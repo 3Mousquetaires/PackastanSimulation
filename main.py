@@ -1,4 +1,5 @@
 import pygame
+import time
 
 class Ville:
     def __init__(self, fichier):
@@ -23,7 +24,7 @@ class Ville:
 pygame.init()
 fenetre = pygame.display.set_mode((750, 750))
 image_ville="ville2.png"
-while True :
-    accueil = pygame.image.load(image_ville).convert()
-    fenetre.blit(accueil, (0,0))
-    pygame.display.flip()
+
+accueil = pygame.image.load(image_ville).convert()
+fenetre.blit(accueil, (0,0))
+pygame.display.flip()
