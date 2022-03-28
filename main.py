@@ -21,6 +21,7 @@ class Ville:
         fenetre.blit(accueil, (0,0))
 
 
+
 pygame.init()
 fenetre = pygame.display.set_mode((750, 750))
 image_ville="ville2.png"
