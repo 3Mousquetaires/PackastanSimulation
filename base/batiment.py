@@ -70,7 +70,7 @@ class Batiment :
         self.capacite = int(str_data[3])
         self.ressource = str_data[4] #ressource graphique
         
-
+        
 
 
     
