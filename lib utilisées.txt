@@ -1,2 +1,4 @@
 pygame
+numpy
+matplotlib
 enum
