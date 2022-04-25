@@ -5,7 +5,7 @@ import tileset
 import tilemap
 import game
 
-file='tileset.png'
+file='ressources/tileset.png'
 
 game = game.Game()
 game.run()  

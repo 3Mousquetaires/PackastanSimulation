@@ -3,7 +3,7 @@ import numpy as np
 import tileset
 
 class Tilemap:
-    def __init__(self, tileset, size=(40, 80), rect=None):
+    def __init__(self, tileset, size=(50, 90), rect=None):
         self.size = size
         self.tileset = tileset
         self.map = np.zeros(size, dtype=int)
@@ -14,6 +14,12 @@ class Tilemap:
             self.rect = pygame.Rect(rect)
         else:
             self.rect = self.image.get_rect()
+
+    def get_size(self):
+        w, h = self.size
+        w = 32*w
+        h = 32*h
+        return h, w
 
     def render(self):
         m, n = self.map.shape

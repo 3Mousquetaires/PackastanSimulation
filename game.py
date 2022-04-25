@@ -2,9 +2,9 @@ import pygame
 from pygame.locals import *
 import numpy as np
 import tileset
-import tilemap
+from tilemap import *
 
-file='tileset.png'
+file='ressources/tileset.png'
 
 class Game:
     W = 1920
@@ -13,13 +13,14 @@ class Game:
 
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode(Game.SIZE)
+        self.tileset = tileset.Tileset(file)
+        self.tilemap = Tilemap(self.tileset)
+        self.map2 = Tilemap(self.tileset)
+        self.screen = pygame.display.set_mode(self.tilemap.get_size())
         pygame.display.set_caption('Pygame Tile Demo')
         self.running = True
 
-        self.tileset = tileset.Tileset(file)
-        self.tilemap = tilemap.Tilemap(self.tileset)
-        self.map2 = tilemap.Tilemap(self.tileset)
+        
 
     def run(self):
         while self.running:

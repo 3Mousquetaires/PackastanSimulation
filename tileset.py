@@ -1,6 +1,6 @@
 import pygame
 
-file = 'tileset.png'
+file = 'ressources/tileset.png'
 
 class Tileset:
     def __init__(self, file, size=(32, 32), margin=1, spacing=1):
