@@ -28,13 +28,13 @@ class Graph :
         return
 
 
-    def findPath(self, x, y):
+    def findPath(self, x, y, s0):
         """via Djikstra"""
         F = queue()
         Dists = {s : +inf for s in self.sommets}
         Vus = {s:False for s in self.sommets}
         Parents = {s:None for s in self.sommets}
 
-        Dists[]
+        Dists[s0]
 
     

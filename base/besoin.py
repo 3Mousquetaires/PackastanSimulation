@@ -1,5 +1,3 @@
-#non-fonctionnel, surtout du matériel
-
 from enum import Enum
 
 class TypeBesoin (Enum) :

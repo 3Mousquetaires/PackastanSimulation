@@ -34,13 +34,15 @@ class TypeBatiment (Enum):
     BAR = 6
     ESPACE_VERT = 7
     MAIRIE = 8
+    ROUTE = 9
 
 
 
 BatimentTToStr = { TypeBatiment.COMMERCE:"commerce", TypeBatiment.MAISON:"maison",
     TypeBatiment.INFIRMERIE:"infirmerie", TypeBatiment.COMMISSARIAT:"commissariat",
     TypeBatiment.USINE:"usine", TypeBatiment.EGLISE:"eglise", TypeBatiment.BAR:"bar",
-    TypeBatiment.ESPACE_VERT:"espace_vert", TypeBatiment.MAIRIE:"mairie" }
+    TypeBatiment.ESPACE_VERT:"espace_vert", TypeBatiment.MAIRIE:"mairie", 
+    TypeBatiment.ROUTE:"route" }
 
 
 def RENDER_BATMATRICE(array, taillex, tailley):
