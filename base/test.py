@@ -17,3 +17,8 @@ ville = [
 ]
 
 
+
+def faire_batville():
+    lenx, leny = 60, 60
+    
+
