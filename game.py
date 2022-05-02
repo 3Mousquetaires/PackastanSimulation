@@ -15,7 +15,6 @@ class Game:
         pygame.init()
         self.tileset = tileset.Tileset(file)
         self.tilemap = Tilemap(self.tileset)
-        self.map2 = Tilemap(self.tileset)
         self.screen = pygame.display.set_mode(self.tilemap.get_size())
         pygame.display.set_caption('Pygame Tile Demo')
         self.running = True
