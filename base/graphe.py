@@ -1,5 +1,11 @@
+from cmath import inf
+import queue
+
+
 class Graph :
     def __init__(self, S):
+        #graphes via listes d'adjacences avec pondération
+        #sous forme de ('a * float) list ????
         self.sommets = S
 
         self.tab = { s:[] for s in S}
@@ -20,5 +26,11 @@ class Graph :
             self.tab[x].append(y)
 
         return
+
+
+    def findPath(self, x, y):
+        """via Djikstra"""
+        F = queue()
+        Dists = [inf for s in self.sommets]
 
     

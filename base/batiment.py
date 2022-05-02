@@ -43,8 +43,13 @@ BatimentTToStr = { TypeBatiment.COMMERCE:"commerce", TypeBatiment.MAISON:"maison
     TypeBatiment.ESPACE_VERT:"espace_vert", TypeBatiment.MAIRIE:"mairie" }
 
 
-
-
+def RENDER_BATMATRICE(array, taillex, tailley):
+    """convention : taillex = nb de batiments sur une ligne, \n
+    tailley = nb batiments sur une colonne"""
+    return [
+        [TypeBatiment( array[i, j] ) for j in range(taillex)]
+        for i in range(tailley)
+    ]
 
 
 

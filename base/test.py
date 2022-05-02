@@ -4,37 +4,16 @@ from batiment import Batiment, TypeBatiment
 from citoyen import Citoyen
 from numpy import log
 import matplotlib.pyplot as plt
+from pygame import game
 
 import os
+from random import choice
 
+from batiment import TypeBatiment
 
-
-c = Citoyen()
-
-DATA = [ [.99] for _ in range(9) ]
-Legend = []
-
-color = ['r', 'g', 'b', 'c', 'm', 'y', 'k', 'orange', 'darkred']
-
-N = 7
-
-Legend.append(0)
-
-
-for i in range(N):
-    Legend.append(i+1)
-    c.selectionnerBesoin()
-    bs = c.getbesoins()
-    for j in range(9):
-        DATA[j].append( ( bs[j]))
-
-    pass
-
-
-for i in range(9):
-    plt.plot(Legend, DATA[i], color=color[i], label=str(i))
-
-plt.legend()
-plt.show()
+ville = [
+    [TypeBatiment(choice([0, 1, 2, 3, 4, 5, 6, 7, 8])) for _ in range(60)]
+    for _ in range(60)
+]
 
 
