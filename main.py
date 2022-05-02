@@ -8,4 +8,4 @@ import game
 file='ressources/tileset.png'
 
 game = game.Game()
-game.run()  
+game.run()

@@ -7,7 +7,7 @@ from tilemap import *
 file='ressources/tileset.png'
 
 class Game:
-    W = 1920
+    W = 1700
     H = 1080
     SIZE = W, H
 
