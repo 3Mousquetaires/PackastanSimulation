@@ -4,6 +4,7 @@ import tileset
 
 class Tilemap:
     def __init__(self, tileset, size=(6, 6), rect=None):
+>>>>>>> cff9d1b9b6e462e89278d0319b2118893948b452
         self.size = size
         self.tileset = tileset
         self.map = np.zeros(size, dtype=int)

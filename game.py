@@ -16,7 +16,7 @@ class Game:
         self.tileset = tileset.Tileset(file)
         self.tilemap = Tilemap(self.tileset)
         self.screen = pygame.display.set_mode(self.tilemap.get_size())
-        pygame.display.set_caption('Pygame Tile Demo')
+        pygame.display.set_caption('Packastan')
         self.running = True
 
         
