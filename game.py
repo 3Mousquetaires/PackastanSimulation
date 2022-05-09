@@ -16,6 +16,8 @@ class Game:
         self.tileset = tileset.Tileset(file)
         self.tilemap = Tilemap(self.tileset)
         self.screen = pygame.display.set_mode(self.tilemap.get_size())
+
+        self.tilemap.set_zero()
         pygame.display.set_caption('Packastan')
         self.running = True
 
@@ -34,8 +36,8 @@ class Game:
                         self.tilemap.set_random()
                     elif event.key == K_z:
                         self.tilemap.set_zero()
-                    elif event.key == K_s:
-                        self.save_image()
+                    #elif event.key == K_s:
+                    #    self.save_image()
                         
 
             self.screen.blit(self.tilemap.image, self.tilemap.rect)

@@ -5,6 +5,14 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python: Main",
+            "type": "python",
+            "request": "launch",
+            "program": "C:/Users/damie/Documents/Dev/TIPE/PackastanSimulation/main.py",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",
@@ -12,7 +20,6 @@
             "console": "integratedTerminal",
             "justMyCode": true
         },
-
         {
             "name": "Python : test",
             "type": "python",
