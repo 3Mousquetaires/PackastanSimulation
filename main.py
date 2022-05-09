@@ -10,4 +10,3 @@ file='ressources/tileset.png'
 game = game.Game()
 print(game.tilemap.get_map())
 game.run()
-
