@@ -3,7 +3,7 @@ import numpy as np
 import tileset
 
 class Tilemap:
-    def __init__(self, tileset, size=(6, 6), rect=None):
+    def __init__(self, tileset, size=(60, 60), rect=None):
         self.size = size
         self.tileset = tileset
         self.map = np.zeros(size, dtype=int)
