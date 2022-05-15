@@ -10,9 +10,10 @@ class TypeBesoin (Enum) :
     FETE = 6
     PHYSIQUE = 7
     GESTION = 8
+    DEPLACEMENT = 9
 
 
 StrToTypeBesoin = {"alimentation":TypeBesoin.ALIMENTATION, "habitation":TypeBesoin.HABITATION,
     "sante":TypeBesoin.SANTE, "securite":TypeBesoin.SECURITE, "emploi":TypeBesoin.EMPLOI,
     "moralite":TypeBesoin.MORALITE, "fete":TypeBesoin.FETE, "physique":TypeBesoin.PHYSIQUE,
-    "gestion":TypeBesoin.GESTION}
+    "gestion":TypeBesoin.GESTION, "deplacement":TypeBesoin.DEPLACEMENT}

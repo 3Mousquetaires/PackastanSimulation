@@ -4,6 +4,9 @@ import numpy as np
 import tileset
 from tilemap import *
 
+from base.batiment import TypeBatiment, Batiment
+from base.citoyen import Citoyen
+
 file='ressources/tileset.png'
 
 class Game:
@@ -21,6 +24,22 @@ class Game:
         pygame.display.set_caption('Packastan')
         self.running = True
 
+        #init batliste
+        self.batliste = []
+        for ligne_bat_int in range(self.tilemap.get_map().shape[0] ):
+            ligne = []
+            for bat_int in range(self.tilemap.get_map().shape[1]):
+                bat = Batiment(
+                    TypeBatiment(self.tilemap.get_map()[ligne_bat_int][bat_int]),
+                    (ligne_bat_int, bat_int))
+                ligne.append(bat)
+            
+            self.batliste.append(ligne)
+        
+        
+    def test_citoyen(self):
+        #On créé un citoyen, il habite à la première maison
+        C = Citoyen(self.batliste[0][18])
         
 
     def run(self):
@@ -38,6 +57,8 @@ class Game:
                         self.tilemap.set_zero()
                     #elif event.key == K_s:
                     #    self.save_image()
+                    elif event.key == K_t:
+                        self.test_citoyen()
                         
 
             self.screen.blit(self.tilemap.image, self.tilemap.rect)

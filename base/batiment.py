@@ -4,7 +4,7 @@ import csv
 from mailbox import MaildirMessage
 import os
 
-from besoin import StrToTypeBesoin, TypeBesoin
+from base.besoin import StrToTypeBesoin, TypeBesoin
 
 #Variables globales  ------------------------------------------------------
 LISTE_BATIMENT_STR = ["commerce", "maison", "infirmerie", 
@@ -37,7 +37,6 @@ class TypeBatiment (Enum):
     ROUTE = 9
 
 
-
 BatimentTToStr = { TypeBatiment.COMMERCE:"commerce", TypeBatiment.MAISON:"maison",
     TypeBatiment.INFIRMERIE:"infirmerie", TypeBatiment.COMMISSARIAT:"commissariat",
     TypeBatiment.USINE:"usine", TypeBatiment.EGLISE:"eglise", TypeBatiment.BAR:"bar",
@@ -47,7 +46,9 @@ BatimentTToStr = { TypeBatiment.COMMERCE:"commerce", TypeBatiment.MAISON:"maison
 
 def RENDER_BATMATRICE(array, taillex, tailley):
     """convention : taillex = nb de batiments sur une ligne, \n
-    tailley = nb batiments sur une colonne"""
+    tailley = nb batiments sur une colonne.\n
+    Attention, c'est une liste de TypeBatiments, il faut 
+    instancer les classes Batiments !"""
     return [
         [TypeBatiment( array[i, j] ) for j in range(taillex)]
         for i in range(tailley)
@@ -56,11 +57,12 @@ def RENDER_BATMATRICE(array, taillex, tailley):
 
 
 class Batiment :
-    def __init__(self, type):
+    def __init__(self, type, adresse):
         # == TESTEE ==
         #on va lire le CSV pour récupérer les données.
         str_data = []
         self.kbien = 1 # 0 <= kbien <= 1
+        self.adresse = adresse
 
         with open(CSV_FILE, 'r') as file:
             reader = csv.reader(file)
