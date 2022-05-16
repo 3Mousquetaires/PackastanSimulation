@@ -53,17 +53,18 @@ class Game:
                     elif event.key == K_z:
                         self.tilemap.set_zero()
                     elif event.key == K_g:
-                        self.tilemap.map[random.randint(0, 59)][random.randint(0, 59)] = 0
+                        for i in range(60*60*60):
+                            self.tilemap.map[random.randint(0, 59)][random.randint(0, 59)] = 0
+                            pygame.time.wait(1);
                         print("hello g")
                         self.tilemap.render()
-                        self.tilemap.image = pygame.transform.scale(self.tilemap.image, self.SIZE)
+                        self.tilemap.image = pygame.transform.scale(self.tilemap.image, (600, 600))
                         self.screen.blit(self.tilemap.image, self.tilemap.rect)
                         pygame.display.update()
                         
                     #elif event.key == K_s:
                     #    self.save_image()
                             
-            self.tilemap.image = pygame.transform.scale(self.tilemap.image, self.SIZE)
             self.screen.blit(self.tilemap.image, self.tilemap.rect)
             pygame.display.update()
         pygame.quit()
