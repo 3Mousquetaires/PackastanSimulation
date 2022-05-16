@@ -3,8 +3,10 @@ from pygame.locals import *
 import numpy as np
 import tileset
 from tilemap import *
+import random
 
 from base.batiment import TypeBatiment, Batiment, Maison
+
 
 file='ressources/tileset.png'
 
@@ -36,8 +38,12 @@ class Game:
             
             self.batliste.append(ligne)
         
+<<<<<<< HEAD
     def GetBatliste(self):
         return self.batliste
+=======
+    
+>>>>>>> 2e0a1171847edf59e46d83bdc166e1cbe47f8858
 
     def run(self):
         while self.running:
@@ -52,6 +58,14 @@ class Game:
                         self.tilemap.set_random()
                     elif event.key == K_z:
                         self.tilemap.set_zero()
+                    elif event.key == K_g:
+                        self.tilemap.map[random.randint(0, 59)][random.randint(0, 59)] = 0
+                        print("hello g")
+                        self.tilemap.render()
+                        self.tilemap.image = pygame.transform.scale(self.tilemap.image, self.SIZE)
+                        self.screen.blit(self.tilemap.image, self.tilemap.rect)
+                        pygame.display.update()
+                        
                     #elif event.key == K_s:
                     #    self.save_image()
                             

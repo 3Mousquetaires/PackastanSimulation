@@ -27,7 +27,7 @@ class Tilemap:
             for j in range(n):
                 tile = self.tileset.tiles[self.map[i, j]]
                 self.image.blit(tile, (j*32, i*32))
-        self.image = pygame.transform.scale(self.image, (600, 600))
+        
 
     def set_zero(self):
         self.map = defaultMap

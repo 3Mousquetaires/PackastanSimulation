@@ -1,13 +1,29 @@
 import random
-import base.batiment
+import base.batiment as bat
+import tilemap
+import game
 
-def ajouter ( ville ) :
-    
-    return 
+map = game.tilemap.get_map()
 
-def retirer ( ville ) :
-    
-    return
+def ajouter ( map , type ) :
+    colonne = random.randint(0 , 59)
+    ligne = random.randint(0 , 59)
+    if map[colonne][ligne] != 9 :
+        if map[colonne][ligne] != type :
+            map[colonne][ligne] = type
+            return map
+    return ajouter(map , type)
+
+def retirer ( map , type) :
+    colonne = random.randint(0 , 59)
+    ligne = random.randint(0 , 59)
+    if map[colonne][ligne] != 9 :
+        new_type = random.randint(0 , 8)
+        if new_type != type :
+            if map[colonne][ligne] != type :
+                map[colonne][ligne] = new_type
+                return map
+    return retirer(map , type)
 
 def max_recompense ( l_recompense , etat_precedent) :
     recompense_max = 0
@@ -32,7 +48,7 @@ etat_precedent = (etat0 + etat1 + etat2 + etat3 + etat4 + etat5 + etat6 + etat7 
 l_recompense = []
 l_etat_vu = []
 
-type = TypeBatiment(random.randint(0 , 8))
+type = bat.TypeBatiment(random.randint(0 , 8))
 
 while etat_moyen <= 90 :
     if random(0 , 10) < 3 :
