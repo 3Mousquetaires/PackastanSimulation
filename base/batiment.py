@@ -3,6 +3,12 @@ from enum import Enum
 import csv
 from mailbox import MaildirMessage
 import os
+from turtle import update
+
+from sympy import memoize_property
+
+import game
+import pygame
 
 from base.besoin import StrToTypeBesoin, TypeBesoin
 
@@ -83,8 +89,48 @@ class Batiment :
 
 
 
-    
+class Maison(Batiment):
+    def __init__(self, type, adresse):
+        super().__init__(type, adresse)
 
-    
+        self.memoire_batiments = { k:None for k in range(9) }
+        self.Update_Bats()
 
 
+    def GetBatiment(self, besoin):
+        if self.memoire_batiments[besoin] == None:
+            self.Update_Bats()
+
+        return self.memoire_batiments[besoin]
+
+
+    def Update_Bats(self):
+        """Renvoie un dico avec tous les batiments les plus proches en fonctions de
+        tous les besoins\n
+        Permet d'avoir un appel commun par maison.
+        Pour chercher juste certains batiments, il suffit de passer un dico partiellement
+        rempli dans Retour0, le prg fill le reste."""
+
+        File = [self.adresse]
+        deja_vus = []
+
+        map = game.Game().tilemap.get_map()
+        while (len(File) != 0) and (None in self.memoire_batiments.values()):
+            #Il reste des bouts de route à parcourir et 
+            # le dico n'est pas encore rempli
+            x, y = File.pop()
+            deja_vus.append((x, y))
+            #il faut explorer le carré autour
+            for i in [x-1, x, x+1]:
+                for j in [y-1, y, y+1]:
+                    if (i, j) in deja_vus:
+                        continue
+                    try:
+                        if self.memoire_batiments[ map[i, j] ] == None:
+                            self.memoire_batiments[ map[i, j] ] = (i, j) #on a trouvé une adresse
+                    except IndexError:
+                        #on est hors de la map, inutile de continuer
+                        continue
+
+                    if map[i, j] == 9: #une route
+                        File.append( (i, j) )

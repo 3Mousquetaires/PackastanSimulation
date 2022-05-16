@@ -36,11 +36,6 @@ class Game:
             
             self.batliste.append(ligne)
         
-        
-    def test_citoyen(self):
-        #On créé un citoyen, il habite à la première maison
-        C = Citoyen(self.batliste[0][18])
-        
 
     def run(self):
         while self.running:
