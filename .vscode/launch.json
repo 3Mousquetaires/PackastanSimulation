@@ -24,7 +24,7 @@
             "name": "Python : test",
             "type": "python",
             "request": "launch",
-            "program": "C:/Users/damie/Documents/Dev/TIPE/PackastanSimulation/base/test.py",
+            "program": "C:/Users/damie/Documents/Dev/TIPE/PackastanSimulation/test_damien.py",
             "console": "integratedTerminal"
         }
     ]

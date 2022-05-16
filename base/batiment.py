@@ -90,8 +90,8 @@ class Batiment :
 
 
 class Maison(Batiment):
-    def __init__(self, type, adresse):
-        super().__init__(type, adresse)
+    def __init__(self, adresse):
+        super().__init__(TypeBatiment.MAISON, adresse)
 
         self.memoire_batiments = { k:None for k in range(9) }
         self.Update_Bats()
