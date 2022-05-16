@@ -18,6 +18,8 @@ game = game.Game()
 print(game.tilemap.get_map())
 map = game.tilemap.get_map()
 
+
+
 batmatrice = RENDER_BATMATRICE(map, 60, 60)
 
 trouve = np.where(map == TypeBatiment.MAISON.value)

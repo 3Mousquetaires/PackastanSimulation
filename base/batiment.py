@@ -80,12 +80,3 @@ class Batiment :
         self.coeff = int(str_data[2])
         self.capacite = int(str_data[3])
         self.ressource = str_data[4] #ressource graphique
-        
-
-
-
-    
-
-    
-
-
