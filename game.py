@@ -3,9 +3,10 @@ from pygame.locals import *
 import numpy as np
 import tileset
 from tilemap import *
+import random
 
 from base.batiment import TypeBatiment, Batiment
-from base.citoyen import Citoyen
+
 
 file='ressources/tileset.png'
 
@@ -36,11 +37,7 @@ class Game:
             
             self.batliste.append(ligne)
         
-        
-    def test_citoyen(self):
-        #On créé un citoyen, il habite à la première maison
-        C = Citoyen(self.batliste[0][18])
-        
+    
 
     def run(self):
         while self.running:
@@ -55,6 +52,14 @@ class Game:
                         self.tilemap.set_random()
                     elif event.key == K_z:
                         self.tilemap.set_zero()
+                    elif event.key == K_g:
+                        self.tilemap.map[random.randint(0, 59)][random.randint(0, 59)] = 0
+                        print("hello g")
+                        self.tilemap.render()
+                        self.tilemap.image = pygame.transform.scale(self.tilemap.image, self.SIZE)
+                        self.screen.blit(self.tilemap.image, self.tilemap.rect)
+                        pygame.display.update()
+                        
                     #elif event.key == K_s:
                     #    self.save_image()
                             
