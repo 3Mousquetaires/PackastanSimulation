@@ -5,7 +5,6 @@ import tileset
 from tilemap import *
 
 from base.batiment import TypeBatiment, Batiment
-from base.citoyen import Citoyen
 
 file='ressources/tileset.png'
 
