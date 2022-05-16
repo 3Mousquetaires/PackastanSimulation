@@ -1,4 +1,5 @@
 import random
+import base.batiment
 
 def ajouter ( ville ) :
     
