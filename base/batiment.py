@@ -6,9 +6,9 @@ import os
 from turtle import update
 
 from sympy import memoize_property
+from main import game
 
-import game
-import pygame
+import numpy as np
 
 from base.besoin import StrToTypeBesoin, TypeBesoin
 
@@ -114,7 +114,7 @@ class Maison(Batiment):
         File = [self.adresse]
         deja_vus = []
 
-        map = game.Game().tilemap.get_map()
+        map =  game.tilemap.get_map()
         while (len(File) != 0) and (None in self.memoire_batiments.values()):
             #Il reste des bouts de route à parcourir et 
             # le dico n'est pas encore rempli
@@ -134,3 +134,20 @@ class Maison(Batiment):
 
                     if map[i, j] == 9: #une route
                         File.append( (i, j) )
+
+
+BATMATRICE = np.ndarray([])
+
+def _CREATE_BATMATRICE():
+    for ligne_bat_int in range(game.tilemap.get_map().shape[0] ):
+        ligne = []
+        for bat_int in range(game.tilemap.get_map().shape[1]):
+            type_bat = TypeBatiment(game.tilemap.get_map()[ligne_bat_int][bat_int])
+            if type_bat == TypeBatiment.MAISON:
+                bat = Maison((ligne_bat_int, bat_int))
+            bat = Batiment(type_bat, (ligne_bat_int, bat_int))
+            ligne.append(bat)
+        
+        BATMATRICE.append(ligne)
+
+_CREATE_BATMATRICE()

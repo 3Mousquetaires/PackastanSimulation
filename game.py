@@ -5,8 +5,6 @@ import tileset
 from tilemap import *
 import random
 
-from base.batiment import TypeBatiment, Batiment, Maison
-
 
 file='ressources/tileset.png'
 
@@ -25,25 +23,6 @@ class Game:
         pygame.display.set_caption('Packastan')
         self.running = True
 
-        #init batliste
-        self.batliste = np.ndarray([])
-        for ligne_bat_int in range(self.tilemap.get_map().shape[0] ):
-            ligne = []
-            for bat_int in range(self.tilemap.get_map().shape[1]):
-                type_bat = TypeBatiment(self.tilemap.get_map()[ligne_bat_int][bat_int])
-                if type_bat == TypeBatiment.MAISON:
-                    bat = Maison((ligne_bat_int, bat_int))
-                bat = Batiment(type_bat, (ligne_bat_int, bat_int))
-                ligne.append(bat)
-            
-            self.batliste.append(ligne)
-        
-<<<<<<< HEAD
-    def GetBatliste(self):
-        return self.batliste
-=======
-    
->>>>>>> 2e0a1171847edf59e46d83bdc166e1cbe47f8858
 
     def run(self):
         while self.running:
