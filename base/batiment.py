@@ -1,12 +1,6 @@
 from enum import Enum
 
 import csv
-from mailbox import MaildirMessage
-import os
-from turtle import update
-
-from sympy import memoize_property
-from main import game
 
 import numpy as np
 
@@ -50,17 +44,6 @@ BatimentTToStr = { TypeBatiment.COMMERCE:"commerce", TypeBatiment.MAISON:"maison
     TypeBatiment.ROUTE:"route" }
 
 
-def RENDER_BATMATRICE(array, taillex, tailley):
-    """convention : taillex = nb de batiments sur une ligne, \n
-    tailley = nb batiments sur une colonne.\n
-    Attention, c'est une liste de TypeBatiments, il faut 
-    instancer les classes Batiments !"""
-    return [
-        [TypeBatiment( array[i, j] ) for j in range(taillex)]
-        for i in range(tailley)
-    ]
-
-
 
 class Batiment :
     def __init__(self, type, adresse):
@@ -90,10 +73,12 @@ class Batiment :
 
 
 class Maison(Batiment):
-    def __init__(self, adresse):
+    def __init__(self, adresse, map):
+        """Chaque maison a une carte, le tilemap.Getmap()"""
         super().__init__(TypeBatiment.MAISON, adresse)
 
         self.memoire_batiments = { k:None for k in range(9) }
+        self.map = map
         self.Update_Bats()
 
 
@@ -113,8 +98,8 @@ class Maison(Batiment):
 
         File = [self.adresse]
         deja_vus = []
+        print("\tcartographie en cours de ", self.adresse)
 
-        map =  game.tilemap.get_map()
         while (len(File) != 0) and (None in self.memoire_batiments.values()):
             #Il reste des bouts de route à parcourir et 
             # le dico n'est pas encore rempli
@@ -126,28 +111,13 @@ class Maison(Batiment):
                     if (i, j) in deja_vus:
                         continue
                     try:
-                        if self.memoire_batiments[ map[i, j] ] == None:
-                            self.memoire_batiments[ map[i, j] ] = (i, j) #on a trouvé une adresse
+                        if self.map[i, j] == 9: #une route
+                            File.append( (i, j) )
+                            continue
                     except IndexError:
                         #on est hors de la map, inutile de continuer
                         continue
 
-                    if map[i, j] == 9: #une route
-                        File.append( (i, j) )
-
-
-BATMATRICE = np.ndarray([])
-
-def _CREATE_BATMATRICE():
-    for ligne_bat_int in range(game.tilemap.get_map().shape[0] ):
-        ligne = []
-        for bat_int in range(game.tilemap.get_map().shape[1]):
-            type_bat = TypeBatiment(game.tilemap.get_map()[ligne_bat_int][bat_int])
-            if type_bat == TypeBatiment.MAISON:
-                bat = Maison((ligne_bat_int, bat_int))
-            bat = Batiment(type_bat, (ligne_bat_int, bat_int))
-            ligne.append(bat)
-        
-        BATMATRICE.append(ligne)
-
-_CREATE_BATMATRICE()
+                    if self.memoire_batiments[ self.map[i, j] ] == None:
+                        self.memoire_batiments[ self.map[i, j] ] = (i, j) #on a trouvé une adresse
+                    
