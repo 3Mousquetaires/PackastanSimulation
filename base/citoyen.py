@@ -1,4 +1,3 @@
-from base.batiment import Batiment, TypeBatiment, RENDER_BATMATRICE, Maison
 from numpy import array, where, log2, where 
 
 from pygame.locals import *
@@ -8,8 +7,6 @@ from random import choice
 
 
 BESOINS_COEFFS = {0:16, 1:16, 2:16, 3:8, 4:8, 5:8, 6:4, 7:4, 8:2}
-
-
 
 
 
@@ -58,6 +55,7 @@ class Citoyen :
     def _rechercherBatiments(self):
         """renvoie l'adresse du premier batiment trouvé répondant
         à *besoin*."""
+        pass
         
 
 

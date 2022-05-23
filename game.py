@@ -5,6 +5,8 @@ import tileset
 from tilemap import *
 import random
 
+from base.batiment import Maison, Batiment, TypeBatiment
+from base.citoyen import Citoyen
 
 file='ressources/tileset.png'
 
@@ -13,7 +15,10 @@ class Game:
     H = 600
     SIZE = W, H
 
-    def __init__(self):
+    def __init__(self, n_citoyen = 0):
+        """Classe moteur graphique + interface backend
+        Gère la ville entière"""
+        #On commence par la partie graphique
         pygame.init()
         self.tileset = tileset.Tileset(file)
         self.tilemap = Tilemap(self.tileset)
@@ -23,7 +28,36 @@ class Game:
         pygame.display.set_caption('Packastan')
         self.running = True
 
+        listemaison = []
 
+        #on créé maintenant la batmatrice à partir de la tileset
+        matrice_liste = []
+        for ligne_bat_int in range(self.tilemap.get_map().shape[0] ):
+            ligne = []
+            for bat_int in range(self.tilemap.get_map().shape[1]):
+                type_bat = TypeBatiment(self.tilemap.get_map()[ligne_bat_int][bat_int])
+                if type_bat == TypeBatiment.MAISON:
+                    bat = Maison((ligne_bat_int, bat_int), self.tilemap.get_map())
+                    listemaison.append(bat)
+                    print(bat.memoire_batiments)
+                else:
+                    bat = Batiment(type_bat, (ligne_bat_int, bat_int))
+                ligne.append(bat)
+        
+            matrice_liste.append(ligne)
+        self.batmarice = np.asarray(matrice_liste)
+
+        #Maintenant : la liste des citoyens
+        self.ncitoyen = n_citoyen
+        self.citoyenliste = []
+        for i in range(self.ncitoyen):
+            c = Citoyen(random.choice(listemaison))
+            self.citoyenliste.append(c)
+
+
+        
+
+    #=================== MOTEUR GRAPHIQUE ====================
     def run(self):
         while self.running:
             for event in pygame.event.get():
@@ -53,3 +87,5 @@ class Game:
             self.screen.blit(self.tilemap.image, self.tilemap.rect)
             pygame.display.update()
         pygame.quit()
+
+    #=================== BACKEND ========================
