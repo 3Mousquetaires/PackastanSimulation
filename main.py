@@ -4,7 +4,7 @@ import game
 
 file='ressources/tileset.png'
 
-game = game.Game()
+game = game.Game(5)
 
 print(game.tilemap.get_map())
 map = game.tilemap.get_map()

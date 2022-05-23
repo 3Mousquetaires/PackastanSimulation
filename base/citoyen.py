@@ -18,10 +18,14 @@ class Citoyen :
 
 
     def tour(self):
+        #J'ai faim !
         besoin = self.selectionnerBesoin()
-
+        
+        #on tape l'adresse du o'Tacos dans le GPS
         bat = self.maison.GetBatiment(besoin)
-        #navigation vers le batiment
+
+        #On vroum vroum jusqu'à Esplanade
+
 
         #interface batiment
 

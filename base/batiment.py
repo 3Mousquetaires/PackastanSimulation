@@ -99,7 +99,6 @@ class Maison(Batiment):
 
         File = [(self.adresse[0], self.adresse[1], [])]
         deja_vus = []
-        print("\tcartographie en cours depuis ", self.adresse)
 
         while (len(File) != 0) and (None in self.memoire_batiments.values()):
             #Il reste des bouts de route à parcourir et 

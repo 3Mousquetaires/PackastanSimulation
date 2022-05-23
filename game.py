@@ -39,7 +39,6 @@ class Game:
                 if type_bat == TypeBatiment.MAISON:
                     bat = Maison((ligne_bat_int, bat_int), self.tilemap.get_map())
                     listemaison.append(bat)
-                    print(bat.memoire_batiments)
                 else:
                     bat = Batiment(type_bat, (ligne_bat_int, bat_int))
                 ligne.append(bat)
@@ -80,11 +79,22 @@ class Game:
                         self.tilemap.image = pygame.transform.scale(self.tilemap.image, (600, 600))
                         self.screen.blit(self.tilemap.image, self.tilemap.rect)
                         pygame.display.update()
+
+                    elif event.key == K_t:
+                        print("Tour en cours ! Attention les oreilles !")
+                        c = self.citoyenliste[0]
+                        c.tour()
+                        print("fini")
                         
                     #elif event.key == K_s:
                     #    self.save_image()
                             
             self.screen.blit(self.tilemap.image, self.tilemap.rect)
+
+            #================ GESTION DU TOUR ================================
+            
+            #   cf l'event K_t, chaque chose en son temps
+
             pygame.display.update()
         pygame.quit()
 
