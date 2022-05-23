@@ -121,7 +121,11 @@ class Game:
                             pygame.display.update()
                     elif event.key == K_k:
                         command = input("Commande@PackastanSimulation >$ ")
-                        self.kommander(command)
+                        try:
+                            self.kommander(command)
+                        except:
+                            print("Commande inconnue")
+                            self.help()
                         
                         
                     #elif event.key == K_s:
