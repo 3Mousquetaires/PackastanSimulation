@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 import numpy as np
+from sympy import arg
 import tileset
 from tilemap import *
 import random
@@ -13,6 +14,7 @@ file='ressources/tileset.png'
 class Game:
     W = 600
     H = 600
+    MAX_TOUR = 6000;
     SIZE = W, H
 
     def __init__(self, n_citoyen = 0):
@@ -27,7 +29,7 @@ class Game:
         self.tilemap.set_zero()
         pygame.display.set_caption('Packastan')
         self.running = True
-
+        self.command_mode = False
         listemaison = []
 
         #on créé maintenant la batmatrice à partir de la tileset
@@ -57,18 +59,18 @@ class Game:
     
 
 #====================Définition des commandes pour le Kommander====================
-    def quit(self):
+    def quit(self, arg1 = None, arg2=None, arg3=None, arg4=None):
         self.running = False
 
-    def printmap(self):
+    def printmap(self, arg1 = None, arg2=None, arg3=None, arg4=None):
         print(self.tilemap.map)
         return
         
-    def reset(self):
+    def reset(self, arg1 = None, arg2=None, arg3=None, arg4=None):
         self.tilemap.set_zero()
         return
 
-    def vannish(self):
+    def vannish(self, arg1 = None, arg2=None, arg3=None, arg4=None):
         for i in range(60*60*60):
             self.tilemap.map[random.randint(0, 59)][random.randint(0, 59)] = 0
             pygame.time.wait(1);
@@ -78,31 +80,44 @@ class Game:
             pygame.display.update()
         return
 
-    def help(self):
+    def getBat(self, posx, posy, arg3=None, arg4=None):
+        print(self.batmarice[int(posx)][int(posy)].type)
+        return
+
+    def exit(self, arg1 = None, arg2=None, arg3=None, arg4=None):
+        self.command_mode = False
+        return
+
+    def help(self, arg1 = None, arg2=None, arg3=None, arg4=None):
         print("""
         Commandes disponibles :
         - quit : quitter le programme
         - reset : remettre la carte à zéro
         - vannish : effacer la carte
         - printmap : afficher la carte
+        - whichbat : afficher le type de batiment à la position x,y (2 arguments nécessaires !)
         - help : afficher la liste des commandes
+        - exit : quitter l'invite de commande Packastan
         """)
         return
 
-    def kommander(self, commande):
+    def kommander(self, commande, arg1 = None, arg2=None, arg3=None, arg4=None):
         commandes = {
             "quit": self.quit,
             "reset": self.reset,
             "vannish": self.vannish,
             "printmap" : self.printmap,
+            "whichbat" : self.getBat,
+            "exit" : self.exit,
             "help": self.help
         }
-        commandes.get(commande)()
+        commandes.get(commande)(arg1, arg2, arg3, arg4)
 
         
 
     #=================== MOTEUR GRAPHIQUE ====================
     def run(self):
+        i = 0;
         while self.running:
             for event in pygame.event.get():
                 if event.type == QUIT:
@@ -124,12 +139,19 @@ class Game:
                             self.screen.blit(self.tilemap.image, self.tilemap.rect)
                             pygame.display.update()
                     elif event.key == K_k:
-                        command = input("Commande@PackastanSimulation >$ ")
-                        try:
-                            self.kommander(command)
-                        except:
-                            print("Commande inconnue")
-                            self.help()
+                        self.command_mode = True
+                        while(self.command_mode):
+                            command = input("Commande@PackastanSimulation >$ ").split()
+                            command.append("");
+                            command.append("");
+                            command.append("");
+                            command.append("");
+                            try:
+                                self.kommander(command[0], arg1=command[1], arg2 = command[2], arg3 = command[3], arg4 = command[4])
+                            except:
+                                print("Commande inconnue")
+                                
+                                self.help()
                         
                         
                     #elif event.key == K_s:
@@ -137,6 +159,7 @@ class Game:
                             
             self.screen.blit(self.tilemap.image, self.tilemap.rect)
             pygame.display.update()
+            
         pygame.quit()
 
     #=================== BACKEND ========================
