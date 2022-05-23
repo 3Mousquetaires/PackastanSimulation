@@ -9,7 +9,7 @@
             "type": "python",
             "request": "launch",
             "program": "C:/Users/damie/Documents/Dev/TIPE/PackastanSimulation/main.py",
-            "console": "integratedTerminal",
+            "console": "externalTerminal",
             "justMyCode": true
         },
         {
@@ -17,7 +17,7 @@
             "type": "python",
             "request": "launch",
             "program": "${file}",
-            "console": "integratedTerminal",
+            "console": "externalTerminal",
             "justMyCode": true
         },
         {
@@ -25,7 +25,7 @@
             "type": "python",
             "request": "launch",
             "program": "C:/Users/damie/Documents/Dev/TIPE/PackastanSimulation/test_damien.py",
-            "console": "integratedTerminal"
+            "console": "externalTerminal"
         }
     ]
 }
