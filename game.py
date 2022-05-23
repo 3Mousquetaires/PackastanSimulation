@@ -59,7 +59,9 @@ class Game:
 
 #====================Définition des commandes pour le Kommander====================
     def quit(self, arg1 = None, arg2=None, arg3=None, arg4=None):
+        self.command_mode = False
         self.running = False
+
 
     def printmap(self, arg1 = None, arg2=None, arg3=None, arg4=None):
         print(self.tilemap.map)
@@ -74,13 +76,16 @@ class Game:
             self.tilemap.map[random.randint(0, 59)][random.randint(0, 59)] = 0
             pygame.time.wait(1);
             self.tilemap.render()
-            self.tilemap.image = pygame.transform.scale(self.tilemap.image, (600, 600))
             self.screen.blit(self.tilemap.image, self.tilemap.rect)
             pygame.display.update()
         return
 
     def getBat(self, posx, posy, arg3=None, arg4=None):
         print(self.batmarice[int(posx)][int(posy)].type)
+        return
+
+    def forceRender(self, arg1 = None, arg2=None, arg3=None, arg4=None):
+        self.tilemap.render()
         return
 
     def exit(self, arg1 = None, arg2=None, arg3=None, arg4=None):
@@ -95,6 +100,7 @@ class Game:
         - vannish : effacer la carte
         - printmap : afficher la carte
         - whichbat : afficher le type de batiment à la position x,y (2 arguments nécessaires !)
+        - forcerender : force le rendu de la carte
         - help : afficher la liste des commandes
         - exit : quitter l'invite de commande Packastan
         """)
@@ -107,6 +113,7 @@ class Game:
             "vannish": self.vannish,
             "printmap" : self.printmap,
             "whichbat" : self.getBat,
+            "forcerender" : self.forceRender,
             "exit" : self.exit,
             "help": self.help
         }
