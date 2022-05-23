@@ -54,6 +54,46 @@ class Game:
             c = Citoyen(random.choice(listemaison))
             self.citoyenliste.append(c)
 
+    
+
+#====================Définition des commandes pour le Kommander====================
+    def quit(self):
+        self.running = False
+
+    def printmap(self):
+        print(self.tilemap.map)
+        
+    def reset(self):
+        self.tilemap.set_zero()
+
+    def vannish(self):
+        for i in range(60*60*60):
+            self.tilemap.map[random.randint(0, 59)][random.randint(0, 59)] = 0
+            pygame.time.wait(1);
+            self.tilemap.render()
+            self.tilemap.image = pygame.transform.scale(self.tilemap.image, (600, 600))
+            self.screen.blit(self.tilemap.image, self.tilemap.rect)
+            pygame.display.update()
+
+    def help(self):
+        print("""
+        Commandes disponibles :
+        - quit : quitter le programme
+        - reset : remettre la carte à zéro
+        - vannish : effacer la carte
+        - printmap : afficher la carte
+        - help : afficher la liste des commandes
+        """)
+
+    def kommander(self, commande):
+        commandes = {
+            "quit": self.quit,
+            "reset": self.reset,
+            "vannish": self.vannish,
+            "printmap" : self.printmap,
+            "help": self.help
+        }
+        commandes.get(commande)()
 
         
 
@@ -79,7 +119,9 @@ class Game:
                             self.tilemap.image = pygame.transform.scale(self.tilemap.image, (600, 600))
                             self.screen.blit(self.tilemap.image, self.tilemap.rect)
                             pygame.display.update()
-                        print("hello g")
+                    elif event.key == K_k:
+                        command = input("Commande@PackastanSimulation >$ ")
+                        self.kommander(command)
                         
                         
                     #elif event.key == K_s:
