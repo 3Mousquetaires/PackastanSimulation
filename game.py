@@ -41,6 +41,7 @@ class Game:
                 if type_bat == TypeBatiment.MAISON:
                     bat = Maison((ligne_bat_int, bat_int), self.tilemap.get_map())
                     listemaison.append(bat)
+                    print(bat.memoire_batiments)
                 else:
                     bat = Batiment(type_bat, (ligne_bat_int, bat_int))
                 ligne.append(bat)
@@ -169,3 +170,4 @@ class Game:
         pygame.quit()
 
     #=================== BACKEND ========================
+    # coucou

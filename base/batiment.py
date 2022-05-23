@@ -122,5 +122,5 @@ class Maison(Batiment):
                         continue
 
                     if self.memoire_batiments[ self.map[i, j] ] == None:
-                        self.memoire_batiments[ self.map[i, j] ] = accumulateur + [(x, y)] #(i, j) #on a trouvé une adresse
+                        self.memoire_batiments[ self.map[i, j] ] = accumulateur + [(i, j)] #(i, j) #on a trouvé une adresse
                     
