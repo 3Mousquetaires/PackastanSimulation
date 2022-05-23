@@ -62,9 +62,11 @@ class Game:
 
     def printmap(self):
         print(self.tilemap.map)
+        return
         
     def reset(self):
         self.tilemap.set_zero()
+        return
 
     def vannish(self):
         for i in range(60*60*60):
@@ -74,6 +76,7 @@ class Game:
             self.tilemap.image = pygame.transform.scale(self.tilemap.image, (600, 600))
             self.screen.blit(self.tilemap.image, self.tilemap.rect)
             pygame.display.update()
+        return
 
     def help(self):
         print("""
@@ -84,6 +87,7 @@ class Game:
         - printmap : afficher la carte
         - help : afficher la liste des commandes
         """)
+        return
 
     def kommander(self, commande):
         commandes = {
