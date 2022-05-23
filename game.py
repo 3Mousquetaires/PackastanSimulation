@@ -73,6 +73,7 @@ class Game:
         return
 
     def vannish(self, arg1 = None, arg2=None, arg3=None, arg4=None):
+        
         for i in range(60*60*60):
             self.tilemap.map[random.randint(0, 59)][random.randint(0, 59)] = 0
             pygame.time.wait(1);
