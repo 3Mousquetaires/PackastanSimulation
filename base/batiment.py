@@ -68,6 +68,21 @@ class Batiment :
         self.coeff = int(str_data[2])
         self.capacite = int(str_data[3])
         self.ressource = str_data[4] #ressource graphique
+
+        self.population = 0
+
+
+    def AjouterCitoyen(self):
+        """renvoie un bool : false si le batiment est plein"""
+        if self.population == self.capacite:
+            return False
+        else :
+            self.population += 1
+            return True
+
+
+    def EnleverCitoyen(self):
+        self.population -= 1
         
 
 
@@ -84,10 +99,14 @@ class Maison(Batiment):
 
 
     def GetBatiment(self, besoin):
-        if self.memoire_batiments[besoin] == None:
+        route = self.memoire_batiments[besoin]
+
+        if route == None:
+            self.Update_Bats()
+        elif self.map[route[-1]] != besoin:
             self.Update_Bats()
 
-        return self.memoire_batiments[besoin]
+        return route
 
 
     def Update_Bats(self):
@@ -121,5 +140,5 @@ class Maison(Batiment):
                         continue
 
                     if self.memoire_batiments[ self.map[i, j] ] == None:
-                        self.memoire_batiments[ self.map[i, j] ] = accumulateur + [(i, j)] #(i, j) #on a trouvé une adresse
+                        self.memoire_batiments[ self.map[i, j] ] = accumulateur + [(x, y), (i, j)] #(i, j) #on a trouvé une adresse
                     

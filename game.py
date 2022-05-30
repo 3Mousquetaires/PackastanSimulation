@@ -6,6 +6,8 @@ import tileset
 from tilemap import *
 import random
 
+import time
+
 from base.batiment import Maison, Batiment, TypeBatiment
 from base.citoyen import Citoyen
 
@@ -55,6 +57,8 @@ class Game:
             c = Citoyen(random.choice(listemaison))
             self.citoyenliste.append(c)
 
+        print(len(self.citoyenliste))
+
     
 
 #====================Définition des commandes pour le Kommander====================
@@ -85,7 +89,7 @@ class Game:
 
     def exit(self, arg1 = None, arg2=None, arg3=None, arg4=None):
         self.command_mode = False
-        return
+        return 
 
     def help(self, arg1 = None, arg2=None, arg3=None, arg4=None):
         print("""
@@ -100,6 +104,12 @@ class Game:
         """)
         return
 
+
+    def checkload(self, posx, posy, arg3 = None, arg4 = None):
+        print(self.batmarice[int(posx)][int(posy)].type, self.batmarice[int(posx)][int(posy)].capacite)
+        return
+
+
     def kommander(self, commande, arg1 = None, arg2=None, arg3=None, arg4=None):
         commandes = {
             "quit": self.quit,
@@ -108,9 +118,10 @@ class Game:
             "printmap" : self.printmap,
             "whichbat" : self.getBat,
             "exit" : self.exit,
-            "help": self.help
+            "help": self.help,
+            "checkroad": self.checkload
         }
-        commandes.get(commande)(arg1, arg2, arg3, arg4)
+        commandes.get(commandes)(arg1, arg2, arg3, arg4)
 
         
 
@@ -140,10 +151,20 @@ class Game:
                         pygame.display.update()
 
                     elif event.key == K_t:
+                        #test de la méthode Citoyen.tour
                         print("Tour en cours ! Attention les oreilles !")
                         c = self.citoyenliste[0]
-                        c.tour()
-                        print("fini")
+
+                        #======== bloc à tester =====
+                        kbien = c.tour( self.batmarice, True)
+                        if kbien != None:
+                            #on a fini une expérience, Ethan déboule avec ses
+                            #algos
+                            print("kbien extrait !", kbien)
+                            
+                        #============================
+                        # bloc testé avec réussite
+
                         
                     elif event.key == K_k:
                         self.command_mode = True
@@ -168,7 +189,22 @@ class Game:
 
             #================ GESTION DU TOUR ================================
             
-            #   cf l'event K_t, chaque chose en son temps
+            
+            t0 = time.time()
+            nb_kbien = 0 #nombre de résultats extraits
+            for c in self.citoyenliste:
+                kbien = c.tour( self.batmarice )
+                if kbien != None:
+                    #on a fini une expérience, Ethan déboule avec ses
+                    #algos
+                    #print("kbien extrait !", kbien)
+                    nb_kbien += 1
+                    pass
+            print("\n\n=================\ntemps d'éxecution :", time.time() - t0)
+            print("nombre de résultats :", nb_kbien)
+            print("=================\n\n")
+
+            #=================================================================
 
             pygame.display.update()
             
