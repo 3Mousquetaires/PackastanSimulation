@@ -23,6 +23,7 @@ class Game:
         """Classe moteur graphique + interface backend
         Gère la ville entière"""
         #On commence par la partie graphique
+        print("=== INIT PACKASTAN ===")
         pygame.init()
         self.tileset = tileset.Tileset(file)
         self.tilemap = Tilemap(self.tileset)
@@ -35,6 +36,7 @@ class Game:
         listemaison = []
 
         #on créé maintenant la batmatrice à partir de la tileset
+        print("Initialisation de la matrice batiments")
         matrice_liste = []
         for ligne_bat_int in range(self.tilemap.get_map().shape[0] ):
             ligne = []
@@ -51,13 +53,14 @@ class Game:
         self.batmarice = np.asarray(matrice_liste)
 
         #Maintenant : la liste des citoyens
+        print("Initiatlisation de la liste des citoyens")
         self.ncitoyen = n_citoyen
         self.citoyenliste = []
         for i in range(self.ncitoyen):
             c = Citoyen(random.choice(listemaison))
             self.citoyenliste.append(c)
 
-        print(len(self.citoyenliste))
+        print("== INIT TERMINEE ==\n\n")
 
     
 
@@ -127,8 +130,12 @@ class Game:
 
     #=================== MOTEUR GRAPHIQUE ====================
     def run(self):
-        i = 0;
+        i = 0 #utile ?
+        nb_tour = 0
+        tickrate_histo = []
+
         while self.running:
+            nb_tour += 1
             for event in pygame.event.get():
                 if event.type == QUIT:
                     self.running = False
@@ -149,6 +156,7 @@ class Game:
                         self.tilemap.image = pygame.transform.scale(self.tilemap.image, (600, 600))
                         self.screen.blit(self.tilemap.image, self.tilemap.rect)
                         pygame.display.update()
+
 
                     elif event.key == K_t:
                         #test de la méthode Citoyen.tour
@@ -200,8 +208,10 @@ class Game:
                     #print("kbien extrait !", kbien)
                     nb_kbien += 1
                     pass
-            print("\n\n=================\ntemps d'éxecution :", time.time() - t0)
-            print("nombre de résultats :", nb_kbien)
+            t1 = time.time()
+            tickrate_histo.append(t1-t0)
+            print("\n\n=================\ntemps d'éxecution :", t1 - t0)
+            print("Tour :", nb_tour, "nombre de résultats :", nb_kbien)
             print("=================\n\n")
 
             #=================================================================
@@ -209,6 +219,9 @@ class Game:
             pygame.display.update()
             
         pygame.quit()
+
+        #juste pour la mesure du tickrate
+        return tickrate_histo
 
     #=================== BACKEND ========================
     # coucou

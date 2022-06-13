@@ -6,6 +6,8 @@ import numpy as np
 
 from base.besoin import StrToTypeBesoin, TypeBesoin
 
+from numba import jit
+
 #Variables globales  ------------------------------------------------------
 LISTE_BATIMENT_STR = ["commerce", "maison", "infirmerie", 
     "commissariat", "usine", "eglise", "bar", "espace vert",
@@ -107,7 +109,6 @@ class Maison(Batiment):
             self.Update_Bats()
 
         return route
-
 
     def Update_Bats(self):
         """Renvoie un dico avec tous les batiments les plus proches en fonctions de
