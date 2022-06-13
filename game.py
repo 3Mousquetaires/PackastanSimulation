@@ -8,6 +8,8 @@ import random
 from base.batiment import Maison, Batiment, TypeBatiment
 from base.citoyen import Citoyen
 
+import app_renforcement
+
 file='ressources/tileset.png'
 
 class Game:
@@ -60,33 +62,36 @@ class Game:
     #=================== MOTEUR GRAPHIQUE ====================
     def run(self):
         while self.running:
-            for event in pygame.event.get():
-                if event.type == QUIT:
-                    self.running = False
+            tours = 0
+            while tours <=600 :
+                for event in pygame.event.get():
+                    if event.type == QUIT:
+                        self.running = False
+                        tours = 601
 
-                elif event.type == KEYDOWN:
-                    if event.key == K_m:
-                        print(self.tilemap.map)
-                    elif event.key == K_r:
-                        self.tilemap.set_random()
-                    elif event.key == K_z:
-                        self.tilemap.set_zero()
-                    elif event.key == K_g:
-                        for i in range(60*60*60):
-                            self.tilemap.map[random.randint(0, 59)][random.randint(0, 59)] = 0
-                            pygame.time.wait(1);
-                            self.tilemap.render()
-                            self.tilemap.image = pygame.transform.scale(self.tilemap.image, (600, 600))
-                            self.screen.blit(self.tilemap.image, self.tilemap.rect)
-                            pygame.display.update()
-                        print("hello g")
-                        
-                        
-                    #elif event.key == K_s:
-                    #    self.save_image()
+                    elif event.type == KEYDOWN:
+                        if event.key == K_m:
+                            print(self.tilemap.map)
+                        elif event.key == K_r:
+                            self.tilemap.set_random()
+                        elif event.key == K_z:
+                            self.tilemap.set_zero()
+                        elif event.key == K_g:
+                            for i in range(60*60*60):
+                                self.tilemap.map[random.randint(0, 59)][random.randint(0, 59)] = 0
+                                pygame.time.wait(1);
+                                self.tilemap.render()
+                                self.tilemap.image = pygame.transform.scale(self.tilemap.image, (600, 600))
+                                self.screen.blit(self.tilemap.image, self.tilemap.rect)
+                                pygame.display.update()
+                            print("hello g")
                             
-            self.screen.blit(self.tilemap.image, self.tilemap.rect)
-            pygame.display.update()
+                            
+                        #elif event.key == K_s:
+                        #    self.save_image()
+                                
+                self.screen.blit(self.tilemap.image, self.tilemap.rect)
+                pygame.display.update()
         pygame.quit()
 
     #=================== BACKEND ========================
