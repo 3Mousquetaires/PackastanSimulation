@@ -8,5 +8,5 @@ eglise,moralite,8,-1,-1
 bar,fete,4,-1,-1
 espace_vert,physique,4,-1,-1
 mairie,gestion,2,-1,-1
-route,deplacement,2,-1,-1
+route,deplacement,1,7,-1
 
