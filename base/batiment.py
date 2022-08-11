@@ -36,6 +36,9 @@ class TypeBatiment (Enum):
     MAIRIE = 8
     ROUTE = 9
 
+    def int(self):
+        return self.value
+
 
 BatimentTToStr = { TypeBatiment.COMMERCE:"commerce", TypeBatiment.MAISON:"maison",
     TypeBatiment.INFIRMERIE:"infirmerie", TypeBatiment.COMMISSARIAT:"commissariat",
