@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import base.batiment
+import batiment
 
 class Ville:
     def __init__(self, height:int, width:int, map:np.ndarray=np.array([[]])): 
@@ -24,7 +24,7 @@ class Ville:
         """
         print(self.map)
     
-    def replaceBat(self, x:int, y:int, typeBat: base.batiment.TypeBatiment):
+    def replaceBat(self, x:int, y:int, typeBat: batiment.TypeBatiment):
         """# Remplacement :
         Permet de remplacer un batiment en position ```(x, y)```, par un bâtiment de type ```batiment.TypeBatiment```. 
         """
@@ -70,10 +70,10 @@ class Ville:
         """# Exportation de la matrice de bâtiments : 
         Permet d'exporter la matrice de bâtiments sous forme d'un ```np.ndarray``` de dimension ```(w, h)```.
         """
-        array = np.zeros((self.height, self.width), dtype=base.batiment.TypeBatiment)
+        array = np.zeros((self.height, self.width), dtype=batiment.TypeBatiment)
         for i in range(self.height):
             for j in range(self.width):
-                array[i][j] = base.batiment.TypeBatiment(self.map[i][j])
+                array[i][j] = batiment.TypeBatiment(self.map[i][j])
         return array
 
 city = Ville(100, 100, np.random.randint(0, 9, size=(100, 100)))
