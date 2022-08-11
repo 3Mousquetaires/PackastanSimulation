@@ -10,16 +10,25 @@ class Ville:
         avec éventuellement une map par défaut (fondée uniquement sur les commerces).\n
         S'utilise en instanciation classique : ```city = Ville(h, w)``` 
         """
-        if np.shape(map) == (height, width):
-            self.map = map
-        else:
-            map = np.zeros((height, width))
-        map_kbien = np.zeros((height, width))
-        for i in range(height):
-            for j in range(width):
-                map_kbien[i][j]=1
         self.width = width
         self.height = height
+        if np.shape(map) == (height, width):
+            self.nummap = map
+        else:
+            self.nummap = np.zeros((height, width))
+        self.map_kbien = np.zeros((height, width))
+        for i in range(height):
+            for j in range(width):
+                self.map_kbien[i][j]=1
+        self.map = []
+        for i in range(height):
+            temp = []
+            for j in range(width):
+                if self.nummap[i][j] == 1 :
+                    bat = batiment.Maison((i, j), self.nummap)
+                else:
+                    bat = batiment.Batiment(type = batiment.TypeBatiment(self.nummap[i][j]), adresse = (i, j))
+                self.map.append(bat)
         self.fig = plt.figure()
 
 
@@ -48,7 +57,7 @@ class Ville:
                             vmax=np.max(data) + 0.5)
             # tell the colorbar to tick at integers
             cax = plt.colorbar(mat, ticks=np.arange(np.min(data), np.max(data) + 1))
-        discrete_matshow(self.map)
+        discrete_matshow(self.nummap)
         plt.show()
     
     def show_extended(self, m1:np.ndarray, m2:np.ndarray):
@@ -57,9 +66,9 @@ class Ville:
         que deux matrices complémentaires ```m1``` et ```m2```. 
         """
         plt.subplot(131)
-        cmap1 = plt.get_cmap('RdPu', np.max(self.map) - np.min(self.map) + 1)
-        mat1 = plt.imshow(self.map, cmap = cmap1, vmin = np.min(self.map)-0.5, vmax = np.max(self.map)+0.5)
-        cax1 = plt.colorbar(mat1, ticks = np.arange(np.min(self.map), np.max(self.map)+1), orientation="horizontal")
+        cmap1 = plt.get_cmap('RdPu', np.max(self.nummap) - np.min(self.nummap) + 1)
+        mat1 = plt.imshow(self.nummap, cmap = cmap1, vmin = np.min(self.nummap)-0.5, vmax = np.max(self.nummap)+0.5)
+        cax1 = plt.colorbar(mat1, ticks = np.arange(np.min(self.nummap), np.max(self.nummap)+1), orientation="horizontal")
 
         plt.subplot(132)
         #cmap2 = plt.get_cmap('RdBu', np.max(m1) - np.min(m1) + 1)
@@ -78,7 +87,7 @@ class Ville:
         array = np.zeros((self.height, self.width), dtype=batiment.TypeBatiment)
         for i in range(self.height):
             for j in range(self.width):
-                array[i][j] = batiment.TypeBatiment(self.map[i][j])
+                array[i][j] = batiment.TypeBatiment(self.nummap[i][j])
         return array
 
 

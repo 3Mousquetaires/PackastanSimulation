@@ -14,7 +14,7 @@ LISTE_BATIMENT_STR = ["commerce", "maison", "infirmerie",
     "mairie"]
 
 
-CSV_FILE = "info_batiments.csv"
+CSV_FILE = "base/info_batiments.csv"
 
 #  ------------------------------------------------------------------------
 
