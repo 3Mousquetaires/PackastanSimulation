@@ -28,6 +28,8 @@ class Ville:
             for j in range(width):
                 self.map_kbien[i][j]=1
 
+        self.map_saturation = np.zeros((height, width)) 
+
         #Init map : Map des instances
         self.map = []
         self.annuaire = []
@@ -45,8 +47,29 @@ class Ville:
         self.habitants = []
         for i in range(self.population):
             hab = citoyen.Citoyen(self.annuaire[random.randint(0, len(self.annuaire))])
+            self.habitants.append(hab)
 
         self.fig = plt.figure()
+
+
+
+
+        # =================== Gestion du tour : jeu et actualisation =================================
+        self.isRunning = True
+        #la mettre en false pour terminer le programme
+
+        while self.isRunning:
+            #appel au jeu de chaque citoyen.
+            for c in self.habitants:
+                resultat = c.tour(self.map, should_print = True)
+
+                if type(resultat) == type(None):
+                    #Si la méthode tour renvoie un truc, c'est qu'un kbien a été extrait.
+                    self.map_kbien[resultat[1]] = resultat[0]
+
+
+
+
 
 
     def print(self):
