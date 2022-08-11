@@ -126,7 +126,7 @@ class Game:
             "help": self.help,
             "checkroad": self.checkload
         }
-        commandes.get(commandes)(arg1, arg2, arg3, arg4)
+        commandes.get(commande)(arg1, arg2, arg3, arg4)
 
         
 

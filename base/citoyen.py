@@ -183,7 +183,9 @@ class Citoyen :
         #on update tous les autres
         for i_b in range(len(self.besoins)):
             if i_b != besoin_i:
-                self.besoins[i_b] *= 1/(log2(BESOINS_COEFFS[i_b])+1) #self.besoins[i_b]
+                self.besoins[i_b] *= 1/(log2(BESOINS_COEFFS[i_b])+1)
+            else:
+                self.besoins[i_b] = 1
 
         return besoin_i #on le retourne sous forme d'un Besoin (version enum)
             
