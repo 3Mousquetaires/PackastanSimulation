@@ -1,9 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from pynput import keyboard
+from pynput.keyboard import Key
 import batiment
 import citoyen
 import time
 import random
+
 
 class Ville:
     def __init__(self, height:int, width:int, population:int = 1,map:np.ndarray=np.array([[]])): 
@@ -53,8 +56,55 @@ class Ville:
         self.fig = plt.figure()
 
 
+    def start(self):
+        #====================Définition des commandes pour le Kommander====================
+        def quit(self, arg1 = None, arg2=None, arg3=None, arg4=None):
+            self.command_mode = False
+            self.running = False
 
 
+        def printmap(self, arg1 = None, arg2=None, arg3=None, arg4=None):
+            self.print()
+            return
+        
+
+        def getBat(self, posx, posy, arg3=None, arg4=None):
+            print(self.nummap[int(posx)][int(posy)].type)
+            return
+
+        def exit(self, arg1 = None, arg2=None, arg3=None, arg4=None):
+            self.command_mode = False
+            return
+
+        def help(self, arg1 = None, arg2=None, arg3=None, arg4=None):
+            print("""
+            Commandes disponibles :
+            - quit : quitter le programme
+            - printmap : afficher la carte
+            - whichbat : afficher le type de batiment à la position x,y (2 arguments nécessaires !)
+            - help : afficher la liste des commandes
+            - exit : quitter l'invite de commande Packastan
+            """)
+            return
+
+        def kommander(self, commande, arg1 = None, arg2=None, arg3=None, arg4=None):
+            commandes = {
+                "quit": self.quit,
+                "printmap" : self.printmap,
+                "whichbat" : self.getBat,
+                "exit" : self.exit,
+                "help": self.help
+            }
+            commandes.get(commande)(arg1, arg2, arg3, arg4)
+
+        def on_press(key):
+            if(key== Key.k):
+                kommander()
+        
+        listener = keyboard.Listener(on_press=on_press)
+        listener.start()
+
+            
         # =================== Gestion du tour : jeu et actualisation =================================
         self.isRunning = True
         #la mettre en false pour terminer le programme
@@ -64,7 +114,7 @@ class Ville:
             for c in self.habitants:
                 resultat = c.tour(self.map, should_print = True)
 
-                if type(resultat) == type(None):
+                if type(resultat) != type(None):
                     #Si la méthode tour renvoie un truc, c'est qu'un kbien a été extrait.
                     self.map_kbien[resultat[1]] = resultat[0]
 
@@ -77,7 +127,7 @@ class Ville:
         """# Impression de la map : 
         Permet d'afficher dans la console la map (sous forme de ```np-array```).
         """
-        print(self.map)
+        print(self.nummap)
     
     def replaceBat(self, x:int, y:int, typeBat: batiment.TypeBatiment):
         """# Remplacement :
@@ -137,6 +187,7 @@ class Ville:
 
 #Tests : 
 city = Ville(100, 100, 300, np.random.randint(0, 9, size=(100, 100)))
-for i in range(10000):
-    city.show_extended(np.random.uniform(low=0.0, high=1.0, size=(50,50)), np.random.randint(0, 10000, size=(500, 500)))
-    time.sleep(0.001)
+city.start()
+#for i in range(10000):
+#    city.show_extended(np.random.uniform(low=0.0, high=1.0, size=(50,50)), np.random.randint(0, 10000, size=(500, 500)))
+#    time.sleep(0.001)
