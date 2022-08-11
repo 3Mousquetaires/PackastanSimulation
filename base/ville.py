@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import batiment
+import citoyen
 
 class Ville:
     def __init__(self, height:int, width:int, map:np.ndarray=np.array([[]])): 
@@ -13,6 +14,10 @@ class Ville:
             self.map = map
         else:
             map = np.zeros((height, width))
+        map_kbien = np.zeros((height, width))
+        for i in range(height):
+            for j in range(width):
+                map_kbien[i][j]=1
         self.width = width
         self.height = height
         self.fig = plt.figure()
@@ -78,6 +83,6 @@ class Ville:
 
 
 #Tests : 
-#city = Ville(100, 100, np.random.randint(0, 9, size=(100, 100)))
-#city.show_extended(np.random.uniform(low=0.0, high=1.0, size=(50,50)), np.random.randint(0, 10000, size=(500, 500)))
-#print(city.exportBatmatrice())
+city = Ville(100, 100, np.random.randint(0, 9, size=(100, 100)))
+city.show_extended(np.random.uniform(low=0.0, high=1.0, size=(50,50)), np.random.randint(0, 10000, size=(500, 500)))
+print(city.exportBatmatrice())
