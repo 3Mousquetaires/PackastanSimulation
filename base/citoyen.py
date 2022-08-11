@@ -66,7 +66,8 @@ class Citoyen :
             besoin = self.selectionnerBesoin()
 
             #on cherche l'adresse du o'Tacos dans le GPS
-            self.route = deque( self.maison.GetBatiment(besoin) )
+            route = self.maison.GetBatiment(besoin)
+            self.route = deque( route )
             self.tour_state += 1
 
             self.temps_parcours = 0
@@ -89,12 +90,12 @@ class Citoyen :
             next_pos = self.route[0]
 
             #il faut tester si la route est pleine ou non
-            next_route = batmatrice[next_pos] 
+            next_route = batmatrice[next_pos[0]][next_pos[1]] 
             if next_route.AjouterCitoyen():
                 self.route.popleft()
                 self.pos = next_pos
                 self.chemin_retour.append(next_pos)
-                batmatrice[ self.pos ].EnleverCitoyen()
+                batmatrice[ self.pos[0] ][self.pos[1]].EnleverCitoyen()
 
                 if len(self.route) == 0:
                     #on est arrivé
@@ -132,11 +133,11 @@ class Citoyen :
             next_pos = self.chemin_retour[-1]
 
             #il faut tester si la route est pleine ou non
-            next_route = batmatrice[next_pos] 
+            next_route = batmatrice[next_pos[0]][next_pos[1]] 
             if next_route.AjouterCitoyen():
                 self.chemin_retour.pop()
                 self.pos = next_pos
-                batmatrice[ self.pos ].EnleverCitoyen()
+                batmatrice[ self.pos[0] ][ self.pos[1]] .EnleverCitoyen()
 
                 if should_print:
                     print(self.pos)

@@ -107,6 +107,8 @@ class Maison(Batiment):
         elif self.map[route[-1]] != besoin:
             self.Update_Bats()
 
+        route = self.memoire_batiments[besoin]
+
         return route
 
     def Update_Bats(self):
