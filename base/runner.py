@@ -4,4 +4,3 @@ import ville
 import batiment
 import besoin
 import citoyen
-

@@ -18,10 +18,6 @@ CSV_FILE = "info_batiments.csv"
 
 #  ------------------------------------------------------------------------
 
-
-
-
-
 class TypeBatiment (Enum):
     """Nécessaire pour sauver de l'espace : 
     stock un type de batiment comme un int au lieu 
