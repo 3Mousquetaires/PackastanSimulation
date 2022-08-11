@@ -188,7 +188,7 @@ class Citoyen :
             else:
                 self.besoins[i_b] = 1
 
-        return besoin_i #on le retourne sous forme d'un Besoin (version enum)
+        return besoin_i
             
 
         
