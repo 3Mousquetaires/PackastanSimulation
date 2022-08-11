@@ -1,5 +1,6 @@
 import random
 
+
 def ajouter ( map , type_bat ) :
     colonne = random.randint(0 , 59)
     ligne = random.randint(0 , 59)
@@ -8,7 +9,6 @@ def ajouter ( map , type_bat ) :
             map[colonne , ligne] = type_bat
             return map
     return ajouter(map , type_bat)
-
 
 
 def retirer ( map , type_bat) :
@@ -23,8 +23,6 @@ def retirer ( map , type_bat) :
     return retirer(map , type_bat)
 
 
-
-
 def max_recompense ( l_recompense , etat_precedent) :
     recompense_max = 0
     j = 0
@@ -34,8 +32,6 @@ def max_recompense ( l_recompense , etat_precedent) :
                 recompense_max = l_recompense[i][0]
                 j = i
     return l_recompense[j][2]
-
-
 
 
 def renforcement(type_bat , etats , etat_moyen , etat_precedent , l_recompense , l_etat_vu , l_action , map) :
