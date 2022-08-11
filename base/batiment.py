@@ -4,7 +4,9 @@ import csv
 
 import numpy as np
 
-from besoin import StrToTypeBesoin, TypeBesoin
+from base.besoin import StrToTypeBesoin, TypeBesoin
+
+from numba import jit
 
 #Variables globales  ------------------------------------------------------
 LISTE_BATIMENT_STR = ["commerce", "maison", "infirmerie", 
@@ -72,6 +74,21 @@ class Batiment :
         self.capacite = int(str_data[3])
         self.ressource = str_data[4] #ressource graphique
         
+        self.population = 0
+
+
+    def AjouterCitoyen(self):
+        """renvoie un bool : false si le batiment est plein"""
+        if self.population == self.capacite:
+            return False
+        else :
+            self.population += 1
+            return True
+
+
+    def EnleverCitoyen(self):
+        self.population -= 1
+        
 
 
 
@@ -87,11 +104,14 @@ class Maison(Batiment):
 
 
     def GetBatiment(self, besoin):
-        if self.memoire_batiments[besoin] == None:
+        route = self.memoire_batiments[besoin]
+
+        if route == None:
+            self.Update_Bats()
+        elif self.map[route[-1]] != besoin:
             self.Update_Bats()
 
-        return self.memoire_batiments[besoin]
-
+        return route
 
     def Update_Bats(self):
         """Renvoie un dico avec tous les batiments les plus proches en fonctions de
@@ -102,7 +122,6 @@ class Maison(Batiment):
 
         File = [(self.adresse[0], self.adresse[1], [])]
         deja_vus = []
-        print("\tcartographie en cours depuis ", self.adresse)
 
         while (len(File) != 0) and (None in self.memoire_batiments.values()):
             #Il reste des bouts de route à parcourir et 
@@ -125,5 +144,4 @@ class Maison(Batiment):
                         continue
 
                     if self.memoire_batiments[ self.map[i, j] ] == None:
-                        self.memoire_batiments[ self.map[i, j] ] = accumulateur + [(i, j)] #(i, j) #on a trouvé une adresse
-                    
+                        self.memoire_batiments[ self.map[i, j] ] = accumulateur + [(x, y), (i, j)] #(i, j) #on a trouvé une adresse
