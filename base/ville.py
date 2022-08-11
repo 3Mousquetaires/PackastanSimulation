@@ -62,14 +62,10 @@ class Ville:
         # =================== Gestion du tour : jeu et actualisation =================================
         self.isRunning = True
         #la mettre en false pour terminer le programme
-        i = 0
         while self.isRunning:
-            i+=1
-            if i == 1000:
-                self.isRunning = False
             #appel au jeu de chaque citoyen.
             for c in self.habitants:
-                resultat = c.tour(self.map, should_print = False)
+                resultat = c.tour(self.map, should_print = True)
 
                 if type(resultat) != type(None):
                     #Si la méthode tour renvoie un truc, c'est qu'un kbien a été extrait.
@@ -165,7 +161,7 @@ class Ville:
 
 
 #Tests : 
-city = Ville(90, 60, 300, defaultMap.defaultMap)
+city = Ville(90, 60, 30000, defaultMap.defaultMap)
 city.start()
 #for i in range(10000):
 #    city.show_extended(np.random.uniform(low=0.0, high=1.0, size=(50,50)), np.random.randint(0, 10000, size=(500, 500)))
