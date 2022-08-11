@@ -65,16 +65,19 @@ class Ville:
         i = 0
         while self.isRunning:
             i+=1
-            if i == 100:
+            if i == 1000:
                 self.isRunning = False
             #appel au jeu de chaque citoyen.
             for c in self.habitants:
-                resultat = c.tour(self.map, should_print = True)
+                resultat = c.tour(self.map, should_print = False)
 
                 if type(resultat) != type(None):
                     #Si la méthode tour renvoie un truc, c'est qu'un kbien a été extrait.
-                    self.map_kbien[resultat[1]] = resultat[0]
+                    coord_bat = resultat[1]
+                    mean_kbien = self.map[coord_bat[0]][coord_bat[1]].ActualiseKbien(resultat[0])
 
+                    self.map_kbien[coord_bat] = mean_kbien
+                    self.show_extended1(self.map_kbien)
 
 
 
@@ -108,7 +111,27 @@ class Ville:
         discrete_matshow(self.nummap)
         plt.show()
     
-    def show_extended(self, m1:np.ndarray, m2:np.ndarray):
+    def show_extended1(self, m1:np.ndarray):
+        """# Affichage étendu : 
+        Permet d'afficher avec ```Matplotlib``` la ville, ainsi qu'une légende sous la forme d'une barre de couleur, ainsi
+        que deux matrices complémentaires ```m1``` et ```m2```. 
+        """
+        plt.ion()
+        plt.subplot(121)
+        cmap1 = plt.get_cmap('RdPu', np.max(self.nummap) - np.min(self.nummap) + 1)
+        mat1 = plt.imshow(self.nummap, cmap = cmap1, vmin = np.min(self.nummap)-0.5, vmax = np.max(self.nummap)+0.5)
+        cax1 = plt.colorbar(mat1, ticks = np.arange(np.min(self.nummap), np.max(self.nummap)+1), orientation="horizontal")
+
+        plt.subplot(122)
+        #cmap2 = plt.get_cmap('RdBu', np.max(m1) - np.min(m1) + 1)
+        mat2 = plt.imshow(m1)
+        cax2 = plt.colorbar(mat2, orientation="horizontal")
+        
+        self.fig.canvas.draw()
+        self.fig.canvas.flush_events()
+        plt.show()
+    
+    def show_extended2(self, m1:np.ndarray, m2:np.ndarray):
         """# Affichage étendu : 
         Permet d'afficher avec ```Matplotlib``` la ville, ainsi qu'une légende sous la forme d'une barre de couleur, ainsi
         que deux matrices complémentaires ```m1``` et ```m2```. 
@@ -130,7 +153,6 @@ class Ville:
         self.fig.canvas.draw()
         self.fig.canvas.flush_events()
         plt.show()
-    
     def exportBatmatrice(self) -> np.ndarray:
         """# Exportation de la matrice de bâtiments : 
         Permet d'exporter la matrice de bâtiments sous forme d'un ```np.ndarray``` de dimension ```(w, h)```.

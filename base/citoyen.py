@@ -1,5 +1,3 @@
-from cProfile import run
-from logging import PlaceHolder
 from numpy import array, where, log2, where 
 
 #from pygame.locals import *

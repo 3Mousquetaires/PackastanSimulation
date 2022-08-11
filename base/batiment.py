@@ -6,8 +6,6 @@ import numpy as np
 
 from besoin import StrToTypeBesoin, TypeBesoin
 
-from numba import jit
-
 #Variables globales  ------------------------------------------------------
 LISTE_BATIMENT_STR = ["commerce", "maison", "infirmerie", 
     "commissariat", "usine", "eglise", "bar", "espace vert",
@@ -52,6 +50,8 @@ class Batiment :
         #on va lire le CSV pour récupérer les données.
         str_data = []
         self.kbien = 1 # 0 <= kbien <= 1
+        self.historique_kbien = [self.kbien]
+
         self.adresse = adresse
 
         with open(CSV_FILE, 'r') as file:
@@ -84,6 +84,13 @@ class Batiment :
 
     def EnleverCitoyen(self):
         self.population -= 1
+
+    
+    def ActualiseKbien(self, kbien):
+        self.kbien = kbien
+        self.historique_kbien.append(self.kbien)
+        
+        return sum(self.historique_kbien)/len(self.historique_kbien)
         
 
 
