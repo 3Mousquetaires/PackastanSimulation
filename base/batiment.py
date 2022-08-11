@@ -4,7 +4,7 @@ import csv
 
 import numpy as np
 
-from base.besoin import StrToTypeBesoin, TypeBesoin
+from besoin import StrToTypeBesoin, TypeBesoin
 
 #Variables globales  ------------------------------------------------------
 LISTE_BATIMENT_STR = ["commerce", "maison", "infirmerie", 
@@ -12,7 +12,7 @@ LISTE_BATIMENT_STR = ["commerce", "maison", "infirmerie",
     "mairie"]
 
 
-CSV_FILE = "base\info_batiments.csv"
+CSV_FILE = "info_batiments.csv"
 
 #  ------------------------------------------------------------------------
 

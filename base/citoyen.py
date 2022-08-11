@@ -1,6 +1,6 @@
 from numpy import array, where, log2, where 
 
-from pygame.locals import *
+#from pygame.locals import *
 import numpy as np
 
 from random import choice
