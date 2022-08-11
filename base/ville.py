@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import batiment
 import citoyen
+import time
 import random
 
 class Ville:
@@ -44,7 +45,7 @@ class Ville:
         #Init habitants : Liste des habitants
         self.habitants = []
         for i in range(self.population):
-            hab = citoyen.Citoyen(self.annuaire[random.randint(0, len(self.annuaire))])
+            hab = citoyen.Citoyen(self.annuaire[random.randint(0, len(self.annuaire)-1)])
 
         self.fig = plt.figure()
 
@@ -82,6 +83,7 @@ class Ville:
         Permet d'afficher avec ```Matplotlib``` la ville, ainsi qu'une légende sous la forme d'une barre de couleur, ainsi
         que deux matrices complémentaires ```m1``` et ```m2```. 
         """
+        plt.ion()
         plt.subplot(131)
         cmap1 = plt.get_cmap('RdPu', np.max(self.nummap) - np.min(self.nummap) + 1)
         mat1 = plt.imshow(self.nummap, cmap = cmap1, vmin = np.min(self.nummap)-0.5, vmax = np.max(self.nummap)+0.5)
@@ -95,6 +97,8 @@ class Ville:
         plt.subplot(133)
         mat3 = plt.imshow(m2)
         cax3 = plt.colorbar(mat3, orientation="horizontal")
+        self.fig.canvas.draw()
+        self.fig.canvas.flush_events()
         plt.show()
     
     def exportBatmatrice(self) -> np.ndarray:
@@ -110,5 +114,6 @@ class Ville:
 
 #Tests : 
 city = Ville(100, 100, 300, np.random.randint(0, 9, size=(100, 100)))
-city.show_extended(np.random.uniform(low=0.0, high=1.0, size=(50,50)), np.random.randint(0, 10000, size=(500, 500)))
-print(city.exportBatmatrice())
+for i in range(10000):
+    city.show_extended(np.random.uniform(low=0.0, high=1.0, size=(50,50)), np.random.randint(0, 10000, size=(500, 500)))
+    time.sleep(0.001)
