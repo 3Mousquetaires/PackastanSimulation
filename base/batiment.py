@@ -4,7 +4,7 @@ import csv
 
 import numpy as np
 
-from base.besoin import StrToTypeBesoin, TypeBesoin
+from besoin import StrToTypeBesoin, TypeBesoin
 
 from numba import jit
 
