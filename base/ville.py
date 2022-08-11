@@ -2,33 +2,50 @@ import numpy as np
 import matplotlib.pyplot as plt
 import batiment
 import citoyen
+import random
 
 class Ville:
-    def __init__(self, height:int, width:int, map:np.ndarray=np.array([[]])): 
+    def __init__(self, height:int, width:int, population:int = 1,map:np.ndarray=np.array([[]])): 
         """# Initialisation de la ville : 
         Permet de créer une ville de taille (height x width), 
         avec éventuellement une map par défaut (fondée uniquement sur les commerces).\n
         S'utilise en instanciation classique : ```city = Ville(h, w)``` 
         """
+        #Init W/H/nb_cit : 
+
         self.width = width
         self.height = height
+        self.population = population
+        #Init nummap : Map en int
         if np.shape(map) == (height, width):
             self.nummap = map
         else:
             self.nummap = np.zeros((height, width))
+        
+        #Init map_kbien : Map des kbien
         self.map_kbien = np.zeros((height, width))
         for i in range(height):
             for j in range(width):
                 self.map_kbien[i][j]=1
+
+        #Init map : Map des instances
         self.map = []
+        self.annuaire = []
         for i in range(height):
             temp = []
             for j in range(width):
                 if self.nummap[i][j] == 1 :
                     bat = batiment.Maison((i, j), self.nummap)
+                    self.annuaire.append(bat)
                 else:
                     bat = batiment.Batiment(type = batiment.TypeBatiment(self.nummap[i][j]), adresse = (i, j))
                 self.map.append(bat)
+        
+        #Init habitants : Liste des habitants
+        self.habitants = []
+        for i in range(self.population):
+            hab = citoyen.Citoyen(self.annuaire[random.randint(0, len(self.annuaire))])
+
         self.fig = plt.figure()
 
 
@@ -92,6 +109,6 @@ class Ville:
 
 
 #Tests : 
-city = Ville(100, 100, np.random.randint(0, 9, size=(100, 100)))
+city = Ville(100, 100, 300, np.random.randint(0, 9, size=(100, 100)))
 city.show_extended(np.random.uniform(low=0.0, high=1.0, size=(50,50)), np.random.randint(0, 10000, size=(500, 500)))
 print(city.exportBatmatrice())
