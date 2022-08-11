@@ -18,4 +18,4 @@ Pour que les différent fichiers fonctionnent correctement, il faut que les bibl
 
 ### Apprentissage par renforcement
 
-Pour plus d'informations sur l'apprentissage par renforcement
+Pour plus d'informations sur l'apprentissage par renforcement, consultez [etape_renforcement.md](https://github.com/3Mousquetaires/PackastanSimulation/blob/main/etape_apprentissage.md)
