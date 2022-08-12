@@ -1,7 +1,7 @@
+
 import numpy as np
 import matplotlib.pyplot as plt
-from pynput import keyboard
-from pynput.keyboard import Key
+import keyboard
 import batiment
 import citoyen
 import time
@@ -57,23 +57,56 @@ class Ville:
 
         self.fig = plt.figure()
 
+    def highlightMaps(self):
+        self.highlightedMaps = []
+        for i in range(10):
+            tmp = np.zeros((self.height, self.width))
+            for j in range(self.height):
+                for k in range(self.width):
+                    if self.nummap[j][k] == i:
+                        tmp[j][k] = i
 
+            self.highlightedMaps.append(tmp)
+            
     def start(self):
+        self.batToShow = 0
+        self.highlightMaps()
         # =================== Gestion du tour : jeu et actualisation =================================
         self.isRunning = True
+
         #la mettre en false pour terminer le programme
         while self.isRunning:
+            
             #appel au jeu de chaque citoyen.
             for c in self.habitants:
-                resultat = c.tour(self.map, should_print = True)
-
+                resultat = c.tour(self.map, should_print = False)
                 if type(resultat) != type(None):
                     #Si la méthode tour renvoie un truc, c'est qu'un kbien a été extrait.
                     coord_bat = resultat[1]
                     mean_kbien = self.map[coord_bat[0]][coord_bat[1]].ActualiseKbien(resultat[0])
-
                     self.map_kbien[coord_bat] = mean_kbien
-                    self.show_extended1(self.map_kbien)
+                    if keyboard.is_pressed("1"):
+                        self.batToShow =1
+                    if keyboard.is_pressed("2"):
+                        self.batToShow = 2
+                    if keyboard.is_pressed("3"):
+                        self.batToShow = 3
+                    if keyboard.is_pressed("4"):
+                        self.batToShow = 4
+                    if keyboard.is_pressed("5"):
+                        self.batToShow = 5
+                    if keyboard.is_pressed("6"):
+                        self.batToShow = 6
+                    if keyboard.is_pressed("7"):
+                        self.batToShow = 7
+                    if keyboard.is_pressed("8"):
+                        self.batToShow = 8
+                    if keyboard.is_pressed("9"):
+                        self.batToShow = 9
+                    if keyboard.is_pressed("0"):
+                        self.batToShow = 0
+                    self.show_extended2(self.map_kbien, self.highlightedMaps[self.batToShow])
+
 
 
 
@@ -110,7 +143,7 @@ class Ville:
     def show_extended1(self, m1:np.ndarray):
         """# Affichage étendu : 
         Permet d'afficher avec ```Matplotlib``` la ville, ainsi qu'une légende sous la forme d'une barre de couleur, ainsi
-        que deux matrices complémentaires ```m1``` et ```m2```. 
+        qu'une matrice complémentaire ```m1```. 
         """
         plt.ion()
         plt.subplot(121)
@@ -149,6 +182,8 @@ class Ville:
         self.fig.canvas.draw()
         self.fig.canvas.flush_events()
         plt.show()
+
+
     def exportBatmatrice(self) -> np.ndarray:
         """# Exportation de la matrice de bâtiments : 
         Permet d'exporter la matrice de bâtiments sous forme d'un ```np.ndarray``` de dimension ```(w, h)```.

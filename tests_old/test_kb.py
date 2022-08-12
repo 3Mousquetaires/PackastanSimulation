@@ -1,28 +1,13 @@
-from pynput import keyboard
+import keyboard
+from time import sleep
+import sys
 
-def on_press(key):
-    try:
-        print('alphanumeric key {0} pressed'.format(
-            key))
-    except AttributeError:
-        print('special key {0} pressed'.format(
-            key))
+running = True
 
-def on_release(key):
-    print('{0} released'.format(
-        key))
-    if key == keyboard.Key.esc:
-        # Stop listener
-        return False
-
-# Collect events until released
-with keyboard.Listener(
-        on_press=on_press,
-        on_release=on_release) as listener:
-    listener.join()
-
-# ...or, in a non-blocking fashion:
-listener = keyboard.Listener(
-    on_press=on_press,
-    on_release=on_release)
-listener.start()
+while running:
+    if keyboard.is_pressed("k"):
+        sleep(1)
+    elif keyboard.is_pressed('Esc'):
+        sys.exit()
+    else:
+        print("hello")
