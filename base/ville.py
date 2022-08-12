@@ -61,13 +61,14 @@ class Ville:
         self.highlightedMaps = []
         for i in range(10):
             tmp = np.zeros((self.height, self.width))
+            tmp.fill(-1)
             for j in range(self.height):
                 for k in range(self.width):
                     if self.nummap[j][k] == i:
                         tmp[j][k] = i
 
             self.highlightedMaps.append(tmp)
-            
+
     def start(self):
         self.batToShow = 0
         self.highlightMaps()
