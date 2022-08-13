@@ -72,12 +72,36 @@ class Ville:
     def start(self):
         self.batToShow = 0
         self.highlightMaps()
+        i = 0
+        def affichage():
+            if keyboard.is_pressed("1"):
+                self.batToShow =1
+            if keyboard.is_pressed("2"):
+                self.batToShow = 2
+            if keyboard.is_pressed("3"):
+                self.batToShow = 3
+            if keyboard.is_pressed("4"):
+                self.batToShow = 4
+            if keyboard.is_pressed("5"):
+                self.batToShow = 5
+            if keyboard.is_pressed("6"):
+                self.batToShow = 6
+            if keyboard.is_pressed("7"):
+                self.batToShow = 7
+            if keyboard.is_pressed("8"):
+                self.batToShow = 8
+            if keyboard.is_pressed("9"):
+                self.batToShow = 9
+            if keyboard.is_pressed("0"):
+                self.batToShow = 0
+            self.show_extended2(self.map_kbien, self.highlightedMaps[self.batToShow], "Tour : "+str(i))
         # =================== Gestion du tour : jeu et actualisation =================================
         self.isRunning = True
-
+        
+        
         #la mettre en false pour terminer le programme
         while self.isRunning:
-            
+            i+=1
             #appel au jeu de chaque citoyen.
             for c in self.habitants:
                 resultat = c.tour(self.map, should_print = False)
@@ -86,27 +110,8 @@ class Ville:
                     coord_bat = resultat[1]
                     mean_kbien = self.map[coord_bat[0]][coord_bat[1]].ActualiseKbien(resultat[0])
                     self.map_kbien[coord_bat] = mean_kbien
-                    if keyboard.is_pressed("1"):
-                        self.batToShow =1
-                    if keyboard.is_pressed("2"):
-                        self.batToShow = 2
-                    if keyboard.is_pressed("3"):
-                        self.batToShow = 3
-                    if keyboard.is_pressed("4"):
-                        self.batToShow = 4
-                    if keyboard.is_pressed("5"):
-                        self.batToShow = 5
-                    if keyboard.is_pressed("6"):
-                        self.batToShow = 6
-                    if keyboard.is_pressed("7"):
-                        self.batToShow = 7
-                    if keyboard.is_pressed("8"):
-                        self.batToShow = 8
-                    if keyboard.is_pressed("9"):
-                        self.batToShow = 9
-                    if keyboard.is_pressed("0"):
-                        self.batToShow = 0
-                    self.show_extended2(self.map_kbien, self.highlightedMaps[self.batToShow])
+            affichage()
+                    
 
 
 
@@ -141,12 +146,13 @@ class Ville:
         discrete_matshow(self.nummap)
         plt.show()
     
-    def show_extended1(self, m1:np.ndarray):
+    def show_extended1( self, m1:np.ndarray, title:str = ""):
         """# Affichage étendu : 
         Permet d'afficher avec ```Matplotlib``` la ville, ainsi qu'une légende sous la forme d'une barre de couleur, ainsi
         qu'une matrice complémentaire ```m1```. 
         """
         plt.ion()
+        
         plt.subplot(121)
         cmap1 = plt.get_cmap('RdPu', np.max(self.nummap) - np.min(self.nummap) + 1)
         mat1 = plt.imshow(self.nummap, cmap = cmap1, vmin = np.min(self.nummap)-0.5, vmax = np.max(self.nummap)+0.5)
@@ -159,16 +165,18 @@ class Ville:
         
         self.fig.canvas.draw()
         self.fig.canvas.flush_events()
+        plt.suptitle(title)
         plt.show()
     
-    def show_extended2(self, m1:np.ndarray, m2:np.ndarray):
+    def show_extended2(self, m1:np.ndarray, m2:np.ndarray, title:str=""):
         """# Affichage étendu : 
         Permet d'afficher avec ```Matplotlib``` la ville, ainsi qu'une légende sous la forme d'une barre de couleur, ainsi
         que deux matrices complémentaires ```m1``` et ```m2```. 
         """
         plt.ion()
+        
         plt.subplot(131)
-        cmap1 = plt.get_cmap('RdPu', np.max(self.nummap) - np.min(self.nummap) + 1)
+        cmap1 = plt.get_cmap('gist_ncar', np.max(self.nummap) - np.min(self.nummap) + 1)
         mat1 = plt.imshow(self.nummap, cmap = cmap1, vmin = np.min(self.nummap)-0.5, vmax = np.max(self.nummap)+0.5)
         cax1 = plt.colorbar(mat1, ticks = np.arange(np.min(self.nummap), np.max(self.nummap)+1), orientation="horizontal")
 
@@ -182,6 +190,7 @@ class Ville:
         cax3 = plt.colorbar(mat3, orientation="horizontal")
         self.fig.canvas.draw()
         self.fig.canvas.flush_events()
+        plt.suptitle(title)
         plt.show()
 
 
@@ -197,7 +206,7 @@ class Ville:
 
 
 #Tests : 
-city = Ville(90, 60, 30000, defaultMap.defaultMap)
+city = Ville(90, 60, 5400, defaultMap.defaultMap)
 city.start()
 #for i in range(10000):
 #    city.show_extended(np.random.uniform(low=0.0, high=1.0, size=(50,50)), np.random.randint(0, 10000, size=(500, 500)))
