@@ -18,6 +18,7 @@ Pour que les différent fichiers fonctionnent correctement, il faut que les bibl
 * enum
 * csv
 * collections
+* keyboard
 
 ### Apprentissage par renforcement
 
