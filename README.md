@@ -4,9 +4,9 @@
 
 Ce repo contient les fichiers sources du projet TIPE 2022-2023 du groupe des 3 mousquetaires :
 
-* Paul-Henri Andrieu [@phandrieu]
-* Damien Maître [@DobbyOff]
-* Ethan Petitjean [@Slordeee]
+* Paul-Henri Andrieu [@phandrieu](https://github.com/phandrieu)
+* Damien Maître [@DobbyOff](https://github.com/DobbyOff)
+* Ethan Petitjean [@Slordeee](https://github.com/Slordeee)
 
 ## Fonctionnement
 
