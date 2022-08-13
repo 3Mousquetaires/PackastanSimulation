@@ -113,22 +113,19 @@ class Ville:
             affichage()
                     
 
-
-
-
-
-
     def print(self):
         """# Impression de la map : 
         Permet d'afficher dans la console la map (sous forme de ```np-array```).
         """
         print(self.nummap)
     
+
     def replaceBat(self, x:int, y:int, typeBat: batiment.TypeBatiment):
         """# Remplacement :
         Permet de remplacer un batiment en position ```(x, y)```, par un bâtiment de type ```batiment.TypeBatiment```. 
         """
         self.map[x][y] = typeBat.int()
+
 
     def show(self):
         """# Affichage : 
@@ -146,6 +143,7 @@ class Ville:
         discrete_matshow(self.nummap)
         plt.show()
     
+
     def show_extended1( self, m1:np.ndarray, title:str = ""):
         """# Affichage étendu : 
         Permet d'afficher avec ```Matplotlib``` la ville, ainsi qu'une légende sous la forme d'une barre de couleur, ainsi
@@ -167,6 +165,7 @@ class Ville:
         self.fig.canvas.flush_events()
         plt.suptitle(title)
         plt.show()
+    
     
     def show_extended2(self, m1:np.ndarray, m2:np.ndarray, title:str=""):
         """# Affichage étendu : 
