@@ -157,7 +157,6 @@ class Ville:
         cax1 = plt.colorbar(mat1, ticks = np.arange(np.min(self.nummap), np.max(self.nummap)+1), orientation="horizontal")
 
         plt.subplot(122)
-        #cmap2 = plt.get_cmap('RdBu', np.max(m1) - np.min(m1) + 1)
         mat2 = plt.imshow(m1)
         cax2 = plt.colorbar(mat2, orientation="horizontal")
         
@@ -166,24 +165,20 @@ class Ville:
         plt.suptitle(title)
         plt.show()
     
-    
+
     def show_extended2(self, m1:np.ndarray, m2:np.ndarray, title:str=""):
         """# Affichage étendu : 
         Permet d'afficher avec ```Matplotlib``` la ville, ainsi qu'une légende sous la forme d'une barre de couleur, ainsi
         que deux matrices complémentaires ```m1``` et ```m2```. 
         """
         plt.ion()
-        
         plt.subplot(131)
         cmap1 = plt.get_cmap('gist_ncar', np.max(self.nummap) - np.min(self.nummap) + 1)
         mat1 = plt.imshow(self.nummap, cmap = cmap1, vmin = np.min(self.nummap)-0.5, vmax = np.max(self.nummap)+0.5)
         cax1 = plt.colorbar(mat1, ticks = np.arange(np.min(self.nummap), np.max(self.nummap)+1), orientation="horizontal")
-
         plt.subplot(132)
-        #cmap2 = plt.get_cmap('RdBu', np.max(m1) - np.min(m1) + 1)
         mat2 = plt.imshow(m1)
         cax2 = plt.colorbar(mat2, orientation="horizontal")
-        #self.fig.add_subplot(113)
         plt.subplot(133)
         mat3 = plt.imshow(m2)
         cax3 = plt.colorbar(mat3, orientation="horizontal")
@@ -207,6 +202,3 @@ class Ville:
 #Tests : 
 city = Ville(90, 60, 5400, defaultMap.defaultMap)
 city.start()
-#for i in range(10000):
-#    city.show_extended(np.random.uniform(low=0.0, high=1.0, size=(50,50)), np.random.randint(0, 10000, size=(500, 500)))
-#    time.sleep(0.001)
