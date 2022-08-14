@@ -1,4 +1,5 @@
 
+from re import M
 import numpy as np
 import matplotlib.pyplot as plt
 import keyboard
@@ -70,6 +71,9 @@ class Ville:
             self.highlightedMaps.append(tmp)
 
     def start(self):
+        """# Simulation de de la ville:
+        Ne prend aucun paramètre, lance la simulation et renvoie la map des ```kbien```
+        """
         self.batToShow = 0
         self.highlightMaps()
         i = 0
@@ -95,6 +99,7 @@ class Ville:
             if keyboard.is_pressed("0"):
                 self.batToShow = 0
             self.show_extended2(self.map_kbien, self.highlightedMaps[self.batToShow], "Tour : "+str(i))
+        
         # =================== Gestion du tour : jeu et actualisation =================================
         self.isRunning = True
         
@@ -111,6 +116,8 @@ class Ville:
                     mean_kbien = self.map[coord_bat[0]][coord_bat[1]].ActualiseKbien(resultat[0])
                     self.map_kbien[coord_bat] = mean_kbien
             affichage()
+        
+        return self.map_kbien
                     
 
     def print(self):
@@ -173,13 +180,16 @@ class Ville:
         """
         plt.ion()
         plt.subplot(131)
+        plt.title("Carte")
         cmap1 = plt.get_cmap('gist_ncar', np.max(self.nummap) - np.min(self.nummap) + 1)
         mat1 = plt.imshow(self.nummap, cmap = cmap1, vmin = np.min(self.nummap)-0.5, vmax = np.max(self.nummap)+0.5)
         cax1 = plt.colorbar(mat1, ticks = np.arange(np.min(self.nummap), np.max(self.nummap)+1), orientation="horizontal")
         plt.subplot(132)
+        plt.title("Carte des kbien")
         mat2 = plt.imshow(m1)
         cax2 = plt.colorbar(mat2, orientation="horizontal")
         plt.subplot(133)
+        plt.title("Carte des " + batiment.LISTE_BATIMENT_STR[self.batToShow] + "s")
         mat3 = plt.imshow(m2)
         cax3 = plt.colorbar(mat3, orientation="horizontal")
         self.fig.canvas.draw()
@@ -199,6 +209,6 @@ class Ville:
         return array
 
 
-#Tests : 
+
 city = Ville(90, 60, 5400, defaultMap.defaultMap)
 city.start()

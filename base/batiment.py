@@ -9,7 +9,7 @@ from besoin import StrToTypeBesoin, TypeBesoin
 #Variables globales  ------------------------------------------------------
 LISTE_BATIMENT_STR = ["commerce", "maison", "infirmerie", 
     "commissariat", "usine", "eglise", "bar", "espace vert",
-    "mairie"]
+    "mairie", "route"]
 
 
 CSV_FILE = "base/info_batiments.csv"
