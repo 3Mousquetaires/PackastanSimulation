@@ -9,7 +9,6 @@ import time
 import random
 import defaultMap
 
-
 class Ville:
     def __init__(self, height:int, width:int, population:int = 1,map:np.ndarray=np.array([[]])): 
         """# Initialisation de la ville : 
@@ -99,25 +98,39 @@ class Ville:
             if keyboard.is_pressed("0"):
                 self.batToShow = 0
             self.show_extended2(self.map_kbien, self.highlightedMaps[self.batToShow], "Tour : "+str(i))
+
+            if keyboard.is_pressed("q"):
+                self.isRunning = False
         
         # =================== Gestion du tour : jeu et actualisation =================================
         self.isRunning = True
+        self.derivee = []
         
         
         #la mettre en false pour terminer le programme
         while self.isRunning:
             i+=1
+
+            map_kbien_avant = np.copy(self.map_kbien)
+
             #appel au jeu de chaque citoyen.
             for c in self.habitants:
                 resultat = c.tour(self.map, should_print = False)
                 if type(resultat) != type(None):
                     #Si la méthode tour renvoie un truc, c'est qu'un kbien a été extrait.
                     coord_bat = resultat[1]
+
                     mean_kbien = self.map[coord_bat[0]][coord_bat[1]].ActualiseKbien(resultat[0])
                     self.map_kbien[coord_bat] = mean_kbien
             affichage()
-        
-        return self.map_kbien
+
+            if i % 2 == 0: #la map n'a aucun changements aux tours impaires
+                delta = np.mean(self.map_kbien - map_kbien_avant)
+                self.derivee.append(delta)
+
+
+
+        return self.map_kbien, self.derivee
                     
 
     def print(self):
@@ -211,4 +224,7 @@ class Ville:
 
 
 city = Ville(90, 60, 5400, defaultMap.defaultMap)
-city.start()
+_, b = city.start()
+
+plt.plot(b)
+plt.show()
