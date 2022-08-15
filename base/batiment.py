@@ -49,7 +49,7 @@ class Batiment :
         # == TESTEE ==
         #on va lire le CSV pour récupérer les données.
         str_data = []
-        self.kbien = 1 # 0 <= kbien <= 1
+        self.kbien = 0 # 0 <= kbien <= 1
         self.historique_kbien = [self.kbien]
 
         self.adresse = adresse
