@@ -110,7 +110,6 @@ class Ville:
         #la mettre en false pour terminer le programme
         while self.isRunning:
             i+=1
-
             map_kbien_avant = np.copy(self.map_kbien)
 
             #appel au jeu de chaque citoyen.
@@ -122,11 +121,12 @@ class Ville:
 
                     mean_kbien = self.map[coord_bat[0]][coord_bat[1]].ActualiseKbien(resultat[0])
                     self.map_kbien[coord_bat] = mean_kbien
-            affichage()
+            
 
-            if i % 2 == 0: #la map n'a aucun changements aux tours impaires
+            if i % 2 == 0: #la map n'a aucun changements aux tours impairs
                 delta = np.mean(self.map_kbien - map_kbien_avant)
                 self.derivee.append(delta)
+            affichage()
 
 
 
