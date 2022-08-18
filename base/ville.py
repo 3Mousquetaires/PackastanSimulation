@@ -223,7 +223,6 @@ class Ville:
 city = Ville(90, 60, 5400, defaultMap.defaultMap)
 _, b = city.start()
 
-plt.ioff()
 plt.figure()
 plt.plot(b)
 plt.show()
