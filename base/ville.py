@@ -125,9 +125,8 @@ class Ville:
                 delta = np.mean(self.map_kbien - map_kbien_avant)
                 self.derivee.append(delta)
             affichage()
-
-
-        print("OK")
+        plt.close(self.fig)
+        plt.ioff()
         return self.map_kbien, self.derivee
                     
 
@@ -224,5 +223,7 @@ class Ville:
 city = Ville(90, 60, 5400, defaultMap.defaultMap)
 _, b = city.start()
 
+plt.ioff()
+plt.figure()
 plt.plot(b)
 plt.show()
