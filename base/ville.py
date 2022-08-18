@@ -30,9 +30,6 @@ class Ville:
         
         #Init map_kbien : Map des kbien
         self.map_kbien = np.zeros((height, width))
-        for i in range(height):
-            for j in range(width):
-                self.map_kbien[i][j]=0
 
         self.map_saturation = np.zeros((height, width)) 
 
