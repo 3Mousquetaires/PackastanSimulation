@@ -1,5 +1,6 @@
 
 from re import M
+from tokenize import Double
 import numpy as np
 import matplotlib.pyplot as plt
 import keyboard
@@ -10,11 +11,12 @@ import random
 import defaultMap
 
 class Ville:
-    def __init__(self, height:int, width:int, population:int = 1,map:np.ndarray=np.array([[]])): 
+    def __init__(self, height:int, width:int, population:int = 1, map:np.ndarray=np.array([[]]), kill_epsilon=0): 
         """# Initialisation de la ville : 
         Permet de créer une ville de taille (height x width), 
         avec éventuellement une map par défaut (fondée uniquement sur les commerces).\n
-        S'utilise en instanciation classique : ```city = Ville(h, w)``` 
+        S'utilise en instanciation classique : ```city = Ville(h, w)```
+        \nkill_epsilon conseillé : 1e-4. Laisser à 0 pour que le tour ne s'arrête pas. 
         """
         #Init W/H/nb_cit : 
 
@@ -31,6 +33,8 @@ class Ville:
         self.map_kbien = np.zeros((height, width))
 
         self.map_saturation = np.zeros((height, width)) 
+
+        self.kill_epsilon = 1e-4 #si la dérivée moyenne des 5 derniers tours descend sous 10^-6, le tour est fini
 
         #Init map : Map des instances
         self.map = []
@@ -124,10 +128,15 @@ class Ville:
             if i % 2 == 0: #la map n'a aucun changements aux tours impairs
                 delta = np.mean(self.map_kbien - map_kbien_avant)
                 self.derivee.append(delta)
+
+                if i > 10 and np.mean(self.derivee[-5:]) < self.kill_epsilon :
+                    self.isRunning = False 
             affichage()
+
+
         plt.close(self.fig)
         plt.ioff()
-        return self.map_kbien, self.derivee
+        return self.map_kbien
                     
 
     def print(self):
@@ -221,8 +230,6 @@ class Ville:
 
 
 city = Ville(90, 60, 5400, defaultMap.defaultMap)
-_, b = city.start()
+map_tour = city.start()
 
-plt.figure()
-plt.plot(b)
-plt.show()
+
