@@ -137,14 +137,14 @@ class Ville:
         plt.close(self.fig)
         plt.ioff()
         return self.map_kbien
-                    
+          
 
     def print(self):
         """# Impression de la map : 
         Permet d'afficher dans la console la map (sous forme de ```np-array```).
         """
         print(self.nummap)
-    
+
 
     def replaceBat(self, x:int, y:int, typeBat: batiment.TypeBatiment):
         """# Remplacement :
@@ -168,7 +168,7 @@ class Ville:
             cax = plt.colorbar(mat, ticks=np.arange(np.min(data), np.max(data) + 1))
         discrete_matshow(self.nummap)
         plt.show()
-    
+
 
     def show_extended1( self, m1:np.ndarray, title:str = ""):
         """# Affichage étendu : 
@@ -190,7 +190,7 @@ class Ville:
         self.fig.canvas.flush_events()
         plt.suptitle(title)
         plt.show()
-    
+
 
     def show_extended2(self, m1:np.ndarray, m2:np.ndarray, title:str=""):
         """# Affichage étendu : 
@@ -228,8 +228,5 @@ class Ville:
         return array
 
 
-
 city = Ville(90, 60, 5400, defaultMap.defaultMap)
 map_tour = city.start()
-
-
