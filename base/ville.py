@@ -94,10 +94,11 @@ class Ville:
                 self.batToShow = 9
             if keyboard.is_pressed("0"):
                 self.batToShow = 0
+            if keyboard.is_pressed("e"):
+                self.isRunning = False
             self.show_extended2(self.map_kbien, self.highlightedMaps[self.batToShow], "Tour : "+str(i))
 
-            if keyboard.is_pressed("q"):
-                self.isRunning = False
+
         
         # =================== Gestion du tour : jeu et actualisation =================================
         self.isRunning = True
