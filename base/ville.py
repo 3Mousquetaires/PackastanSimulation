@@ -100,7 +100,7 @@ class Ville:
 
 
         
-        # =================== Gestion du tour : jeu et actualisation =================================
+        # =================== Gestion du tour : jeu et actualisation ===============================
         self.isRunning = True
         self.derivee = []
         
