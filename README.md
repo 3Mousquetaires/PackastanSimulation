@@ -19,6 +19,9 @@ Pour que les différent fichiers fonctionnent correctement, il faut que les bibl
 * csv
 * collections
 * keyboard
+* requests
+* json
+* igraph
 
 ### Apprentissage par renforcement
 
