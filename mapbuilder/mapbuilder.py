@@ -1,9 +1,50 @@
+from msilib import type_string
 import requests as rq
 import json
 import math
 import numpy as np
 
 import igraph as grf
+
+
+#CONSTANTES (tout est converti en m/m²)
+_LVL_HEIGHT = 2.875
+_POP_DENSITY = 0.08333
+_EARTH_RADIUS = 6_371.009 * 10**3
+_SHAB_AREA_RATIO = .91
+
+_TYPE_TO_TYPE = {
+    'retail' : 0,
+    'commercial' : 0,
+    'greenhouse' : 0, # ?
+    'residential' : 1,
+    'hotel' : 1,
+    'houseboat' : 1,
+    'dormitory' : 1,
+    'hospital' : 2,
+    'kindergarten' : 4,
+    'school' : 4,
+    'service' : 4,
+    'construction' : 4,
+    'university' : 4, # :(
+    'office' : 4,
+    'industrial' : 4,
+    'agricultural' : 4,
+    'college' : 4,
+    'religious': 5,
+    'religion' : 5,
+    'cathedral' : 5,
+    'convent' : 5,
+    'chapel' : 5,
+    'roof' : 7,
+    'kiosk' : 7,
+    'public' : 8,
+    'administration' : 8,
+    'civic' : 8
+
+
+}
+
 
 
 class MapBuilder:
@@ -20,6 +61,27 @@ class MapBuilder:
         x = np.mean([pt[0] for pt in liste_sommets])
         y = np.mean([pt[1] for pt in liste_sommets])
         return (x, y)
+
+
+    def _deg2rad(self, angle):
+        return angle* np.pi * _EARTH_RADIUS / 180
+
+
+    def _calculateArea(self, liste_sommets):
+        """Calcule l'aire du polygone associé.\n
+        Signature : float list list -> float"""
+        # Il faut d'abord convertir toutes ces coordonées en sommets de R². 
+        # On prend l'angle en radians entre le point et le centre.
+        liste_points =  [ ] 
+        for s in liste_sommets:
+            diff = (s[0] - self.center[1], s[1] - self.center[0])
+            liste_points.append(( self._deg2rad(diff[0]), self._deg2rad(diff[1]) ))
+        
+        #1/2 Somme de i = 0 à (n-1) des |x_i y_i+1 - x_i+1 y_i|
+        somme = 0
+        for i in range(len(liste_points)-1):
+            somme += liste_points[i][0]*liste_points[i+1][1] - liste_points[i+1][0]*liste_points[i][1] 
+        return abs(somme) /2
         
 
 
@@ -42,12 +104,15 @@ class MapBuilder:
         for bat in batlist_json:
             print(f"{i}/{len( batlist_json )}")
             i += 1
-            coos = self._calculateCoos(bat["geometry"]["coordinates"])
+            coos = self._calculateCoos(bat["geometry"]["coordinates"][0])
+            area = self._calculateArea(bat["geometry"]["coordinates"][0])
+
             batlist.append(
                 {
                     "id" : bat["id"],
                     "coos" : coos,
-                    "props" : bat["properties"]
+                    "props" : bat["properties"],
+                    "area" : area
                 })
 
             #On ajoute un sommet par dessus le marché
@@ -191,11 +256,70 @@ class MapBuilder:
 #print(GetItineraire( (2.316068734550804,48.87037435), (-1.2770243425435213,46.1581427) ))
 #2.316068734550804,48.87037435;-1.2770243425435213,46.1581427
 
-#print(GetData_batiments((48.58310, 7.74863)))
-MB = MapBuilder((48.58310, 7.74863))
-g = MB.CreateGraph()
+#print(GetData_batiments((48.58310, 7.74863))
 
-g.write("mapbuilder/graph_stras")
+def test_code():
+    """Génère le graphe de stras-centre"""
+    MB = MapBuilder((48.58310, 7.74863))
+    g = MB.CreateGraph()
+
+    g.write("mapbuilder/graph_stras")
+
+
+def étude_bats():
+    MB = MapBuilder((48.58310, 7.74863))
+    json = MB._GetData_batiments()
+
+    #tri des batiments
+    batlist = []
+    i = 1
+
+    poptot = 0
+
+    for bat in json:
+        print(f"{i}/{len( json )}")
+        i += 1
+        coos = MB._calculateCoos(bat["geometry"]["coordinates"][0])
+        area = MB._calculateArea(bat["geometry"]["coordinates"][0])
+
+        try:
+            type_str = bat["properties"]["type"]
+        except KeyError:
+            type_int = -1
+            #cas des None à gérer
+
+
+        types_inconnus_liste = []
+        try:
+            type_int = _TYPE_TO_TYPE[type_str]
+        except KeyError:
+            type_int = -1
+            types_inconnus_liste.append(type_str)
+        except UnboundLocalError:
+            pass
+
+        
+        capacite = (( bat["properties"]["height"]//_LVL_HEIGHT )+1) * _POP_DENSITY * area
+
+        batlist.append(
+            {
+                "id" : bat["id"],
+                "coos" : coos,
+                "props" : bat["properties"],
+                "area" : area,
+                "type" : type_int,
+                "capacite" : capacite
+            })
+
+        if type_int == 1:
+            poptot += capacite
+
+    print(poptot)
+
+
+étude_bats()
 
 
 
+# avec la somme des abs : 24699
+# sans abs : -470
