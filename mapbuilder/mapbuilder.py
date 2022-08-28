@@ -4,7 +4,9 @@ import json
 import math
 import numpy as np
 
-import igraph as grf
+#import igraph as grf
+import networkx as nx
+# Vocabulaire anglais : Edges sont les arètes, Nodes sont les sommets
 
 
 #CONSTANTES (tout est converti en m/m²)
@@ -41,8 +43,6 @@ _TYPE_TO_TYPE = {
     'public' : 8,
     'administration' : 8,
     'civic' : 8
-
-
 }
 
 
@@ -96,35 +96,64 @@ class MapBuilder:
         batlist_json = self._GetData_batiments()
         print(f"\t { len( batlist_json ) } batiments trouvés")
 
-        G = grf.Graph() #c'est ce truc qu'on va retourner.
+        G = nx.Graph() #c'est ce truc qu'on va retourner.
 
         #C'est parti. On extrait chaque bâtiment et ce qui nous intéresse dans une liste de dicos
         batlist = []
-        i = 1
+        routelist = []
+        i = 0
+
+        poptot = 0
+
         for bat in batlist_json:
             print(f"{i}/{len( batlist_json )}")
+
+            # =================== Traitement des donnes du batiment ===================
             i += 1
             coos = self._calculateCoos(bat["geometry"]["coordinates"][0])
             area = self._calculateArea(bat["geometry"]["coordinates"][0])
+
+            try:
+                type_str = bat["properties"]["type"]
+            except KeyError:
+                type_int = -1
+                #cas des None à gérer
+
+            types_inconnus_liste = []
+            try:
+                type_int = _TYPE_TO_TYPE[type_str]
+            except KeyError:
+                type_int = -1
+                types_inconnus_liste.append(type_str)
+            except UnboundLocalError:
+                pass
+
+            
+            capacite = (( bat["properties"]["height"]//_LVL_HEIGHT )+1) * _POP_DENSITY * area
 
             batlist.append(
                 {
                     "id" : bat["id"],
                     "coos" : coos,
                     "props" : bat["properties"],
-                    "area" : area
+                    "area" : area,
+                    "type" : type_int,
+                    "capacite" : capacite
                 })
 
-            #On ajoute un sommet par dessus le marché
-            G.add_vertex(bat["id"])
+            #On ajoute un sommet par dessus le marché.
+            G.add_node(bat["id"])
+            # Dans le graphe, les batiments sont désignés par leur id et les routes par leur nom.
 
+            # =================== Routes ===================
             #maintenant il faut toutes les routes.
             for i in range(len(batlist)-1):
                 route = self._GetItineraire( coos, batlist[i]["coos"] )
 
                 for r in range(len(route)):
-                    if not route[r] in G.vs()["name"]:
-                        G.add_vertex(route[r])
+                    if not route[r] in routelist:
+                        routelist.append(route[r])
+                        G.add_node(route[r])
                         
                         if r == 0:
                             G.add_edge(bat["id"], route[r])
@@ -133,6 +162,10 @@ class MapBuilder:
                 
                 G.add_edge(route[-1], batlist[i]["id"])
             
+
+        #on écrit le graphe
+        self.print_json(G.__dict__, "graphe_stras.json")
+
         return G
 
 
@@ -317,9 +350,19 @@ def étude_bats():
     print(poptot)
 
 
-étude_bats()
+#étude_bats()
+test_code()
 
 
 
-# avec la somme des abs : 24699
-# sans abs : -470
+def deserializeGraph(dict):
+  Gprime = nx.Graph()
+
+  for n in dict["_node"]:
+    Gprime.add_node(n)
+
+  for n in dict["_adj"]:
+    for a in dict["_adj"][n]:
+      Gprime.add_edge(n, a)
+
+  return Gprime

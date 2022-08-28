@@ -1,5 +1,7 @@
 import math
 
+import networkx as nx
+
 def deg2num(lat_deg, lon_deg, zoom):
   lat_rad = math.radians(lat_deg)
   n = 2.0 ** zoom
@@ -9,6 +11,7 @@ def deg2num(lat_deg, lon_deg, zoom):
 
 print(deg2num(48.58310, 7.74863, 14))
 
+# ESSAYER DE SERIALISER UN TRUC AVEC JSON.
 
 
 #   Types des batiments sur stras :
@@ -65,3 +68,32 @@ print(deg2num(48.58310, 7.74863, 14))
 #Central Park
 #   40.771300, -73.973902
 # Je m'amuse comme un fou
+
+import json
+
+G = nx.Graph()
+G.add_nodes_from([1, 2, 3, 4, 5])
+G.add_edges_from([(1, 2), (2, 3), (3, 1)])
+
+json_graph = json.dumps(G.__dict__, default=lambda o: o.__dict__, indent=5)
+print(G)
+#print(json_graph)
+
+G_pdict = json.loads(json_graph)
+print(G_pdict)
+
+def deserializeGraph(dict):
+  Gprime = nx.Graph()
+
+  for n in dict["_node"]:
+    Gprime.add_node(n)
+
+  for n in dict["_adj"]:
+    for a in dict["_adj"][n]:
+      Gprime.add_edge(n, a)
+
+  return Gprime
+
+
+print(deserializeGraph(G_pdict))
+
