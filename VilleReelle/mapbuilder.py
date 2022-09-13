@@ -1,4 +1,3 @@
-from msilib import type_string
 import requests as rq
 import json
 import math
