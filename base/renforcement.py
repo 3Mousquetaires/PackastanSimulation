@@ -1,3 +1,4 @@
+from os import kill
 from typing import NewType, final
 from batiment import TypeBatiment
 from ville import *
@@ -50,10 +51,10 @@ def etape_exploration(map, mapkb):
     return kbienmoyen, map, oldtype, newtype
 
 def exploration(map, mapkb):
-    city = Ville(len(map), len(map[1]), len(map)*len(map[1]), map)
+    city = Ville(len(map), len(map[1]), len(map)*len(map[1]), map, kill_epsilon=1e-4)
     map, mapbk = city.start()
     oldkbmoy, newmap, oldtype, newtype = etape_exploration(map, mapkb)
-    city = Ville(len(newmap), len(newmap[1]), len(newmap)*len(newmap[1]), newmap)
+    city = Ville(len(newmap), len(newmap[1]), len(newmap)*len(newmap[1]), newmap, kill_epsilon=1e-4)
     map, mapkb = city.start()
     newkb = np.mean(mapkb)
     listeActions.append((oldtype, newtype, (newkb-oldkbmoy)))
@@ -81,17 +82,17 @@ def etape_exploitation(map, mapkb):
     return kbmoyen, map, oldtype, newtype
 
 def exploitation(map, mapkb):
-    city = Ville(len(map), len(map[1]), len(map)*len(map[1]), map)
+    city = Ville(len(map), len(map[1]), len(map)*len(map[1]), map, kill_epsilon=1e-4)
     map, mapkb = city.start()
     oldkbmoy, newmap, oldtype, newtype = etape_exploitation(map, mapkb)
-    city = Ville(len(newmap), len(newmap[1]), len(newmap)*len(newmap[1]), newmap)
+    city = Ville(len(newmap), len(newmap[1]), len(newmap)*len(newmap[1]), newmap, kill_epsilon=1e-4)
     map, mapkb = city.start()
     newkb = np.mean(mapkb)
     listeActions.append((oldtype, newtype, (newkb-oldkbmoy)))
     return map, mapkb
 
 def renforcement():
-    city = Ville(90, 60, 5400, defaultMap.defaultMap)
+    city = Ville(90, 60, 5400, defaultMap.defaultMap, kill_epsilon=1e-4)
     map, map_kbien = city.start(affichageLive=False)
     kbmoy = np.mean(map_kbien)
     while(kbmoy < 0.5):
