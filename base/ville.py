@@ -11,7 +11,7 @@ import random
 import defaultMap
 
 class Ville:
-    def __init__(self, height:int, width:int, population:int = 1, map:np.ndarray=np.array([[]]), kill_epsilon=1E-3): 
+    def __init__(self, height:int, width:int, population:int = 1, map:np.ndarray=np.array([[]]), kill_epsilon=1E-4): 
         """# Initialisation de la ville : 
         Permet de créer une ville de taille (height x width), 
         avec éventuellement une map par défaut (fondée uniquement sur les commerces).\n
@@ -34,7 +34,7 @@ class Ville:
 
         self.map_saturation = np.zeros((height, width)) 
 
-        #self.kill_epsilon = 1e-3 #si la dérivée moyenne des 5 derniers tours descend sous 10^-6, le tour est fini
+        self.kill_epsilon = kill_epsilon #si la dérivée moyenne des 5 derniers tours descend sous 10^-6, le tour est fini
 
         #Init map : Map des instances
         self.map = []

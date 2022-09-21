@@ -51,10 +51,10 @@ def etape_exploration(map, mapkb):
     return kbienmoyen, map, oldtype, newtype
 
 def exploration(map, mapkb):
-    city = Ville(len(map), len(map[1]), len(map)*len(map[1]), map, kill_epsilon=1e-4)
+    city = Ville(len(map), len(map[1]), len(map)*len(map[1]), map)
     map, mapbk = city.start()
     oldkbmoy, newmap, oldtype, newtype = etape_exploration(map, mapkb)
-    city = Ville(len(newmap), len(newmap[1]), len(newmap)*len(newmap[1]), newmap, kill_epsilon=1e-4)
+    city = Ville(len(newmap), len(newmap[1]), len(newmap)*len(newmap[1]), newmap)
     map, mapkb = city.start()
     newkb = np.mean(mapkb)
     listeActions.append((oldtype, newtype, (newkb-oldkbmoy)))
@@ -82,20 +82,20 @@ def etape_exploitation(map, mapkb):
     return kbmoyen, map, oldtype, newtype
 
 def exploitation(map, mapkb):
-    city = Ville(len(map), len(map[1]), len(map)*len(map[1]), map, kill_epsilon=1e-4)
+    city = Ville(len(map), len(map[1]), len(map)*len(map[1]), map)
     map, mapkb = city.start()
     oldkbmoy, newmap, oldtype, newtype = etape_exploitation(map, mapkb)
-    city = Ville(len(newmap), len(newmap[1]), len(newmap)*len(newmap[1]), newmap, kill_epsilon=1e-4)
+    city = Ville(len(newmap), len(newmap[1]), len(newmap)*len(newmap[1]), newmap)
     map, mapkb = city.start()
     newkb = np.mean(mapkb)
     listeActions.append((oldtype, newtype, (newkb-oldkbmoy)))
     return map, mapkb
 
 def renforcement():
-    city = Ville(90, 60, 5400, defaultMap.defaultMap, kill_epsilon=1e-4)
+    city = Ville(90, 60, 5400, defaultMap.defaultMap)
     map, map_kbien = city.start(affichageLive=False)
     kbmoy = np.mean(map_kbien)
-    while(kbmoy < 0.5):
+    while(kbmoy < 0.35):
         rd = random.randint(0, 100)
         if rd < 20:
             map, map_kbien = exploration(map, map_kbien)
