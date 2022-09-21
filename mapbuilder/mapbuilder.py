@@ -4,6 +4,8 @@ import json
 import math
 import numpy as np
 
+import time
+
 #import igraph as grf
 import networkx as nx
 # Vocabulaire anglais : Edges sont les arètes, Nodes sont les sommets
@@ -101,15 +103,17 @@ class MapBuilder:
         #C'est parti. On extrait chaque bâtiment et ce qui nous intéresse dans une liste de dicos
         batlist = []
         routelist = []
-        i = 0
+        t = 0
 
         poptot = 0
+        t0 = time.time()
 
         for bat in batlist_json:
-            print(f"{i}/{len( batlist_json )}")
+            print(f"{t}/{len( batlist_json )} \t {time.time() - t0}")
+            t0 = time.time()
 
             # =================== Traitement des donnes du batiment ===================
-            i += 1
+            t += 1
             coos = self._calculateCoos(bat["geometry"]["coordinates"][0])
             area = self._calculateArea(bat["geometry"]["coordinates"][0])
 
@@ -150,17 +154,21 @@ class MapBuilder:
             for i in range(len(batlist)-1):
                 route = self._GetItineraire( coos, batlist[i]["coos"] )
 
-                for r in range(len(route)):
-                    if not route[r] in routelist:
-                        routelist.append(route[r])
-                        G.add_node(route[r])
-                        
+                if route == []:
+                    G.add_edge(bat["id"], batlist[i]["id"])
+                else:
+                    for r in range(len(route)):
+                        if not route[r] in routelist:
+                            routelist.append(route[r])
+                            G.add_node(route[r])
+                            
                         if r == 0:
                             G.add_edge(bat["id"], route[r])
                         else:
                             G.add_edge(route[r-1], route[r])
-                
-                G.add_edge(route[-1], batlist[i]["id"])
+                    
+                    G.add_edge(route[-1], batlist[i]["id"])
+                #dernier pb ici au tour 96 : ListIndexOutOfRange
             
 
         #on écrit le graphe
@@ -208,7 +216,11 @@ class MapBuilder:
 
         if route.status_code != 200:
             print(f"Erreur : code {route.status_code} renvoyé.")
-            return
+
+            while route.status_code != 200:
+                print("\t - réessayer - ")
+                time.sleep(60)
+                route = rq.get(url_get, headers=headers)
 
         json_response = route.json()
 
@@ -223,6 +235,7 @@ class MapBuilder:
         with open(f"mapbuilder/{nom}", 'w') as print_file :
             print_file.write(json.dumps(json_file, indent=4, sort_keys=True))
             print_file.close()
+            #problème au 793 : que des 400.
 
 
     def _deg2num(self, lat_deg, lon_deg, zoom):
