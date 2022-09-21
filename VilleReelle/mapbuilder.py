@@ -7,6 +7,15 @@ import numpy as np
 import networkx as nx
 # Vocabulaire anglais : Edges sont les arètes, Nodes sont les sommets
 
+import batiment
+
+
+
+
+
+def _deg2rad(angle):
+    return angle* np.pi * _EARTH_RADIUS / 180
+
 
 #CONSTANTES (tout est converti en m/m²)
 _LVL_HEIGHT = 2.875
@@ -53,13 +62,13 @@ class MapBuilder:
         """Exemple : centre de Stras : (48.58310, 7.74863) (fonctionne sur les coordonées géographiques).\n"""
         self.center = center
 
-
+ 
     def _calculateCoos(self, liste_sommets):
         """calcul la moyenne de tous les points passés en paramètres.
         Structure : float list list -> float tupple"""
         x = np.mean([pt[0] for pt in liste_sommets])
         y = np.mean([pt[1] for pt in liste_sommets])
-        return (x, y)
+        return  (x, y)
 
 
     def _deg2rad(self, angle):
@@ -81,32 +90,35 @@ class MapBuilder:
         for i in range(len(liste_points)-1):
             somme += liste_points[i][0]*liste_points[i+1][1] - liste_points[i+1][0]*liste_points[i][1] 
         return abs(somme) /2
+    
+    
+    def _closer(self, liste, a0):
+        closer = liste[0]
+        for x in liste:
+            if abs(x-a0) < abs(closer-a0):
+                closer = x
+        
+        return closer
+            
         
 
 
-    def CreateGraph(self):
-        """Retourne une instance igraph.Graphe. \n
-        \tSommets : tous les batiments, routes ou autres.
-        \n\tLes arrêtes représentent l'accessibilité entre chaque bâtiment."""
+    def CreateBatListe(self):
+        """Utilise self.GetData_Batiments pour renvoyer une liste de 
+        Bâtiments formatés et avec les bonnes données."""
 
-        print(f"Initialisation de {self.center} démarrée. Allez prendre un café.")
+        print(f" --- \tInitialisation de {self.center} démarrée. Allez prendre un café.")
 
         #Il faut tout d'abord récupérer toutes les informations sur les bâtiments.
-        batlist_json = self._GetData_batiments()
-        print(f"\t { len( batlist_json ) } batiments trouvés")
-
-        G = nx.Graph() #c'est ce truc qu'on va retourner.
+        batlist_json = self.GetData_batiments()
+        print(f" --- \t{ len( batlist_json ) } batiments trouvés")
 
         #C'est parti. On extrait chaque bâtiment et ce qui nous intéresse dans une liste de dicos
         batlist = []
-        routelist = []
+        maisonliste = []
         i = 0
 
-        poptot = 0
-
         for bat in batlist_json:
-            print(f"{i}/{len( batlist_json )}")
-
             # =================== Traitement des donnes du batiment ===================
             i += 1
             coos = self._calculateCoos(bat["geometry"]["coordinates"][0])
@@ -115,14 +127,14 @@ class MapBuilder:
             try:
                 type_str = bat["properties"]["type"]
             except KeyError:
-                type_int = -1
+                type_int = 1
                 #cas des None à gérer
 
             types_inconnus_liste = []
             try:
                 type_int = _TYPE_TO_TYPE[type_str]
             except KeyError:
-                type_int = -1
+                type_int = 1
                 types_inconnus_liste.append(type_str)
             except UnboundLocalError:
                 pass
@@ -130,42 +142,30 @@ class MapBuilder:
             
             capacite = (( bat["properties"]["height"]//_LVL_HEIGHT )+1) * _POP_DENSITY * area
 
-            batlist.append(
-                {
+            dist_origine = (
+                _deg2rad(coos[1]-self.center[0]), 
+                _deg2rad(coos[0]-self.center[1]) 
+            )
+
+            props_dico = {
                     "id" : bat["id"],
-                    "coos" : coos,
-                    "props" : bat["properties"],
+                    "dist_origine" : dist_origine,
+                    "props_" : bat["properties"],
                     "area" : area,
-                    "type" : type_int,
                     "capacite" : capacite
-                })
-
-            #On ajoute un sommet par dessus le marché.
-            G.add_node(bat["id"])
-            # Dans le graphe, les batiments sont désignés par leur id et les routes par leur nom.
-
-            # =================== Routes ===================
-            #maintenant il faut toutes les routes.
-            for i in range(len(batlist)-1):
-                route = self._GetItineraire( coos, batlist[i]["coos"] )
-
-                for r in range(len(route)):
-                    if not route[r] in routelist:
-                        routelist.append(route[r])
-                        G.add_node(route[r])
-                        
-                        if r == 0:
-                            G.add_edge(bat["id"], route[r])
-                        else:
-                            G.add_edge(route[r-1], route[r])
-                
-                G.add_edge(route[-1], batlist[i]["id"])
+            }
             
-
-        #on écrit le graphe
-        self.print_json(G.__dict__, "graphe_stras.json")
-
-        return G
+            
+            
+            if type_int == 1:
+                newbat = batiment.Maison(type_int, coos, props_dico)
+            else:
+                newbat = batiment.Batiment(type_int, coos, props_dico)
+                maisonliste.append(newbat)
+                
+            batlist.append(newbat)
+        
+        return batlist
 
 
             
@@ -233,7 +233,7 @@ class MapBuilder:
         return (xtile, ytile)
 
 
-    def _GetData_batiments(self):
+    def GetData_batiments(self):
         """Récupère l'intégralité des données sur les batiments contenus dans la zone."""
         #Ca va être un peu le cirque.
         #On déjà récupérer les coos des 4 maps que l'on doit aller chercher.
@@ -268,7 +268,7 @@ class MapBuilder:
 
         json_list = []
         for id in map_ids:
-            print(id)
+            print(" -- \t tile id", id)
             response = rq.get(f"https://data.osmbuildings.org/0.2/anonymous/tile/15/{id[0]}/{id[1]}.json", headers=HEADER)
 
             if response.status_code != 200:
@@ -290,67 +290,7 @@ class MapBuilder:
 
 #print(GetData_batiments((48.58310, 7.74863))
 
-def test_code():
-    """Génère le graphe de stras-centre"""
-    MB = MapBuilder((48.58310, 7.74863))
-    g = MB.CreateGraph()
 
-    g.write("mapbuilder/graph_stras")
-
-
-def étude_bats():
-    MB = MapBuilder((48.58310, 7.74863))
-    json = MB._GetData_batiments()
-
-    #tri des batiments
-    batlist = []
-    i = 1
-
-    poptot = 0
-
-    for bat in json:
-        print(f"{i}/{len( json )}")
-        i += 1
-        coos = MB._calculateCoos(bat["geometry"]["coordinates"][0])
-        area = MB._calculateArea(bat["geometry"]["coordinates"][0])
-
-        try:
-            type_str = bat["properties"]["type"]
-        except KeyError:
-            type_int = -1
-            #cas des None à gérer
-
-
-        types_inconnus_liste = []
-        try:
-            type_int = _TYPE_TO_TYPE[type_str]
-        except KeyError:
-            type_int = -1
-            types_inconnus_liste.append(type_str)
-        except UnboundLocalError:
-            pass
-
-        
-        capacite = (( bat["properties"]["height"]//_LVL_HEIGHT )+1) * _POP_DENSITY * area
-
-        batlist.append(
-            {
-                "id" : bat["id"],
-                "coos" : coos,
-                "props" : bat["properties"],
-                "area" : area,
-                "type" : type_int,
-                "capacite" : capacite
-            })
-
-        if type_int == 1:
-            poptot += capacite
-
-    print(poptot)
-
-
-#étude_bats()
-test_code()
 
 
 
