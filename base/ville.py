@@ -168,6 +168,11 @@ class Ville:
             cax = plt.colorbar(mat, ticks=np.arange(np.min(data), np.max(data) + 1))
         discrete_matshow(self.nummap)
         plt.show()
+        
+        
+    def kbienmoy(self):
+        return np.mean([ self.map_kbien[i][j] for i in range(len(self.map_kbien))
+                        for j in len(self.map_kbien[i]) if self.map[i][j] != 9])
 
 
     def show_extended1( self, m1:np.ndarray, title:str = ""):
