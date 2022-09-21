@@ -11,7 +11,7 @@ import random
 import defaultMap
 
 class Ville:
-    def __init__(self, height:int, width:int, population:int = 1, map:np.ndarray=np.array([[]]), kill_epsilon=0): 
+    def __init__(self, height:int, width:int, population:int = 1, map:np.ndarray=np.array([[]]), kill_epsilon=1E-3): 
         """# Initialisation de la ville : 
         Permet de créer une ville de taille (height x width), 
         avec éventuellement une map par défaut (fondée uniquement sur les commerces).\n
@@ -34,7 +34,7 @@ class Ville:
 
         self.map_saturation = np.zeros((height, width)) 
 
-        self.kill_epsilon = 1e-4 #si la dérivée moyenne des 5 derniers tours descend sous 10^-6, le tour est fini
+        #self.kill_epsilon = 1e-3 #si la dérivée moyenne des 5 derniers tours descend sous 10^-6, le tour est fini
 
         #Init map : Map des instances
         self.map = []
@@ -70,7 +70,7 @@ class Ville:
 
             self.highlightedMaps.append(tmp)
 
-    def start(self):
+    def start(self, affichageLive=False):
         """# Simulation de de la ville:
         Ne prend aucun paramètre, lance la simulation et renvoie la map des ```kbien```
         """
@@ -131,12 +131,13 @@ class Ville:
 
                 if i > 10 and np.mean(self.derivee[-5:]) < self.kill_epsilon :
                     self.isRunning = False 
-            affichage()
+            if(affichageLive):
+                affichage()
 
 
         plt.close(self.fig)
         plt.ioff()
-        return self.map_kbien
+        return self.nummap, self.map_kbien
           
 
     def print(self):
@@ -228,5 +229,3 @@ class Ville:
         return array
 
 
-city = Ville(90, 60, 5400, defaultMap.defaultMap)
-map_tour = city.start()
