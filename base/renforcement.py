@@ -1,3 +1,4 @@
+from email.policy import default
 from os import kill
 from typing import NewType, final
 from batiment import TypeBatiment
@@ -11,8 +12,11 @@ import batiment
 import citoyen
 import time
 import random
-import defaultMap
+import defaultMap as dm
+import map_test
 import csv
+
+defaultMap = map_test.testmap(30)
 
 valeurs = []
 
@@ -92,10 +96,10 @@ def exploitation(map, mapkb):
     return map, mapkb
 
 def renforcement():
-    city = Ville(90, 60, 5400, defaultMap.defaultMap)
+    city = Ville(len(defaultMap), len(defaultMap[0]), len(defaultMap)*len(defaultMap[0]), defaultMap)
     map, map_kbien = city.start(affichageLive=False)
     kbmoy = np.mean(map_kbien)
-    while(kbmoy < 0.35):
+    while(kbmoy < 0.20):
         rd = random.randint(0, 100)
         if rd < 20:
             map, map_kbien = exploration(map, map_kbien)
@@ -107,7 +111,7 @@ def renforcement():
         kbmoy = np.mean(map_kbien)
         writer.writerow([kbmoy])
         print(kbmoy)
-    city = Ville(90, 60, 5400, defaultMap.defaultMap, kill_epsilon=0)
+    city = Ville(len(map), len(map[0]), len(map)*len(map[0]), map, kill_epsilon=0)
     map, map_kbien = city.start(affichageLive=True)
 
 renforcement()

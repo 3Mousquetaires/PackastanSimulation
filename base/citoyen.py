@@ -9,7 +9,7 @@ from collections import deque
 
 import batiment
 
-BESOINS_COEFFS = {0:16, 1:16, 2:16, 3:8, 4:8, 5:8, 6:4, 7:4, 8:2}
+BESOINS_COEFFS = {0:1.0, 1:7.0, 2:0.08, 3:0.02, 4:5, 5:1.0, 6:1.0, 7:2.5, 8:2.0}
 
 coeff_uniform = np.log(1.2)
 

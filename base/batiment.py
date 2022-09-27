@@ -66,7 +66,7 @@ class Batiment :
         self.type = type
         self.besoin =  StrToTypeBesoin[ str_data[1] ] 
         #traduction de "alimentation" -> TypeBesoin.ALIMENTATION
-        self.coeff = int(str_data[2])
+        self.coeff = float(str_data[2])
         self.capacite = int(str_data[3])
         self.ressource = str_data[4] #ressource graphique
         

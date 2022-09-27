@@ -74,7 +74,7 @@ class Ville:
         """# Simulation de de la ville:
         Ne prend aucun paramètre, lance la simulation et renvoie la map des ```kbien```
         """
-        self.batToShow = 0
+        self.batToShow = 1
         self.highlightMaps()
         i = 0
         def affichage():
