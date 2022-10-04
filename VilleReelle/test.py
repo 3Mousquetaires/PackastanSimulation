@@ -48,6 +48,12 @@ print(deg2num(48.58310, 7.74863, 14))
    'college': 1
   }
 
+
+
+
+
+
+
 #aire moyenne : 471 m², taille moyenne : 14.7 m
 
 #coordonée du centre de strasbourg :

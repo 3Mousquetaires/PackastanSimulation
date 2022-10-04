@@ -7,7 +7,7 @@ import numpy as np
 import networkx as nx
 # Vocabulaire anglais : Edges sont les arètes, Nodes sont les sommets
 
-import batiment
+import batiment_r
 
 
 
@@ -68,7 +68,7 @@ class MapBuilder:
         Structure : float list list -> float tupple"""
         x = np.mean([pt[0] for pt in liste_sommets])
         y = np.mean([pt[1] for pt in liste_sommets])
-        return  (x, y)
+        return  (round(x, 14), round(y, 14))
 
 
     def _deg2rad(self, angle):
@@ -158,9 +158,9 @@ class MapBuilder:
             
             
             if type_int == 1:
-                newbat = batiment.Maison(type_int, coos, props_dico)
+                newbat = batiment_r.Maison(type_int, coos, props_dico)
             else:
-                newbat = batiment.Batiment(type_int, coos, props_dico)
+                newbat = batiment_r.Batiment(type_int, coos, props_dico)
                 maisonliste.append(newbat)
                 
             batlist.append(newbat)
@@ -168,17 +168,8 @@ class MapBuilder:
         return batlist
 
 
-            
 
-        
-        
-
-
-
-
-
-
-    def _GetItineraire(self, start, finish):
+    def GetItineraire(self, start, finish):
         """
         Prend en argument deux positions, et renvoie la liste des routes pour faire le trajet.\n
         

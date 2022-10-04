@@ -7,7 +7,7 @@ from random import choice
 
 from collections import deque
 
-import batiment
+import batiment_r
 
 BESOINS_COEFFS = {0:16, 1:16, 2:16, 3:8, 4:8, 5:8, 6:4, 7:4, 8:2}
 
@@ -15,7 +15,7 @@ coeff_uniform = np.log(1.2)
 
 
 class Citoyen :
-    def __init__(self, maison:batiment.TypeBatiment):
+    def __init__(self, maison:batiment_r.TypeBatiment):
         self.age = 0
         self.besoins = array([.99 for _ in range(0, 9)]) #array([uniform(.5, 1) for _ in range(0, 9)])
         self.maison = maison

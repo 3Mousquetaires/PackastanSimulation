@@ -103,7 +103,6 @@ class Batiment :
 
 class Maison(Batiment):
     def __init__(self, type, adresse, props):
-        """Chaque maison a une carte, le tilemap.Getmap()"""
         super().__init__(1, adresse, props)
 
         self.memoire_batiments = { k:None for k in range(9) }
@@ -122,36 +121,10 @@ class Maison(Batiment):
         route = self.memoire_batiments[besoin]
 
         return route
+    
 
-    def Update_Bats(self):
-        """Renvoie un dico avec tous les batiments les plus proches en fonctions de
-        tous les besoins\n
-        Permet d'avoir un appel commun par maison.
-        Pour chercher juste certains batiments, il suffit de passer un dico partiellement
-        rempli dans Retour0, le prg fill le reste."""
+    def Update_Bats(self, type_, chemin):
+        """SET : update l'annuaire de la maison"""
+        self.memoire_batiments[type_] = chemin
 
-        File = [(self.coos[0], self.coos[1], [])]
-        deja_vus = []
-
-        while (len(File) != 0) and (None in self.memoire_batiments.values()):
-            #Il reste des bouts de route à parcourir et 
-            # le dico n'est pas encore rempli
-            x, y, accumulateur = File.pop()
-            deja_vus.append((x, y))
-            #il faut explorer le carré autour
-            for i in [x-1, x, x+1]:
-                for j in [y-1, y, y+1]:
-                    if (i, j) in deja_vus:
-                        continue
-                    try:
-                        if self.map[i, j] == 9: #une route                            
-                            # explications accumulateur :
-                            # l'acc garde en mémoire la généalogie du point
-                            File.append( (i, j, accumulateur + [(x, y)]) )
-                            continue
-                    except IndexError:
-                        #on est hors de la map, inutile de continuer
-                        continue
-
-                    if self.memoire_batiments[ self.map[i, j] ] == None:
-                        self.memoire_batiments[ self.map[i, j] ] = accumulateur + [(x, y), (i, j)] #(i, j) #on a trouvé une adresse
+        

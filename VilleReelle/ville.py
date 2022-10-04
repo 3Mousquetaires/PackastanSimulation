@@ -6,17 +6,19 @@ from tokenize import Double
 import numpy as np
 import matplotlib.pyplot as plt
 import keyboard
-import batiment
+import batiment_r
 import citoyen
 import time
 import random
 import defaultMap
-
 import requests
 import shutil
 import os
 
 import mapbuilder as mb
+
+import osmnx.graph as grph
+import osmnx.distance as dist
 
 
         
@@ -42,15 +44,8 @@ class Ville:
         MB = mb.MapBuilder(center)
         print(" --- initialisation des bâtiments")
         self.batlist = MB.CreateBatListe()
-        
-        # on initialise toutes les maisons
-        print(" --- \tinitialisation de l'annuaire des maisons")
-        maisonlist = [m for m in self.batlist if m.type == 1]
-        
-        print(f" --- \t{len(maisonlist)} maisons trouvées.")
-        for m in maisonlist:
-            pass
             
+        
         
         # ======== On va gérer les dimensions ==========
         self._buildMap()
@@ -69,6 +64,42 @@ class Ville:
         #Init habitants : Liste des habitants
         self.population = population
         self.habitants = []
+        
+        print(" --- \tdimensions : ", self.N, self.S, self.E, self.W)
+        
+        
+        # on initialise toutes les maisons
+        print(" --- Initialisation de l'annuaire des maisons")
+        maisonlist = [m for m in self.batlist if m.type == 1]
+        
+        t0 = time.time()
+        G = grph.graph_from_bbox(self.N, self.S, self.E, self.W, network_type="all")
+        print(" --- \tCréation du graphe : ", time.time()-t0)
+        
+        t0 = time.time()
+        print(" --- \tCréation de l'annuaire")
+        
+        roadlist = []
+        
+        print(len(maisonlist))
+        
+        i = 0
+        for m in maisonlist:
+            print(i)
+            i += 1
+            coos = m.coos
+            node0 = dist.nearest_nodes(G, coos[0], coos[1])
+            
+            for k in range(9):
+                if k != 1:
+                    batf = self.find_closer(coos, k)
+                    nodef = dist.nearest_nodes(G, batf.coos[0], batf.coos[1])
+                    
+                    chemin = dist.shortest_path(G, node0, nodef)
+                    roadlist.append(chemin)
+                    m.Update_Bats(k, chemin)
+                    
+        print("Finito !", time.time()-t0)
         
 
         self.show_realistic()
@@ -174,7 +205,7 @@ class Ville:
         return self.map_kbien
 
 
-    def replaceBat(self, x:int, y:int, typeBat: batiment.TypeBatiment):
+    def replaceBat(self, x:int, y:int, typeBat: batiment_r.TypeBatiment):
         """# Remplacement :
         Permet de remplacer un batiment en position ```(x, y)```, par un bâtiment de type ```batiment.TypeBatiment```. 
         """
@@ -185,7 +216,7 @@ class Ville:
         """# Cherche le batiment le plus proche du coos0 correspondant au type en question"""
         bat_preums = self.batlist[0]
         
-        min_ = np.linalg.norm(bat_preums.coos - coos0, 2)
+        min_ = np.linalg.norm( np.array( bat_preums.coos) - np.array(coos0), 2)
         bmin_ =  bat_preums
         
         for bat in self.batlist:
@@ -194,14 +225,12 @@ class Ville:
             elif bat.type != type2find:
                 continue
             else:
-                nnorm = np.linalg.norm(bat.coos - coos0, 2)
+                nnorm = np.linalg.norm( np.array(bat.coos) - np.array(coos0), 2)
                 if nnorm < min_ :
                     min_ = nnorm
                     bmin_ = bat
                     
-                    
-        return bmin_
-        
+        return bmin_    
         
 
 
@@ -231,46 +260,29 @@ class Ville:
         
         print(" --- \trecherche de la map de background en cours")
         
-        EN_TETE = {
-            "Host": "render.openstreetmap.org",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-            "Accept-Language": "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
-            "Accept-Encoding": "gzip, deflate, br",
-            "DNT": "1",
-            "Connection": "keep-alive",
-            "Cookie": "_osm_totp_token=345644",
-            "Upgrade-Insecure-Requests": "1",
-            "Sec-Fetch-Dest": "document",
-            "Sec-Fetch-Mode": "navigate",
-            "Sec-Fetch-Site": "cross-site"
-        }
-        
         print(" --- \t sommets W-N-E-S :", self.W, self.N, self.E, self.S)
         
         URL = f"https://render.openstreetmap.org/cgi-bin/export?bbox={self.W},{self.S},{self.E},{self.N}&scale=10000&format=png"
         
-        r = requests.get(URL, headers=EN_TETE, stream=True)
+        #https://render.openstreetmap.org/cgi-bin/export?bbox=7.7193546295166025,48.58103633431289,7.767333984375001,48.588389089026066&scale=11447&format=png
+        #https://render.openstreetmap.org/cgi-bin/export?bbox=2.2958973333333335,48.8716851 99 99 99 95,2.3184674615384613,48.88672527272727&scale=10000&format=png
+        print(" --- map inexistante, cliquer sur ce lien : \n")
+        print(URL)
+        print(f"merci de la renommer en {self.center}.png")
         
-        if r.status_code == 200:
-            with open(imgpath, 'wb') as f:
-                r.raw.decode_content = True
-                shutil.copyfileobj(r.raw, f) 
-        else:
-            print(r.status_code, URL)
-            
-        return imgpath
+        raise Exception("map inconnue :(")
 
 
     def exportBatmatrice(self) -> np.ndarray:
         """# Exportation de la matrice de bâtiments : 
         Permet d'exporter la matrice de bâtiments sous forme d'un ```np.ndarray``` de dimension ```(w, h)```.
         """
-        array = np.zeros((self.height, self.width), dtype=batiment.TypeBatiment)
+        array = np.zeros((self.height, self.width), dtype=batiment_r.TypeBatiment)
         for i in range(self.height):
             for j in range(self.width):
-                array[i][j] = batiment.TypeBatiment(self.nummap[i][j])
+                array[i][j] = batiment_r.TypeBatiment(self.nummap[i][j])
         return array
 
 
 city = Ville((48.58310, 7.74863))
+#city = Ville((48.882970, 2.299415))
