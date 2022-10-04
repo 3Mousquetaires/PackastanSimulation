@@ -286,3 +286,13 @@ class Ville:
 
 city = Ville((48.58310, 7.74863))
 #city = Ville((48.882970, 2.299415))
+
+
+# 8.25 d'init générale
+
+# TODO : 
+#   Faire la couche d'au dessus, 
+#       ammener la gestion des jeux à la chaîne
+#   Factoriser l'init générale
+#   Serialiser : créer un graphe
+
