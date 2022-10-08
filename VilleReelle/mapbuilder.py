@@ -3,11 +3,17 @@ import json
 import math
 import numpy as np
 
+import time
+
 #import igraph as grf
 import networkx as nx
+import os
 # Vocabulaire anglais : Edges sont les arètes, Nodes sont les sommets
 
 import batiment_r
+
+import osmnx.graph as grph
+import osmnx.distance as dist
 
 
 
@@ -61,6 +67,69 @@ class MapBuilder:
     def __init__(self, center):
         """Exemple : centre de Stras : (48.58310, 7.74863) (fonctionne sur les coordonées géographiques).\n"""
         self.center = center
+        
+        self.batliste = []
+        self.maisonliste = []
+        self.pfGraph = nx.MultiDiGraph()
+        
+    
+    def Initialise(self):
+        """Faut s'y frotter...\n
+            Préférer la déserialisation depuis le cache avec MapBuilder.LoadFromCache"""
+            
+        print(f" --- Initialisation de {self.center} lancée, allez prendre un café.")
+        print(" --- \tPremier traitement des bâtiments.")
+        self.CreateBatListe()
+        
+        #calcul de la bbox
+        coos_list = [bat.coos for bat in self.batlist]
+        self.E = max([x[0] for x in coos_list])
+        self.W = min(x[0] for x in coos_list)
+        
+        self.N = max([y[1] for y in coos_list])
+        self.S = min([y[1] for y in coos_list])
+        
+        self.bbox = (self.N, self.S, self.E, self.W)
+        
+        
+        print(" --- \tCréation du graphe de déplacement.")
+        self.pfGraph = grph.graph_from_bbox(self.N, self.S, self.E, self.W, network_type="all")
+        
+        
+        t0 = time.time()
+        print(f" --- \tInitialisation des maisons : {len(self.maisonliste)} trouvées.")
+        
+        self.route_liste = []
+        # deuxième traitement : init des maisons
+        for m in self.maisonliste:
+            for k in range(9):
+                if k != 1:
+                    batf = self.find_closer(m.coos, k)
+                    
+                    chemin = self.GetItineraire(m.coos, batf.coos)
+                    self.route_liste.append(chemin)
+                    m.Update_Bats(k, chemin)
+                    
+        print(f" --- \tMaisons générées en {time.time()-t0}.")
+        
+        print(f" --- Serialisation rapide")
+        self.SelfSerialize()
+        
+
+    def SelfSerialize(self):
+        """Ecrit l'instance actuelle dans [self.center]\map.json et [self.center]\graph.json\n
+        Appel automatique depuis Initialise, éviter de toucher."""
+        path = os.path.join(os.getcwd(), "memoire",  f"{self.center}")
+        
+        os.makedirs(path)
+        with open(os.path.join(f"{path}\\map.json"), 'w') as file:
+            file.write(json.dumps(self.batliste))
+            
+        with open(os.path.join(f"{path}\\graph.json"), 'w') as file:
+            file.write(json.dumps(nx.adjacency_data(self.pfGraph)))
+        
+        
+        
 
  
     def _calculateCoos(self, liste_sommets):
@@ -80,7 +149,7 @@ class MapBuilder:
         Signature : float list list -> float"""
         # Il faut d'abord convertir toutes ces coordonées en sommets de R². 
         # On prend l'angle en radians entre le point et le centre.
-        liste_points =  [ ] 
+        liste_points =  [] 
         for s in liste_sommets:
             diff = (s[0] - self.center[1], s[1] - self.center[0])
             liste_points.append(( self._deg2rad(diff[0]), self._deg2rad(diff[1]) ))
@@ -92,32 +161,38 @@ class MapBuilder:
         return abs(somme) /2
     
     
-    def _closer(self, liste, a0):
-        closer = liste[0]
-        for x in liste:
-            if abs(x-a0) < abs(closer-a0):
-                closer = x
+    def find_closer(self, coos0, type2find):
+        """# Cherche le batiment le plus proche du coos0 correspondant au type en question"""
+        bat_preums = self.batlist[0]
         
-        return closer
-            
+        min_ = np.linalg.norm( np.array( bat_preums.coos) - np.array(coos0), 2)
+        bmin_ =  bat_preums
         
+        for bat in self.batlist:
+            if bat.coos == coos0 :
+                continue
+            elif bat.type != type2find:
+                continue
+            else:
+                nnorm = np.linalg.norm( np.array(bat.coos) - np.array(coos0), 2)
+                if nnorm < min_ :
+                    min_ = nnorm
+                    bmin_ = bat
+                    
+        return bmin_    
 
 
     def CreateBatListe(self):
         """Utilise self.GetData_Batiments pour renvoyer une liste de 
         Bâtiments formatés et avec les bonnes données."""
-
-        print(f" --- \tInitialisation de {self.center} démarrée. Allez prendre un café.")
-
         #Il faut tout d'abord récupérer toutes les informations sur les bâtiments.
         batlist_json = self.GetData_batiments()
-        print(f" --- \t{ len( batlist_json ) } batiments trouvés")
+        print(f" --- \t{ len( batlist_json ) } batiments trouvés.")
 
         #C'est parti. On extrait chaque bâtiment et ce qui nous intéresse dans une liste de dicos
-        batlist = []
-        maisonliste = []
         i = 0
 
+        #premier traitement général
         for bat in batlist_json:
             # =================== Traitement des donnes du batiment ===================
             i += 1
@@ -159,13 +234,12 @@ class MapBuilder:
             
             if type_int == 1:
                 newbat = batiment_r.Maison(type_int, coos, props_dico)
+                self.maisonliste.append(newbat)
             else:
                 newbat = batiment_r.Batiment(type_int, coos, props_dico)
-                maisonliste.append(newbat)
+                self.maisonliste.append(newbat)
                 
-            batlist.append(newbat)
-        
-        return batlist
+            self.batlist.append(newbat)
 
 
 
@@ -175,38 +249,11 @@ class MapBuilder:
         
         les deux arguments sous forme de couple de coordonées longitude puis lattitude.\n
         exemple (6.6609505, 47.5211928), (6.665798, 47.523648)"""
-        BASE_URL = "https://routing.openstreetmap.de"
-        headers = {
-            "Host": "routing.openstreetmap.de",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:103.0) Gecko/20100101 Firefox/103.0",
-            "Accept": "application/json, text/javascript, */*; q=0.01",
-            "Accept-Language": "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
-            "Accept-Encoding": "gzip, deflate, br",
-            "Referer": "https://www.openstreetmap.org/",
-            "Origin": "https://www.openstreetmap.org",
-            "DNT": "1",
-            "Connection": "keep-alive",
-            "Sec-Fetch-Dest": "empty",
-            "Sec-Fetch-Mode": "cors",
-            "Sec-Fetch-Site": "cross-site",
-            "Sec-GPC": "1"
-        }
-
-        url_get = f"{BASE_URL}/routed-car/route/v1/driving/{start[0]},{start[1]};{finish[0]},{finish[1]}?overview=false&geometries=polyline&steps=true"
-
-        route = rq.get(url_get, headers=headers)
-
-        if route.status_code != 200:
-            print(f"Erreur : code {route.status_code} renvoyé.")
-            return
-
-        json_response = route.json()
-
-        road_list = [r["name"] for r in json_response["routes"][0]["legs"][0]["steps"] if r["name"] != ""]
-        #ne pas s'en occuper, faut juste parser la requête de réponse. Appeler dam si ça plante.
-
-        return road_list
-
+        node0 = dist.nearest_nodes(self.pfGraph, start[0], start[1])
+        node1 = dist.nearest_nodes(self.pfGraph, finish[0], finish[1])
+        
+        return dist.shortest_path(self.pfGraph, node0, node1)
+        
 
     def print_json(self, json_file, nom):
         """Ecrit le JSON en para dans le fichier \"nom\"."""
@@ -284,15 +331,5 @@ class MapBuilder:
 
 
 
-
-def deserializeGraph(dict):
-  Gprime = nx.Graph()
-
-  for n in dict["_node"]:
-    Gprime.add_node(n)
-
-  for n in dict["_adj"]:
-    for a in dict["_adj"][n]:
-      Gprime.add_edge(n, a)
-
-  return Gprime
+MB = MapBuilder((48.58310, 7.74863))
+MB.Initialise()

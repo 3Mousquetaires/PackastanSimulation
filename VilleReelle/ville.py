@@ -212,25 +212,7 @@ class Ville:
         #TODO
         
         
-    def find_closer(self, coos0, type2find):
-        """# Cherche le batiment le plus proche du coos0 correspondant au type en question"""
-        bat_preums = self.batlist[0]
-        
-        min_ = np.linalg.norm( np.array( bat_preums.coos) - np.array(coos0), 2)
-        bmin_ =  bat_preums
-        
-        for bat in self.batlist:
-            if bat.coos == coos0 :
-                continue
-            elif bat.type != type2find:
-                continue
-            else:
-                nnorm = np.linalg.norm( np.array(bat.coos) - np.array(coos0), 2)
-                if nnorm < min_ :
-                    min_ = nnorm
-                    bmin_ = bat
-                    
-        return bmin_    
+
         
 
 
@@ -288,7 +270,7 @@ city = Ville((48.58310, 7.74863))
 #city = Ville((48.882970, 2.299415))
 
 
-# 8.25 d'init générale
+# 8.25 d'init générale : factoriser
 
 # TODO : 
 #   Faire la couche d'au dessus, 
