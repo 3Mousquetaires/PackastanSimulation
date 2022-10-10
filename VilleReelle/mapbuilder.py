@@ -68,7 +68,7 @@ class MapBuilder:
         """Exemple : centre de Stras : (48.58310, 7.74863) (fonctionne sur les coordonées géographiques).\n"""
         self.center = center
         
-        self.batliste = []
+        self.batlist = []
         self.maisonliste = []
         self.pfGraph = nx.MultiDiGraph()
         
@@ -236,7 +236,7 @@ class MapBuilder:
                 newbat = batiment_r.Maison(type_int, coos, props_dico)
                 self.maisonliste.append(newbat)
             else:
-                newbat = batiment_r.Batiment(type_int, coos, props_dico)
+                newbat = batiment_r.Maison(type_int, coos, props_dico)
                 self.maisonliste.append(newbat)
                 
             self.batlist.append(newbat)
