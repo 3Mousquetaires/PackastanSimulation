@@ -15,8 +15,10 @@ import random
 import defaultMap as dm
 import map_test
 import csv
+import sys
 
-defaultMap = map_test.testmap(30)
+np.set_printoptions(threshold=sys.maxsize)
+defaultMap = dm.defaultMap
 
 valeurs = []
 
@@ -99,7 +101,7 @@ def renforcement():
     city = Ville(len(defaultMap), len(defaultMap[0]), len(defaultMap)*len(defaultMap[0]), defaultMap)
     map, map_kbien = city.start(affichageLive=False)
     kbmoy = np.mean(map_kbien)
-    while(kbmoy < 0.20):
+    while(kbmoy < 0.240):
         rd = random.randint(0, 100)
         if rd < 20:
             map, map_kbien = exploration(map, map_kbien)
@@ -111,6 +113,8 @@ def renforcement():
         kbmoy = np.mean(map_kbien)
         writer.writerow([kbmoy])
         print(kbmoy)
+    with open('map.txt', 'w') as f:
+        print(map.tolist(), file=f)
     city = Ville(len(map), len(map[0]), len(map)*len(map[0]), map, kill_epsilon=0)
     map, map_kbien = city.start(affichageLive=True)
 
