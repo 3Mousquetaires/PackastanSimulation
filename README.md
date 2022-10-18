@@ -15,13 +15,12 @@ Pour que les différent fichiers fonctionnent correctement, il faut que les bibl
 * numpy
 * matplotlib
 * pynput
-* enum
 * csv
 * collections
 * keyboard
 * requests
 * json
-* igraph
+* osmnx
 
 ### Apprentissage par renforcement
 

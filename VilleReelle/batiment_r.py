@@ -1,10 +1,9 @@
-from enum import Enum
 
 import csv
 
 import numpy as np
 
-from besoin import StrToTypeBesoin, TypeBesoin
+from besoin import StrToTypeBesoin
 
 #Variables globales  ------------------------------------------------------
 LISTE_BATIMENT_STR = ["commerce", "maison", "infirmerie", 
@@ -12,35 +11,17 @@ LISTE_BATIMENT_STR = ["commerce", "maison", "infirmerie",
     "mairie", "route"]
 
 
-CSV_FILE = "base/info_batiments.csv"
+CSV_FILE = "base\info_batiments.csv"
 
 #  ------------------------------------------------------------------------
 
-class TypeBatiment (Enum):
-    """Nécessaire pour sauver de l'espace : 
-    stock un type de batiment comme un int au lieu 
-    d'une string.\n
-    Utiliser le dico BatimentTToStr pour convertir TypeBatiment -> string."""
-    COMMERCE = 0
-    MAISON = 1
-    INFIRMERIE = 2
-    COMMISSARIAT = 3
-    USINE = 4
-    EGLISE = 5
-    BAR = 6
-    ESPACE_VERT = 7
-    MAIRIE = 8
-    ROUTE = 9
-
-    def int(self):
-        return self.value
 
 
-BatimentTToStr = { TypeBatiment.COMMERCE:"commerce", TypeBatiment.MAISON:"maison",
-    TypeBatiment.INFIRMERIE:"infirmerie", TypeBatiment.COMMISSARIAT:"commissariat",
-    TypeBatiment.USINE:"usine", TypeBatiment.EGLISE:"eglise", TypeBatiment.BAR:"bar",
-    TypeBatiment.ESPACE_VERT:"espace_vert", TypeBatiment.MAIRIE:"mairie", 
-    TypeBatiment.ROUTE:"route" }
+BatimentTToStr = { 0:"commerce", 1:"maison",
+    2: "infirmerie", 3:"commissariat",
+    4:"usine", 5:"eglise", 6:"bar",
+    7:"espace_vert", 8:"mairie", 
+    9:"route" }
 
 
 
@@ -58,7 +39,7 @@ class Batiment :
             reader = csv.reader(file)
 
             for row in reader:
-                if row[0] == BatimentTToStr[ TypeBatiment( type_)]:
+                if row[0] == BatimentTToStr[  type_]:
                     str_data = row
                     break
 
@@ -76,7 +57,6 @@ class Batiment :
         self.autre_props = props["props_"]
         self.id = props["id"]
         self.area = props["area"]
-        self.dist_origine = props["dist_origine"]
 
 
     def AjouterCitoyen(self):
@@ -126,5 +106,3 @@ class Maison(Batiment):
     def Update_Bats(self, type_, chemin):
         """SET : update l'annuaire de la maison"""
         self.memoire_batiments[type_] = chemin
-
-        

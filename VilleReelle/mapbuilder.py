@@ -15,6 +15,8 @@ import batiment_r
 import osmnx.graph as grph
 import osmnx.distance as dist
 
+from osmnx import save_graphml, load_graphml
+
 
 
 
@@ -62,10 +64,10 @@ _TYPE_TO_TYPE = {
 
 
 class MapBuilder:
-    """Outil intégré de construction de graphe basé sur la zone proche autour d'un point central."""
+    """Outil intégré de construction de graphe urbain basé sur la zone proche autour d'un point central."""
 
     def __init__(self, center):
-        """Exemple : centre de Stras : (48.58310, 7.74863) (fonctionne sur les coordonées géographiques).\n"""
+        """Exemple : centre de Strasbourg : (48.58310, 7.74863) (fonctionne sur les coordonées géographiques).\n"""
         self.center = center
         
         self.batlist = []
@@ -73,9 +75,12 @@ class MapBuilder:
         self.pfGraph = nx.MultiDiGraph()
         
     
-    def Initialise(self):
+    def Initialise(self, size=4):
         """Faut s'y frotter...\n
-            Préférer la déserialisation depuis le cache avec MapBuilder.LoadFromCache"""
+            Préférer la déserialisation depuis le cache avec MapBuilder.LoadFromMemory\n
+            Temps d'exécution : 10 15 minutes."""
+            
+        self.size = size
             
         print(f" --- Initialisation de {self.center} lancée, allez prendre un café.")
         print(" --- \tPremier traitement des bâtiments.")
@@ -100,8 +105,12 @@ class MapBuilder:
         print(f" --- \tInitialisation des maisons : {len(self.maisonliste)} trouvées.")
         
         self.route_liste = []
+        #print(json.dumps(self.maisonliste[0].__dict__))
         # deuxième traitement : init des maisons
+        i = 0
         for m in self.maisonliste:
+            print(i)
+            i += 1
             for k in range(9):
                 if k != 1:
                     batf = self.find_closer(m.coos, k)
@@ -110,10 +119,63 @@ class MapBuilder:
                     self.route_liste.append(chemin)
                     m.Update_Bats(k, chemin)
                     
-        print(f" --- \tMaisons générées en {time.time()-t0}.")
+        deltat = time.time()-t0
+        print(f" --- \tMaisons générées en {deltat//60} min {deltat%60} s.")
         
-        print(f" --- Serialisation rapide")
+        print(" --- Initialisation terminée !")
+        
+        print(" --- Serialisation rapide")
         self.SelfSerialize()
+        
+        print(" --- \tterminé !")
+        
+        
+        
+    def _dumpsBatList(self):
+        """Les objets maisons ne sont pas sérialisables, """
+        D = []
+        
+        for b in self.batlist:
+            D.append(b.__dict__)
+            
+        return D
+    
+    
+    def _loadsBatList(self, data):
+        self.batlist = []
+        
+        for b in data:
+            props_dico = {
+                "id" : b["id"],
+                "props_" : b["autre_props"],
+                "area" : b["area"],
+                "capacite": b["capacite"]
+            }
+            
+            
+            if b["type"] == 1:
+                bat = batiment_r.Maison(1, b["coos"], props_dico)
+            else:
+                bat = batiment_r.Batiment(b["type"], b["coos"], props_dico)
+                
+            self.batlist.append(bat)
+    
+    
+    
+    def LoadFromMemory(self):
+        print(f" --- Initialisation de {self.center} commencée")
+        path = path = os.path.join(os.getcwd(), "memoire",  f"{self.center}")
+        
+        with open(f"{path}\\map.json", "r") as file:
+            print(f" --- \tTrouvé dans la mémoire !")
+            data = file.read()
+            batlist_raw = json.loads(data)
+            self._loadsBatList(batlist_raw)
+            
+            
+        print(" --- FIN")
+        return
+    
         
 
     def SelfSerialize(self):
@@ -121,12 +183,15 @@ class MapBuilder:
         Appel automatique depuis Initialise, éviter de toucher."""
         path = os.path.join(os.getcwd(), "memoire",  f"{self.center}")
         
-        os.makedirs(path)
+        try:
+            os.makedirs(path)
+        except FileExistsError:
+            pass
+        
         with open(os.path.join(f"{path}\\map.json"), 'w') as file:
-            file.write(json.dumps(self.batliste))
+            file.write(json.dumps(self._dumpsBatList()))
             
-        with open(os.path.join(f"{path}\\graph.json"), 'w') as file:
-            file.write(json.dumps(nx.adjacency_data(self.pfGraph)))
+        save_graphml(self.pfGraph, f"{path}\\graph.xml")
         
         
         
@@ -236,8 +301,7 @@ class MapBuilder:
                 newbat = batiment_r.Maison(type_int, coos, props_dico)
                 self.maisonliste.append(newbat)
             else:
-                newbat = batiment_r.Maison(type_int, coos, props_dico)
-                self.maisonliste.append(newbat)
+                newbat = batiment_r.Batiment(type_int, coos, props_dico)
                 
             self.batlist.append(newbat)
 
@@ -277,11 +341,14 @@ class MapBuilder:
         #On déjà récupérer les coos des 4 maps que l'on doit aller chercher.
         center_map_id = self._deg2num(self.center[0], self.center[1], 15)
 
-        #On s'intéresse aux 4 maps autour du centre.
-        map_ids = []
-        for i in range(2):
-            for j in range(2):
-                map_ids.append( (center_map_id[0]+i, center_map_id[1]+j) )
+        if self.size == 1:
+            map_ids = [(center_map_id[0], center_map_id[1])]
+        else:
+            #On s'intéresse aux 4 maps autour du centre.
+            map_ids = []
+            for i in range(2):
+                for j in range(2):
+                    map_ids.append( (center_map_id[0]+i, center_map_id[1]+j) )
 
         #maintenant les requêtes.
         HEADER = {
@@ -317,7 +384,8 @@ class MapBuilder:
             json_list.append(response.json())
         
         #On va faire l'union de toutes ces données
-        json_list[0]["features"] += json_list[1]["features"] + json_list[2]["features"] + json_list[3]["features"]
+        if self.size != 1:
+            json_list[0]["features"] += json_list[1]["features"] + json_list[2]["features"] + json_list[3]["features"]
 
         json_f  = json_list[0]["features"]
         return json_f
@@ -328,8 +396,8 @@ class MapBuilder:
 
 #print(GetData_batiments((48.58310, 7.74863))
 
+#MB = MapBuilder((48.58310, 7.74863))
 
-
-
-MB = MapBuilder((48.58310, 7.74863))
-MB.Initialise()
+MB = MapBuilder( (47.5204, 6.6594) )
+#MB.Initialise(size=1)
+MB.LoadFromMemory()
