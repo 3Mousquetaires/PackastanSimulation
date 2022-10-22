@@ -84,7 +84,7 @@ class MapBuilder:
             
         print(f" --- Initialisation de {self.center} lancée, allez prendre un café.")
         print(" --- \tPremier traitement des bâtiments.")
-        self.CreateBatListe()
+        self._create_bat_list()
         
         #calcul de la bbox
         coos_list = [bat.coos for bat in self.batlist]
@@ -115,7 +115,7 @@ class MapBuilder:
                 if k != 1:
                     batf = self.find_closer(m.coos, k)
                     
-                    chemin = self.GetItineraire(m.coos, batf.coos)
+                    chemin = self._get_itineraire(m.coos, batf.coos)
                     self.route_liste.append(chemin)
                     m.Update_Bats(k, chemin)
                     
@@ -248,11 +248,11 @@ class MapBuilder:
         return bmin_    
 
 
-    def CreateBatListe(self):
-        """Utilise self.GetData_Batiments pour renvoyer une liste de 
+    def _create_bat_list(self):
+        """Utilise self._getdata_batiments pour renvoyer une liste de 
         Bâtiments formatés et avec les bonnes données."""
         #Il faut tout d'abord récupérer toutes les informations sur les bâtiments.
-        batlist_json = self.GetData_batiments()
+        batlist_json = self._getdata_batiments()
         print(f" --- \t{ len( batlist_json ) } batiments trouvés.")
 
         #C'est parti. On extrait chaque bâtiment et ce qui nous intéresse dans une liste de dicos
@@ -308,7 +308,7 @@ class MapBuilder:
 
 
 
-    def GetItineraire(self, start, finish):
+    def _get_itineraire(self, start, finish):
         """
         Prend en argument deux positions, et renvoie la liste des routes pour faire le trajet.\n
         
@@ -336,7 +336,7 @@ class MapBuilder:
         return (xtile, ytile)
 
 
-    def GetData_batiments(self):
+    def _getdata_batiments(self):
         """Récupère l'intégralité des données sur les batiments contenus dans la zone."""
         #Ca va être un peu le cirque.
         #On déjà récupérer les coos des 4 maps que l'on doit aller chercher.
@@ -347,8 +347,8 @@ class MapBuilder:
         else:
             #On s'intéresse aux 4 maps autour du centre.
             map_ids = []
-            for i in range(2):
-                for j in range(2):
+            for i in range(-self.size+1, self.size):
+                for j in range(-self.size+1, self.size):
                     map_ids.append( (center_map_id[0]+i, center_map_id[1]+j) )
 
         #maintenant les requêtes.
@@ -390,12 +390,16 @@ class MapBuilder:
 
         json_f  = json_list[0]["features"]
         return json_f
+    
+    
+    def GetBatList(self):
+        return self.batlist
 
 
-#print(GetItineraire( (2.316068734550804,48.87037435), (-1.2770243425435213,46.1581427) ))
+#print(_get_itineraire( (2.316068734550804,48.87037435), (-1.2770243425435213,46.1581427) ))
 #2.316068734550804,48.87037435;-1.2770243425435213,46.1581427
 
-#print(GetData_batiments((48.58310, 7.74863))
+#print(__getdata_batiments((48.58310, 7.74863))
 
 #MB = MapBuilder((48.58310, 7.74863))
 

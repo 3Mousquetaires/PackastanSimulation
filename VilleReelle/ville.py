@@ -1,24 +1,18 @@
-
-from email.header import Header
-import hashlib
-from re import M
-from tokenize import Double
 import numpy as np
 import matplotlib.pyplot as plt
 import keyboard
 import batiment_r
 import citoyen
 import time
-import random
-import defaultMap
-import requests
-import shutil
 import os
 
 import mapbuilder as mb
 
 import osmnx.graph as grph
 import osmnx.distance as dist
+
+
+KILL_EPSILON = 1e-4
 
 
         
@@ -29,28 +23,20 @@ type_to_c = {0:'#ed1c24', 1:'#6ABE30', 2:'#5B6EE1',
 
 
 class Ville:
-    def __init__(self, center, population:int = 1, kill_epsilon=0): 
+    def __init__(self, center, batlist, population:int = 1): 
         """# Initialisation de la ville : 
         Permet de créer une ville de taille (height x width), 
         avec éventuellement une map par défaut (fondée uniquement sur les commerces).\n
         S'utilise en instanciation classique : ```city = Ville(h, w)```
-        \nkill_epsilon conseillé : 1e-4. Laisser à 0 pour que le tour ne s'arrête pas. 
         """
         
-        self.kill_epsilon = 1e-4 #si la dérivée moyenne des 5 derniers tours descend sous 10^-6, le tour est fini
+        self.batlist = batlist
         self.center = center
-
-        # ======== On va initialiser la ville ===========
-        MB = mb.MapBuilder(center)
-        print(" --- initialisation des bâtiments")
-        self.batlist = MB.CreateBatListe()
-            
-        
         
         # ======== On va gérer les dimensions ==========
         self._buildMap()
-        print("\n --- initialisation de la carte")
-        self.imgpath = self.get_background()
+        
+        
         
         #affichage. On vise la rapidité.
         self.coos_listx = [bat.coos[0] for bat in self.batlist]
@@ -66,41 +52,6 @@ class Ville:
         self.habitants = []
         
         print(" --- \tdimensions : ", self.N, self.S, self.E, self.W)
-        
-        
-        # on initialise toutes les maisons
-        print(" --- Initialisation de l'annuaire des maisons")
-        maisonlist = [m for m in self.batlist if m.type == 1]
-        
-        t0 = time.time()
-        G = grph.graph_from_bbox(self.N, self.S, self.E, self.W, network_type="all")
-        print(" --- \tCréation du graphe : ", time.time()-t0)
-        
-        t0 = time.time()
-        print(" --- \tCréation de l'annuaire")
-        
-        roadlist = []
-        
-        print(len(maisonlist))
-        
-        i = 0
-        for m in maisonlist:
-            print(i)
-            i += 1
-            coos = m.coos
-            node0 = dist.nearest_nodes(G, coos[0], coos[1])
-            
-            for k in range(9):
-                if k != 1:
-                    batf = self.find_closer(coos, k)
-                    nodef = dist.nearest_nodes(G, batf.coos[0], batf.coos[1])
-                    
-                    chemin = dist.shortest_path(G, node0, nodef)
-                    roadlist.append(chemin)
-                    m.Update_Bats(k, chemin)
-                    
-        print("Finito !", time.time()-t0)
-        
 
         self.show_realistic()
         
@@ -205,7 +156,7 @@ class Ville:
         return self.map_kbien
 
 
-    def replaceBat(self, x:int, y:int, typeBat: batiment_r.TypeBatiment):
+    def replaceBat(self, x:int, y:int, typeBat:int):
         """# Remplacement :
         Permet de remplacer un batiment en position ```(x, y)```, par un bâtiment de type ```batiment.TypeBatiment```. 
         """
@@ -220,7 +171,9 @@ class Ville:
         plt.style.use('dark_background')
         fig, ax = plt.subplots(figsize=(7, 7))
         
-        bck = plt.imread(self.imgpath)
+        
+        imgpath = self.get_background()
+        bck = plt.imread(imgpath)
         
         
         bbox = (self.W, self.E, self.S, self.N)
@@ -266,7 +219,7 @@ class Ville:
         return array
 
 
-city = Ville((48.58310, 7.74863))
+
 #city = Ville((48.882970, 2.299415))
 
 

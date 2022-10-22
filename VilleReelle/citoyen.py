@@ -15,7 +15,7 @@ coeff_uniform = np.log(1.2)
 
 
 class Citoyen :
-    def __init__(self, maison:batiment_r.TypeBatiment):
+    def __init__(self, maison):
         self.age = 0
         self.besoins = array([.99 for _ in range(0, 9)]) #array([uniform(.5, 1) for _ in range(0, 9)])
         self.maison = maison
