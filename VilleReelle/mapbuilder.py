@@ -406,5 +406,9 @@ if __name__ == "__main__":
     if len(sys.argv) < 3:
         print("Erreur : il manque des arguments\nSynthaxe : mapbuilder.py latitude longitude")
     else:    
+        try: 
+            size = int(sys.argv[3])
+        except IndexError:
+            size = 4
         MB = MapBuilder( (float(sys.argv[1]), float(sys.argv[2])) )
-        MB.Initialise(size=4)
+        MB.Initialise(size=size)
