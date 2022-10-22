@@ -155,6 +155,7 @@ class MapBuilder:
             
             if b["type"] == 1:
                 bat = batiment_r.Maison(1, b["coos"], props_dico)
+                bat.memoire_batiments = b["memoire_batiments"]
             else:
                 bat = batiment_r.Batiment(b["type"], b["coos"], props_dico)
                 
@@ -189,7 +190,7 @@ class MapBuilder:
             pass
         
         with open(os.path.join(f"{path}\\map.json"), 'w') as file:
-            file.write(json.dumps(self._dumpsBatList()))
+            file.write(json.dumps(self._dumpsBatList(), sort_keys=True, indent=4 ))
             
         save_graphml(self.pfGraph, f"{path}\\graph.xml")
         
@@ -398,6 +399,12 @@ class MapBuilder:
 
 #MB = MapBuilder((48.58310, 7.74863))
 
-MB = MapBuilder( (47.5204, 6.6594) )
-#MB.Initialise(size=1)
-MB.LoadFromMemory()
+
+import sys
+
+if __name__ == "__main__":
+    if len(sys.argv) < 3:
+        print("Erreur : il manque des arguments\nSynthaxe : mapbuilder.py latitude longitude")
+    else:    
+        MB = MapBuilder( (float(sys.argv[1]), float(sys.argv[2])) )
+        MB.Initialise(size=4)

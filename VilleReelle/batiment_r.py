@@ -1,5 +1,6 @@
 
 import csv
+import os
 
 import numpy as np
 
@@ -11,7 +12,7 @@ LISTE_BATIMENT_STR = ["commerce", "maison", "infirmerie",
     "mairie", "route"]
 
 
-CSV_FILE = "base\info_batiments.csv"
+CSV_FILE = os.path.join(os.getcwd(), "info_batiments.csv")
 
 #  ------------------------------------------------------------------------
 
