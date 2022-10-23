@@ -25,5 +25,11 @@ class Core():
 
 
 if __name__ == "__main__":
-    C = Core((48.5944, 7.7540), 1)
+    C = Core((48.5944, 7.754), 1)
     C._lancer_simulation()
+    
+    
+    
+#   Grande Tailles :
+# Strasbourg centré sur la grande île : (48.5825, 7.7477)
+# Strasbourg centré sur le Kléber : (48.5944, 7.7540)

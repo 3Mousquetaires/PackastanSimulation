@@ -44,7 +44,7 @@ class Ville:
         self.coos_list = np.array([bat.coos for bat in self.batlist])
         
         self.color_list = [ type_to_c[bat.type] for bat in self.batlist ]
-        self.size_list = [ (1/50) * bat.area for bat in self.batlist ]
+        self.size_list = [ (1/200) * bat.area for bat in self.batlist ]
         
         
         #Init habitants : Liste des habitants

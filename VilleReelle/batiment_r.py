@@ -12,7 +12,6 @@ LISTE_BATIMENT_STR = ["commerce", "maison", "infirmerie",
     "mairie", "route"]
 
 
-CSV_FILE = os.path.join(os.getcwd(), "info_batiments.csv")
 
 #  ------------------------------------------------------------------------
 
@@ -36,13 +35,26 @@ class Batiment :
 
         self.coos = coos
 
-        with open(CSV_FILE, 'r') as file:
-            reader = csv.reader(file)
+        CSV_FILE = os.path.join(os.getcwd(), "info_batiments.csv")
 
-            for row in reader:
-                if row[0] == BatimentTToStr[  type_]:
-                    str_data = row
-                    break
+        try:
+            with open(CSV_FILE, 'r') as file:
+                reader = csv.reader(file)
+
+                for row in reader:
+                    if row[0] == BatimentTToStr[  type_]:
+                        str_data = row
+                        break
+        except FileNotFoundError:
+            CSV_FILE = CSV_FILE = os.path.join(os.getcwd(), "VilleReelle", "info_batiments.csv")
+            
+            with open(CSV_FILE, 'r') as file:
+                reader = csv.reader(file)
+
+                for row in reader:
+                    if row[0] == BatimentTToStr[  type_]:
+                        str_data = row
+                        break
 
         #exploitation de str_data :
         self.type = type_
