@@ -169,19 +169,29 @@ class Ville:
 
     def show_realistic(self):
         plt.style.use('dark_background')
-        fig, ax = plt.subplots(figsize=(7, 7))
+        fig, ax = plt.subplots(figsize=(7.8, 7))
         
         
-        imgpath = self.get_background()
-        bck = plt.imread(imgpath)
+        #imgpath = self.get_background()
+        #bck = plt.imread(imgpath)
         
         
         bbox = (self.W, self.E, self.S, self.N)
-        ax.imshow(bck, zorder=0, extent=bbox, aspect='equal')
+        #ax.imshow(bck, zorder=0, extent=bbox, aspect='equal')
         
         print(" --- \tploting", len(self.batlist), "batiments")
         
-        ax.scatter(self.coos_listx, self.coos_listy, c=self.color_list, s=self.size_list)
+        dico = {0:"Commerces", 1:"habitat", 2:"santé", 3:"securité",
+                4:"emploi", 5:"moralité", 6:"fete", 7:"physique",
+                8:"gestion"}
+        
+        sc = ax.scatter(self.coos_listx, self.coos_listy, c=self.color_list, s=self.size_list)
+        
+        for t in dico:
+            ax.scatter([], [], c=type_to_c[t], label=dico[t])
+
+        fig.subplots_adjust(right=0.8)
+        ax.legend(loc="center left",     bbox_to_anchor=(0.8, 0.5), bbox_transform=fig.transFigure)
             
         plt.show()
         
@@ -224,10 +234,4 @@ class Ville:
 
 
 # 8.25 d'init générale : factoriser
-
-# TODO : 
-#   Faire la couche d'au dessus, 
-#       ammener la gestion des jeux à la chaîne
-#   Factoriser l'init générale
-#   Serialiser : créer un graphe
 
