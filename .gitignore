@@ -128,4 +128,5 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-memoire
+memoire/
+memoire/(47.5206, 6.6652)/map.json
