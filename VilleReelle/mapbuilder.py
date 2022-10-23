@@ -75,7 +75,7 @@ class MapBuilder:
         self.pfGraph = nx.MultiDiGraph()
         
     
-    def Initialise(self, size=4):
+    def Initialise(self, size):
         """Faut s'y frotter...\n
             Préférer la déserialisation depuis le cache avec MapBuilder.LoadFromMemory\n
             Temps d'exécution : 10 15 minutes."""
@@ -165,13 +165,23 @@ class MapBuilder:
     
     def LoadFromMemory(self):
         print(f" --- Initialisation de {self.center} commencée")
-        path = path = os.path.join(os.getcwd(), "memoire",  f"{self.center}")
-        
-        with open(f"{path}\\map.json", "r") as file:
-            print(f" --- \tTrouvé dans la mémoire !")
-            data = file.read()
-            batlist_raw = json.loads(data)
-            self._loadsBatList(batlist_raw)
+
+        try:
+            path = os.path.join(os.getcwd(), "memoire",  f"{self.center}")
+
+            with open(f"{path}\\map.json", "r") as file:
+                print(f" --- \tTrouvé dans la mémoire !")
+                data = file.read()
+                batlist_raw = json.loads(data)
+                self._loadsBatList(batlist_raw)
+        except FileNotFoundError:
+            path = os.path.join(os.getcwd(), "VilleReelle", "memoire",  f"{self.center}")
+
+            with open(f"{path}\\map.json", "r") as file:
+                print(f" --- \tTrouvé dans la mémoire !")
+                data = file.read()
+                batlist_raw = json.loads(data)
+                self._loadsBatList(batlist_raw)
             
             
         print(" --- FIN")
@@ -385,8 +395,8 @@ class MapBuilder:
             json_list.append(response.json())
         
         #On va faire l'union de toutes ces données
-        if self.size != 1:
-            json_list[0]["features"] += json_list[1]["features"] + json_list[2]["features"] + json_list[3]["features"]
+        for i in range(len(map_ids)):
+            json_list[0]["features"] += json_list[i]["features"]
 
         json_f  = json_list[0]["features"]
         return json_f
@@ -413,6 +423,6 @@ if __name__ == "__main__":
         try: 
             size = int(sys.argv[3])
         except IndexError:
-            size = 4
-        MB = MapBuilder( (float(sys.argv[1]), float(sys.argv[2])) )
+            size = 1
+        MB = MapBuilder( (float(sys.argv[1]), float(sys.argv[2])))
         MB.Initialise(size=size)

@@ -12,7 +12,7 @@ LISTE_BATIMENT_STR = ["commerce", "maison", "infirmerie",
     "mairie", "route"]
 
 
-CSV_FILE = os.path.join(os.getcwd(), "VilleReelle", "info_batiments.csv")
+CSV_FILE = os.path.join(os.getcwd(), "info_batiments.csv")
 
 #  ------------------------------------------------------------------------
 
