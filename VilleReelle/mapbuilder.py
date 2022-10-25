@@ -1,3 +1,4 @@
+from fileinput import close
 import requests as rq
 import json
 import math
@@ -338,14 +339,17 @@ class MapBuilder:
         itineraire = dist.shortest_path(self.pfGraph, node0, node1)
         chemin = []
         
+        if itineraire == None:
+            return []
+
         for r in itineraire:
             try:
                 chemin.append(self.route_dico[r])
             except KeyError:
                 #il faut créer la route.
-                coos = (self.pfGraph.node[r]['lat'], self.pfGraph.node[r]['lon'])
-                id_ = i_route
-                i_route += 1
+                coos = (self.pfGraph.nodes[r]['y'], self.pfGraph.nodes[r]['x'])
+                id_ = self.i_route
+                self.i_route += 1
                 newr = batiment_r.Road(coos, id_)
                 self.route_dico[r] = id_
                 self.batlist.append(newr)
@@ -441,6 +445,12 @@ class MapBuilder:
 import sys
 
 if __name__ == "__main__":
+    MB = MapBuilder( (48.5825, 7.7477))
+    MB.Initialise(size=2)
+
+    close()
+
+
     if len(sys.argv) < 3:
         print("Erreur : il manque des arguments\nSynthaxe : mapbuilder.py latitude longitude")
     else:    
