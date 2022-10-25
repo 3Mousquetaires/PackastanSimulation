@@ -20,12 +20,12 @@ class Core():
         
         #initialisation de la ville
         V = Ville(self.center, self.mb.GetBatList(), self.population)
-        
+        V.start()
         
 
 
 if __name__ == "__main__":
-    C = Core((48.5944, 7.754), 1)
+    C = Core((47.5206, 6.6652), 1)
     C._lancer_simulation()
     
     
@@ -33,3 +33,4 @@ if __name__ == "__main__":
 #   Grande Tailles :
 # Strasbourg centré sur la grande île : (48.5825, 7.7477)
 # Strasbourg centré sur le Kléber : (48.5944, 7.7540)
+# Paris centré sur l'Elysée : (48.86934, 2.31738)

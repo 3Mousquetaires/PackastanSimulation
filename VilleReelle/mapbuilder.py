@@ -104,10 +104,12 @@ class MapBuilder:
         t0 = time.time()
         print(f" --- \tInitialisation des maisons : {len(self.maisonliste)} trouvées.")
         
-        self.route_liste = []
         #print(json.dumps(self.maisonliste[0].__dict__))
         # deuxième traitement : init des maisons
+        self.route_dico = {}
+        
         i = 0
+        self.i_route = len(self.batlist)
         for m in self.maisonliste:
             print(i)
             i += 1
@@ -115,8 +117,9 @@ class MapBuilder:
                 if k != 1:
                     batf = self.find_closer(m.coos, k)
                     
-                    chemin = self._get_itineraire(m.coos, batf.coos)
-                    self.route_liste.append(chemin)
+                    chemin = [m.id]
+                    chemin += self._get_itineraire(m.coos, batf.coos)          
+                    chemin.append(batf.id)
                     m.Update_Bats(k, chemin)
                     
         deltat = time.time()-t0
@@ -128,7 +131,7 @@ class MapBuilder:
         self.SelfSerialize()
         
         print(" --- \tterminé !")
-        
+                                        
         
         
     def _dumpsBatList(self):
@@ -156,6 +159,8 @@ class MapBuilder:
             if b["type"] == 1:
                 bat = batiment_r.Maison(1, b["coos"], props_dico)
                 bat.memoire_batiments = b["memoire_batiments"]
+            elif b["type"] == 9:
+                bat = batiment_r.Road(b["coos"], b["id"])
             else:
                 bat = batiment_r.Batiment(b["type"], b["coos"], props_dico)
                 
@@ -216,8 +221,10 @@ class MapBuilder:
         return  (round(x, 14), round(y, 14))
 
 
+
     def _deg2rad(self, angle):
         return angle* np.pi * _EARTH_RADIUS / 180
+
 
 
     def _calculateArea(self, liste_sommets):
@@ -235,6 +242,7 @@ class MapBuilder:
         for i in range(len(liste_points)-1):
             somme += liste_points[i][0]*liste_points[i+1][1] - liste_points[i+1][0]*liste_points[i][1] 
         return abs(somme) /2
+    
     
     
     def find_closer(self, coos0, type2find):
@@ -299,7 +307,7 @@ class MapBuilder:
             )
 
             props_dico = {
-                    "id" : bat["id"],
+                    "id" : i,
                     "dist_origine" : dist_origine,
                     "props_" : bat["properties"],
                     "area" : area,
@@ -327,7 +335,23 @@ class MapBuilder:
         node0 = dist.nearest_nodes(self.pfGraph, start[0], start[1])
         node1 = dist.nearest_nodes(self.pfGraph, finish[0], finish[1])
         
-        return dist.shortest_path(self.pfGraph, node0, node1)
+        itineraire = dist.shortest_path(self.pfGraph, node0, node1)
+        chemin = []
+        
+        for r in itineraire:
+            try:
+                chemin.append(self.route_dico[r])
+            except KeyError:
+                #il faut créer la route.
+                coos = (self.pfGraph.node[r]['lat'], self.pfGraph.node[r]['lon'])
+                id_ = i_route
+                i_route += 1
+                newr = batiment_r.Road(coos, id_)
+                self.route_dico[r] = id_
+                self.batlist.append(newr)
+        
+        return chemin
+        
         
 
     def print_json(self, json_file, nom):

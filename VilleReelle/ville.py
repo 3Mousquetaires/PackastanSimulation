@@ -36,15 +36,13 @@ class Ville:
         # ======== On va gérer les dimensions ==========
         self._buildMap()
         
-        
-        
         #affichage. On vise la rapidité.
         self.coos_listx = [bat.coos[0] for bat in self.batlist]
         self.coos_listy = [bat.coos[1] for bat in self.batlist]
         self.coos_list = np.array([bat.coos for bat in self.batlist])
         
         self.color_list = [ type_to_c[bat.type] for bat in self.batlist ]
-        self.size_list = [ (1/200) * bat.area for bat in self.batlist ]
+        self.size_list = [ (1/20) * bat.area for bat in self.batlist ]
         
         
         #Init habitants : Liste des habitants
@@ -53,7 +51,8 @@ class Ville:
         
         print(" --- \tdimensions : ", self.N, self.S, self.E, self.W)
 
-        self.show_realistic()
+        self._update_list_kbien()
+        #self.show_realistic()
         
         
 
@@ -163,7 +162,8 @@ class Ville:
         #TODO
         
         
-
+    def _update_list_kbien(self):
+        self.kbien_list = np.ndarray([bat.kbien for bat in self.batlist])
         
 
 

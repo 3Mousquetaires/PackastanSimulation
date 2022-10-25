@@ -119,3 +119,13 @@ class Maison(Batiment):
     def Update_Bats(self, type_, chemin):
         """SET : update l'annuaire de la maison"""
         self.memoire_batiments[type_] = chemin
+        
+        
+ROAD_AREA = 50
+
+        
+class Road(Batiment):
+    """Plus un shortcut qu'autre chose, ne contient pas de méthodes additionnelles."""
+    def __init__(self, coos, id):
+        props = {"props_":None, "id":id, "area":ROAD_AREA}
+        super().__init__(9, coos, props)
