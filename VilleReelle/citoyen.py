@@ -11,7 +11,7 @@ import batiment_r
 
 BESOINS_COEFFS = {0:16, 1:16, 2:16, 3:8, 4:8, 5:8, 6:4, 7:4, 8:2}
 
-coeff_uniform = np.log(1.2)
+coeff_uniform = np.log(.94)
 
 
 class Citoyen :
@@ -19,13 +19,13 @@ class Citoyen :
         self.age = 0
         self.besoins = array([.99 for _ in range(0, 9)]) #array([uniform(.5, 1) for _ in range(0, 9)])
         self.maison = maison
-        self.pos = maison.adresse
+        self.pos = maison.id
         #0 : chez lui; 1 : en marche; 2 : là bas; 3 : en retour
         self.tour_state = 0
 
 
 
-    def tour(self, batmatrice, should_print = False):
+    def tour(self, batlist, should_print = False):
         """Il faut transmettre l'instance de batiment de position 
         Citoyen.pos à la méthode."""
         #========= EXPLICATIONS ==============
@@ -85,15 +85,19 @@ class Citoyen :
         elif self.tour_state == 1:
             #On vroum vroum jusqu'à Esplanade
             self.temps_parcours += 1
-            next_pos = self.route[0]
+            next_step = self.route[0]
 
             #il faut tester si la route est pleine ou non
-            next_route = batmatrice[next_pos[0]][next_pos[1]] 
+            try:
+                next_route = batlist[next_step]
+            except TypeError:
+                return
+            
             if next_route.AjouterCitoyen():
                 self.route.popleft()
-                self.pos = next_pos
-                self.chemin_retour.append(next_pos)
-                batmatrice[ self.pos[0] ][self.pos[1]].EnleverCitoyen()
+                self.pos = next_step
+                self.chemin_retour.append(next_step)
+                batlist[ self.pos ].EnleverCitoyen()
 
                 if len(self.route) == 0:
                     #on est arrivé
@@ -112,7 +116,7 @@ class Citoyen :
     
             
             else:
-                print("Bouchon en", next_pos)
+                print("Bouchon en", next_step)
                 return #on ne peut rien faire, la route de devant
                 #est bloquée
 
@@ -128,14 +132,14 @@ class Citoyen :
         elif self.tour_state == 3:
             #gestion de la route de retour
             self.temps_parcours += 1
-            next_pos = self.chemin_retour[-1]
+            next_step = self.chemin_retour[-1]
 
             #il faut tester si la route est pleine ou non
-            next_route = batmatrice[next_pos[0]][next_pos[1]] 
+            next_route = batlist[next_step]
             if next_route.AjouterCitoyen():
                 self.chemin_retour.pop()
-                self.pos = next_pos
-                batmatrice[ self.pos[0] ][ self.pos[1]] .EnleverCitoyen()
+                self.pos = next_step
+                batlist[ self.pos ].EnleverCitoyen()
 
                 if should_print:
                     print(self.pos)
@@ -143,6 +147,7 @@ class Citoyen :
                     #on est rentrés
                     self.tour_state = 0
                     kbien = np.exp(- ( coeff_uniform *self.temps_parcours)**2 )
+                    #kbien = self.temps_parcours
 
                     if should_print:
                         print("== Etape quatre : Finie ! ==")
@@ -157,7 +162,7 @@ class Citoyen :
 
             
             else:
-                print("Bouchon en", next_pos)
+                print("Bouchon en", next_step)
                 return #on ne peut rien faire, la route de devant
                 #est bloquée
     
@@ -176,7 +181,8 @@ class Citoyen :
 
     def selectionnerBesoin(self):
         #on prend les 3 derniers
-        besoins_min_list = sorted(self.besoins)
+        besoins_min_list = sorted([self.besoins[t] for t in range(len(self.besoins)) 
+                                   if t != 1])
         besoinTt = choice(besoins_min_list[:3])
         besoin_i = where(self.besoins == besoinTt)[0][0]
 

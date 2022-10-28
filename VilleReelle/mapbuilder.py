@@ -66,7 +66,7 @@ _TYPE_TO_TYPE = {
 
 class MapBuilder:
     """Outil intégré de construction de graphe urbain basé sur la zone proche autour d'un point central."""
-
+    
     def __init__(self, center):
         """Exemple : centre de Strasbourg : (48.58310, 7.74863) (fonctionne sur les coordonées géographiques).\n"""
         self.center = center
@@ -74,6 +74,7 @@ class MapBuilder:
         self.batlist = []
         self.maisonliste = []
         self.pfGraph = nx.MultiDiGraph()
+       
         
     
     def Initialise(self, size):
@@ -158,10 +159,10 @@ class MapBuilder:
             
             
             if b["type"] == 1:
-                bat = batiment_r.Maison(1, b["coos"], props_dico)
+                bat = batiment_r.Maison(b["coos"], props_dico)
                 bat.memoire_batiments = b["memoire_batiments"]
             elif b["type"] == 9:
-                bat = batiment_r.Road(b["coos"], b["id"])
+                bat = batiment_r.Road((b["coos"][1], b["coos"][0]), b["id"])
             else:
                 bat = batiment_r.Batiment(b["type"], b["coos"], props_dico)
                 
@@ -318,7 +319,7 @@ class MapBuilder:
             
             
             if type_int == 1:
-                newbat = batiment_r.Maison(type_int, coos, props_dico)
+                newbat = batiment_r.Maison(coos, props_dico)
                 self.maisonliste.append(newbat)
             else:
                 newbat = batiment_r.Batiment(type_int, coos, props_dico)
@@ -445,12 +446,6 @@ class MapBuilder:
 import sys
 
 if __name__ == "__main__":
-    MB = MapBuilder( (48.5825, 7.7477))
-    MB.Initialise(size=2)
-
-    close()
-
-
     if len(sys.argv) < 3:
         print("Erreur : il manque des arguments\nSynthaxe : mapbuilder.py latitude longitude")
     else:    

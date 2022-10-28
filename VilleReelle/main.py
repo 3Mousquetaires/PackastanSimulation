@@ -3,6 +3,11 @@
 from mapbuilder import MapBuilder
 from ville import Ville
 
+import numpy as np
+import matplotlib.pyplot as plt
+
+import time
+
 
 class Core():
     def __init__(self, center, population):
@@ -17,15 +22,22 @@ class Core():
         
     def _lancer_simulation(self):
         """Lance une simulation qui s'arrête à l'asymptote. Renvoie la kbien."""
-        
-        #initialisation de la ville
         V = Ville(self.center, self.mb.GetBatList(), self.population)
-        V.start()
         
-
+        data = V.start()
+        
+        kbien = self._compute_mean(data)
+        return kbien
+        
+        
+    def _compute_mean(self, data):
+        """En attendant de faire marcher np.nonzero..."""
+        n = len(data)-data.count(0)
+        return sum(data)/n
+        
 
 if __name__ == "__main__":
-    C = Core((47.5206, 6.6652), 1)
+    C = Core((48.5825, 7.7477), 10_000)
     C._lancer_simulation()
     
     

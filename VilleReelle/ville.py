@@ -1,10 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import keyboard
+from citoyen import Citoyen
 import batiment_r
-import citoyen
 import time
 import os
+from random import choice
 
 import mapbuilder as mb
 
@@ -42,7 +43,7 @@ class Ville:
         self.coos_list = np.array([bat.coos for bat in self.batlist])
         
         self.color_list = [ type_to_c[bat.type] for bat in self.batlist ]
-        self.size_list = [ (1/20) * bat.area for bat in self.batlist ]
+        self.size_list = [ (1/200) * bat.area for bat in self.batlist ]
         
         
         #Init habitants : Liste des habitants
@@ -53,6 +54,12 @@ class Ville:
 
         self._update_list_kbien()
         #self.show_realistic()
+        
+        print(" --- Création des citoyens")
+        maisonlist = [m for m in self.batlist if m.type == 1]
+        for c in range(self.population):
+            citoyen = Citoyen(choice(maisonlist))
+            self.habitants.append(citoyen)
         
         
 
@@ -125,34 +132,39 @@ class Ville:
         self.isRunning = True
         self.derivee = []
         
+        X = []
+        Y = []
+        
         
         #la mettre en false pour terminer le programme
         while self.isRunning:
             i+=1
-            map_kbien_avant = np.copy(self.map_kbien)
+            X.append(i)
+            map_kbien_avant = np.copy(self.kbien_list)
 
             #appel au jeu de chaque citoyen.
             for c in self.habitants:
-                resultat = c.tour(self.map, should_print = False)
+                resultat = c.tour(self.batlist, should_print = False)
                 if type(resultat) != type(None):
                     #Si la méthode tour renvoie un truc, c'est qu'un kbien a été extrait.
-                    coord_bat = resultat[1]
-
-                    mean_kbien = self.map[coord_bat[0]][coord_bat[1]].ActualiseKbien(resultat[0])
-                    self.map_kbien[coord_bat] = mean_kbien
+                    id_bat = resultat[1]
+                    mean_kbien = self.batlist[id_bat].ActualiseKbien(resultat[0])
+                    #print(mean_kbien)
+                    self.kbien_list[id_bat] = mean_kbien #mean_kbien
+                    #print(self.kbien_list)
+                    Y.append(self.kbien_list)
             
 
             if i % 2 == 0: #la map n'a aucun changements aux tours impairs
-                delta = np.mean(self.map_kbien - map_kbien_avant)
-                self.derivee.append(delta)
+               delta = np.mean(self.kbien_list - map_kbien_avant)
+               self.derivee.append(delta)
 
-                if i > 10 and np.mean(self.derivee[-5:]) < self.kill_epsilon :
-                    self.isRunning = False
+               if i > 100 and np.mean(self.derivee[-5:]) < KILL_EPSILON :
+                   self.isRunning = False
 
 
-        plt.close(self.fig)
-        plt.ioff()
-        return self.map_kbien
+        print(i, np.mean(self.kbien_list))
+        return self.kbien_list
 
 
     def replaceBat(self, x:int, y:int, typeBat:int):
@@ -163,7 +175,7 @@ class Ville:
         
         
     def _update_list_kbien(self):
-        self.kbien_list = np.ndarray([bat.kbien for bat in self.batlist])
+        self.kbien_list = [bat.kbien for bat in self.batlist]
         
 
 
@@ -171,27 +183,21 @@ class Ville:
         plt.style.use('dark_background')
         fig, ax = plt.subplots(figsize=(7.8, 7))
         
-        
-        #imgpath = self.get_background()
-        #bck = plt.imread(imgpath)
-        
-        
         bbox = (self.W, self.E, self.S, self.N)
-        #ax.imshow(bck, zorder=0, extent=bbox, aspect='equal')
         
         print(" --- \tploting", len(self.batlist), "batiments")
         
         dico = {0:"Commerces", 1:"habitat", 2:"santé", 3:"securité",
                 4:"emploi", 5:"moralité", 6:"fete", 7:"physique",
-                8:"gestion"}
+                8:"gestion", 9:"routes"}
         
-        sc = ax.scatter(self.coos_listx, self.coos_listy, c=self.color_list, s=self.size_list)
+        ax.scatter(self.coos_listx, self.coos_listy, c=self.color_list, s=self.size_list)
         
         for t in dico:
             ax.scatter([], [], c=type_to_c[t], label=dico[t])
 
         fig.subplots_adjust(right=0.8)
-        ax.legend(loc="center left",     bbox_to_anchor=(0.8, 0.5), bbox_transform=fig.transFigure)
+        ax.legend(loc="center left", bbox_to_anchor=(0.8, 0.5), bbox_transform=fig.transFigure)
             
         plt.show()
         

@@ -95,7 +95,7 @@ class Batiment :
 
 
 class Maison(Batiment):
-    def __init__(self, type, adresse, props):
+    def __init__(self, adresse, props):
         super().__init__(1, adresse, props)
 
         self.memoire_batiments = { k:None for k in range(9) }
@@ -104,14 +104,7 @@ class Maison(Batiment):
 
 
     def GetBatiment(self, besoin):
-        route = self.memoire_batiments[besoin]
-
-        if route == None:
-            self.Update_Bats()
-        elif self.map[route[-1]] != besoin:
-            self.Update_Bats()
-
-        route = self.memoire_batiments[besoin]
+        route = self.memoire_batiments[str(besoin)]
 
         return route
     
