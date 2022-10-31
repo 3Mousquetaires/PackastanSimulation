@@ -203,6 +203,9 @@ class Ville:
 
         fig.subplots_adjust(left=.1)
         ax_ville.legend(loc="center left", bbox_transform=fig.transFigure)
+        box = ax_ville.get_position()
+        ax_ville.set_position([box.x0, box.y0 + box.height * 0.1, box.width, box.height * 0.9])
+        ax_ville.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),fancybox=True, shadow=True, ncol=5)
             
             
         # ====== MAP KBIEN ========
