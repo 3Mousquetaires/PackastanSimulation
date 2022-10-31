@@ -69,6 +69,8 @@ class Ville:
         for c in range(self.population):
             citoyen = Citoyen(choice(maisonlist))
             self.habitants.append(citoyen)
+            
+        print(" --- Initialisation terminée")
         
         
 
@@ -172,7 +174,7 @@ class Ville:
                    self.isRunning = False
 
 
-        print(i, np.mean(self.kbien_list))
+        print(f" --- Simulation fini en {i} tours.")
         return self.kbien_list
 
 

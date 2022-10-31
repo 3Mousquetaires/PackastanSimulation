@@ -191,7 +191,7 @@ class MapBuilder:
                 self._loadsBatList(batlist_raw)
             
             
-        print(" --- FIN")
+        print(" --- Fin du chargement de la map")
         return
     
         

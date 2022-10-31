@@ -39,7 +39,7 @@ class Core():
         
 
 if __name__ == "__main__":
-    C = Core((48.5825, 7.7477), 10_000)
+    C = Core((48.5825, 7.7477), 100_000)
     C._lancer_simulation()
     
     
