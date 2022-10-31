@@ -145,6 +145,7 @@ class Ville:
         
         X = []
         Y = []
+        t0 = time.time()
         
         
         #la mettre en false pour terminer le programme
@@ -173,8 +174,8 @@ class Ville:
                if i > 100 and np.mean(self.derivee[-5:]) < KILL_EPSILON :
                    self.isRunning = False
 
-
-        print(f" --- Simulation fini en {i} tours.")
+        deltat = time.time() - t0
+        print(f" --- Simulation fini en {i} tours, soient {deltat//60} min {deltat%60} sec.")
         return self.kbien_list
 
 
