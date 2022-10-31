@@ -23,11 +23,14 @@ class Core():
     def _lancer_simulation(self):
         """Lance une simulation qui s'arrête à l'asymptote. Renvoie la kbien."""
         V = Ville(self.center, self.mb.GetBatList(), self.population)
+        V.show_realistic()
         
         data = V.start()
         
-        kbien = self._compute_mean(data)
-        return kbien
+        V.show_realistic()
+        
+        # kbien = self._compute_mean(data)
+        # return kbien
         
         
     def _compute_mean(self, data):

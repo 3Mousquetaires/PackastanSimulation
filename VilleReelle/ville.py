@@ -1,3 +1,4 @@
+from matplotlib.figure import figaspect
 import numpy as np
 import matplotlib.pyplot as plt
 import keyboard
@@ -43,7 +44,7 @@ class Ville:
         self.coos_list = np.array([bat.coos for bat in self.batlist])
         
         self.color_list = [ type_to_c[bat.type] for bat in self.batlist ]
-        self.size_list = [ (1/200) * bat.area for bat in self.batlist ]
+        self.size_list = [ (1/500) * bat.area for bat in self.batlist ]
         
         
         #Init habitants : Liste des habitants
@@ -181,23 +182,35 @@ class Ville:
 
     def show_realistic(self):
         plt.style.use('dark_background')
-        fig, ax = plt.subplots(figsize=(7.8, 7))
+        fig, axes = plt.subplots(1, 2, figsize=(12, 6))
         
         bbox = (self.W, self.E, self.S, self.N)
         
         print(" --- \tploting", len(self.batlist), "batiments")
         
+        # ====== VILLE ==========
+        ax_ville = axes[0]
+        
+        ax_ville.set_box_aspect(1)
         dico = {0:"Commerces", 1:"habitat", 2:"santé", 3:"securité",
                 4:"emploi", 5:"moralité", 6:"fete", 7:"physique",
                 8:"gestion", 9:"routes"}
         
-        ax.scatter(self.coos_listx, self.coos_listy, c=self.color_list, s=self.size_list)
+        ax_ville.scatter(self.coos_listx, self.coos_listy, c=self.color_list, s=self.size_list)
         
         for t in dico:
-            ax.scatter([], [], c=type_to_c[t], label=dico[t])
+            ax_ville.scatter([], [], c=type_to_c[t], label=dico[t])
 
-        fig.subplots_adjust(right=0.8)
-        ax.legend(loc="center left", bbox_to_anchor=(0.8, 0.5), bbox_transform=fig.transFigure)
+        fig.subplots_adjust(left=.1)
+        ax_ville.legend(loc="center left", bbox_transform=fig.transFigure)
+            
+            
+        # ====== MAP KBIEN ========
+        ax_kbien = axes[1]
+        ax_kbien.set_box_aspect(1)    
+        
+        ax_kbien.scatter(self.coos_listx, self.coos_listy, s=self.size_list, alpha=self.kbien_list)
+        
             
         plt.show()
         
