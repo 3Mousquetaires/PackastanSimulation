@@ -56,8 +56,16 @@ class Ville:
         self._update_list_kbien()
         #self.show_realistic()
         
+        
         print(" --- Création des citoyens")
         maisonlist = [m for m in self.batlist if m.type == 1]
+        for m in maisonlist:
+            self.kbien_list[m.id] = -.5
+            
+        routeliste = [r for r in self.batlist if r.type == 9]
+        for r in routeliste:
+            self.kbien_list[r.id] = -.5
+            
         for c in range(self.population):
             citoyen = Citoyen(choice(maisonlist))
             self.habitants.append(citoyen)
@@ -201,19 +209,23 @@ class Ville:
         for t in dico:
             ax_ville.scatter([], [], c=type_to_c[t], label=dico[t])
 
-        fig.subplots_adjust(left=.1)
+
         ax_ville.legend(loc="center left", bbox_transform=fig.transFigure)
         box = ax_ville.get_position()
         ax_ville.set_position([box.x0, box.y0 + box.height * 0.1, box.width, box.height * 0.9])
         ax_ville.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),fancybox=True, shadow=True, ncol=5)
             
+        plt.title("Carte des kbiens")
             
         # ====== MAP KBIEN ========
         ax_kbien = axes[1]
         ax_kbien.set_box_aspect(1)    
         
-        ax_kbien.scatter(self.coos_listx, self.coos_listy, s=self.size_list, alpha=self.kbien_list)
-        
+        #cmap = plt.get_cmap('gist_ncar', 1)
+        pts = ax_kbien.scatter(self.coos_listx, self.coos_listy, s=self.size_list, c=self.kbien_list, cmap="plasma")
+        fig.colorbar(pts)
+            
+            
             
         plt.show()
         
