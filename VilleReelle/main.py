@@ -28,19 +28,32 @@ class Core():
         
         V.show_realistic()
         
-        # kbien = self._compute_mean(data)
+        kbien = self._compute_mean(data)
+        print(" --- kbien :", kbien)
         # return kbien
         
         
     def _compute_mean(self, data):
         """En attendant de faire marcher np.nonzero..."""
-        n = len(data)-data.count(0)
-        return sum(data)/n
+        k = data.count(-.5)
+        n = len(data)-data.count(0)-k
+        return (sum(data) + k*.5)/n
         
 
+maps = {
+    "Paris centre 2": (48.86934, 2.31739),
+    "Paris centre 3": (),
+    "Strasbourg centre 2": (48.5825, 7.7477)
+}
+
+
 if __name__ == "__main__":
-    C = Core((48.5825, 7.7477), 100_000)
+    C = Core((48.5825, 7.7477), 50_000)
+    #C = Core((48.86934, 2.31738), 500_000)
     C._lancer_simulation()
+
+
+
     
     
     
