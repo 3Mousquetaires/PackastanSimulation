@@ -95,8 +95,8 @@ class Batiment :
 
 
 class Maison(Batiment):
-    def __init__(self, adresse, props):
-        super().__init__(1, adresse, props)
+    def __init__(self, coos, props):
+        super().__init__(1, coos, props)
 
         self.memoire_batiments = { k:None for k in range(9) }
         self.memoire_batiments[1] = [self.coos]
@@ -132,6 +132,7 @@ ROAD_AREA = 50
         
 class Road(Batiment):
     """Plus un shortcut qu'autre chose, ne contient pas de méthodes additionnelles."""
-    def __init__(self, coos, id):
+    def __init__(self, coos, id, node):
         props = {"props_":None, "id":id, "area":ROAD_AREA}
+        self.node = node
         super().__init__(9, coos, props)

@@ -49,12 +49,11 @@ class Core():
             #maison
             newbat = bat.Maison(i, oldbat.coos, props)
         else :
-            newbat = bat.Batiment(type_, i, props)
+            newbat = bat.Batiment(type_, oldbat.coos, props)
             
         self.mb.SetBat(i, newbat)
             
         self.mb.ActualiseGraphe(i)
-        
         
         
     def _compute_mean(self, data):
@@ -62,6 +61,13 @@ class Core():
         k = data.count(-.5)
         n = len(data)-data.count(0)-k
         return (sum(data) + k*.5)/n
+    
+    
+    def _mean_kbien(self, k):
+        """Renvoie la moyenne bien calculée de tous les batiments du type k"""
+        
+        for i in range(len(self.MB.batlist)):
+            pass
         
 
 maps = {
@@ -75,7 +81,7 @@ if __name__ == "__main__":
     C = Core((48.5825, 7.7477), 50_000)
     #C = Core((48.86934, 2.31738), 500_000)
     #C._lancer_simulation()
-    C.ReplaceBat(0, 4)
+    C.ReplaceBat(1, 4)
     
     print("fin")
 

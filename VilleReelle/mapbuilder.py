@@ -141,7 +141,7 @@ class MapBuilder:
         print(" --- Actualisation de l'annuaire des maisons concernées.")
         for m in self.maisonliste:
             print(" --- \t*")
-            k = m.IsRelated()
+            k = m.IsRelated(i)
             if k != [-1] :
                 for t in k:
                     if t == 1:
@@ -179,6 +179,7 @@ class MapBuilder:
             
             if b["type"] == 1:
                 bat = batiment_r.Maison(b["coos"], props_dico)
+                self.maisonliste.append(bat)
                 bat.memoire_batiments = b["memoire_batiments"]
             elif b["type"] == 9:
                 bat = batiment_r.Road((b["coos"][1], b["coos"][0]), b["id"])
@@ -200,6 +201,11 @@ class MapBuilder:
                 data = file.read()
                 batlist_raw = json.loads(data)
                 self._loadsBatList(batlist_raw)
+            
+            self.pfGraph = load_graphml(f"{path}\\graph.xml")
+            
+            
+
         except FileNotFoundError:
             path = os.path.join(os.getcwd(), "VilleReelle", "memoire",  f"{self.center}")
 
@@ -208,6 +214,8 @@ class MapBuilder:
                 data = file.read()
                 batlist_raw = json.loads(data)
                 self._loadsBatList(batlist_raw)
+                
+            self.pfGraph(f"{path}\\graph.xml")
             
             
         print(" --- Fin du chargement de la map")
@@ -233,7 +241,7 @@ class MapBuilder:
         
     def GetBat(self, i):
         """get"""
-        return self.batlist[i]
+        return self.batlist[i-1]
 
  
     def _calculateCoos(self, liste_sommets):
@@ -366,13 +374,13 @@ class MapBuilder:
 
         for r in itineraire:
             try:
-                chemin.append(self.route_dico[r])
+                chemin.append(self.batlist[r])
             except KeyError:
                 #il faut créer la route.
                 coos = (self.pfGraph.nodes[r]['y'], self.pfGraph.nodes[r]['x'])
                 id_ = self.i_route
                 self.i_route += 1
-                newr = batiment_r.Road(coos, id_)
+                newr = batiment_r.Road(coos, id_, node=r)
                 self.route_dico[r] = id_
                 self.batlist.append(newr)
         
@@ -457,7 +465,7 @@ class MapBuilder:
     
     
     def SetBat(self, i, bat):
-        self.batlist[i] = bat
+        self.batlist[i-1] = bat
         
 
 
