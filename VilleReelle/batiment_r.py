@@ -108,6 +108,19 @@ class Maison(Batiment):
 
         return route
     
+    
+    def IsRelated(self, i):
+        """Renvoie k si l'annuaire de la maison pointe sur le batiment i pour le besoin k.
+        Renvoie -1 sinon."""
+        a = []
+        for k in self.memoire_batiments:
+            if i in self.memoire_batiments[k]:
+                a.append(k)
+        
+        if a == []:
+            return [-1]
+        return a
+
 
     def Update_Bats(self, type_, chemin):
         """SET : update l'annuaire de la maison"""

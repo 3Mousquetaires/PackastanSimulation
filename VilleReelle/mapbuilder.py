@@ -110,7 +110,7 @@ class MapBuilder:
         # deuxième traitement : init des maisons
         self.route_dico = {}
         
-        i = 0
+        i = -1
         self.i_route = len(self.batlist)
         for m in self.maisonliste:
             print(i)
@@ -133,7 +133,26 @@ class MapBuilder:
         self.SelfSerialize()
         
         print(" --- \tterminé !")
-                                        
+                    
+                    
+    def ActualiseGraphe(self, i):
+        """Actualise le graphe de déplacement, en supposant
+        que seul le ie batiment ait été changé."""
+        print(" --- Actualisation de l'annuaire des maisons concernées.")
+        for m in self.maisonliste:
+            print(" --- \t*")
+            k = m.IsRelated()
+            if k != [-1] :
+                for t in k:
+                    if t == 1:
+                        continue
+                    batf = self.find_closer(m.coos, t)
+                
+                    chemin = [m.id]
+                    chemin += self._get_itineraire(m.coos, batf.coos)          
+                    chemin.append(batf.id)
+                    m.Update_Bats(t, chemin) 
+        print(" --- \tFini")                                   
         
         
     def _dumpsBatList(self):
@@ -212,7 +231,9 @@ class MapBuilder:
         save_graphml(self.pfGraph, f"{path}\\graph.xml")
         
         
-        
+    def GetBat(self, i):
+        """get"""
+        return self.batlist[i]
 
  
     def _calculateCoos(self, liste_sommets):
@@ -433,6 +454,11 @@ class MapBuilder:
     
     def GetBatList(self):
         return self.batlist
+    
+    
+    def SetBat(self, i, bat):
+        self.batlist[i] = bat
+        
 
 
 #print(_get_itineraire( (2.316068734550804,48.87037435), (-1.2770243425435213,46.1581427) ))

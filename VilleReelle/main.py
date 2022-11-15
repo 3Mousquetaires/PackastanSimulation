@@ -6,6 +6,8 @@ from ville import Ville
 import numpy as np
 import matplotlib.pyplot as plt
 
+import batiment_r as bat
+
 import time
 
 
@@ -20,17 +22,39 @@ class Core():
         self.population = population
         
         
+        
+        
     def _lancer_simulation(self):
         """Lance une simulation qui s'arrête à l'asymptote. Renvoie la kbien."""
         V = Ville(self.center, self.mb.GetBatList(), self.population)
         
         data = V.start()
         
-        V.show_realistic()
-        
         kbien = self._compute_mean(data)
-        print(" --- kbien :", kbien)
+        print(" --- RESULTAT FINAL :", kbien)
+        
+        V.show_realistic()
         # return kbien
+        
+        
+    def ReplaceBat(self, i, type_):
+        """Cette méthode écrase le batiment en position i et le remplace un autre
+        avec les mêmes caractéristiques si ce n'est son type"""
+        oldbat = self.mb.GetBat(i)
+        props = {"props_":oldbat.autre_props,
+                 "id":oldbat.id,
+                 "area":oldbat.area}
+        
+        if type_ == 1:
+            #maison
+            newbat = bat.Maison(i, oldbat.coos, props)
+        else :
+            newbat = bat.Batiment(type_, i, props)
+            
+        self.mb.SetBat(i, newbat)
+            
+        self.mb.ActualiseGraphe(i)
+        
         
         
     def _compute_mean(self, data):
@@ -50,7 +74,10 @@ maps = {
 if __name__ == "__main__":
     C = Core((48.5825, 7.7477), 50_000)
     #C = Core((48.86934, 2.31738), 500_000)
-    C._lancer_simulation()
+    #C._lancer_simulation()
+    C.ReplaceBat(0, 4)
+    
+    print("fin")
 
 
 

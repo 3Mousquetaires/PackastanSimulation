@@ -176,7 +176,7 @@ class Ville:
 
         deltat = time.time() - t0
         print(f" --- Simulation fini en {i} tours, soient {deltat//60} min {deltat%60} sec.")
-        return self.kbien_list
+        return type_liste, self.kbien_list
 
 
     def replaceBat(self, x:int, y:int, typeBat:int):
