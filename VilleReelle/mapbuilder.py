@@ -74,6 +74,8 @@ class MapBuilder:
         self.batlist = []
         self.maisonliste = []
         self.pfGraph = nx.MultiDiGraph()
+        
+        self.route_dico = {}
        
         
     
@@ -135,24 +137,26 @@ class MapBuilder:
         print(" --- \tterminé !")
                     
                     
+                    
     def ActualiseGraphe(self, i):
         """Actualise le graphe de déplacement, en supposant
         que seul le ie batiment ait été changé."""
         print(" --- Actualisation de l'annuaire des maisons concernées.")
         for m in self.maisonliste:
-            print(" --- \t*")
             k = m.IsRelated(i)
             if k != [-1] :
+                print(m)
                 for t in k:
                     if t == 1:
                         continue
                     batf = self.find_closer(m.coos, t)
-                
+                    print("hello ?")
                     chemin = [m.id]
                     chemin += self._get_itineraire(m.coos, batf.coos)          
                     chemin.append(batf.id)
                     m.Update_Bats(t, chemin) 
         print(" --- \tFini")                                   
+        
         
         
     def _dumpsBatList(self):
@@ -182,7 +186,8 @@ class MapBuilder:
                 self.maisonliste.append(bat)
                 bat.memoire_batiments = b["memoire_batiments"]
             elif b["type"] == 9:
-                bat = batiment_r.Road((b["coos"][1], b["coos"][0]), b["id"])
+                bat = batiment_r.Road((b["coos"][1], b["coos"][0]), b["id"], b["node"])
+                self.route_dico[b["node"]] =b["id"]
             else:
                 bat = batiment_r.Batiment(b["type"], b["coos"], props_dico)
                 
@@ -284,9 +289,7 @@ class MapBuilder:
         bmin_ =  bat_preums
         
         for bat in self.batlist:
-            if bat.coos == coos0 :
-                continue
-            elif bat.type != type2find:
+            if bat.type != type2find:
                 continue
             else:
                 nnorm = np.linalg.norm( np.array(bat.coos) - np.array(coos0), 2)
@@ -374,7 +377,7 @@ class MapBuilder:
 
         for r in itineraire:
             try:
-                chemin.append(self.batlist[r])
+                chemin.append(self.batlist[ self.route_dico[r]])
             except KeyError:
                 #il faut créer la route.
                 coos = (self.pfGraph.nodes[r]['y'], self.pfGraph.nodes[r]['x'])
@@ -383,6 +386,7 @@ class MapBuilder:
                 newr = batiment_r.Road(coos, id_, node=r)
                 self.route_dico[r] = id_
                 self.batlist.append(newr)
+                
         
         return chemin
         
