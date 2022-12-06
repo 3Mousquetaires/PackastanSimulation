@@ -284,16 +284,15 @@ class MapBuilder:
     
     def find_closer(self, coos0, type2find):
         """# Cherche le batiment le plus proche du coos0 correspondant au type en question"""
-        bat_preums = self.batlist[0]
-        
-        bmin_ =  -1
+        min_ =  -1
+        bmin_ = None
         
         for bat in self.batlist:
             if bat.type != type2find or bat.coos == coos0:
                 continue
             else:
                 nnorm = np.linalg.norm( np.array(bat.coos) - np.array(coos0), 2)
-                if nnorm < min_ or bmin_ == -1:
+                if nnorm < min_ or min_ == -1:
                     min_ = nnorm
                     bmin_ = bat
                     
