@@ -377,7 +377,7 @@ class MapBuilder:
 
         for r in itineraire:
             try:
-                chemin.append(self.batlist[ self.route_dico[r]])
+                chemin.append(self.batlist[ self.route_dico[r]].id)
             except KeyError:
                 #il faut créer la route.
                 coos = (self.pfGraph.nodes[r]['y'], self.pfGraph.nodes[r]['x'])
@@ -386,6 +386,8 @@ class MapBuilder:
                 newr = batiment_r.Road(coos, id_, node=r)
                 self.route_dico[r] = id_
                 self.batlist.append(newr)
+                
+                chemin.append(newr.id)
                 
         
         return chemin
@@ -493,3 +495,7 @@ if __name__ == "__main__":
             size = 1
         MB = MapBuilder( (float(sys.argv[1]), float(sys.argv[2])))
         MB.Initialise(size=size)
+        
+        
+MB = MapBuilder((47.2737, 4.8264))
+MB.Initialise(size=1)
