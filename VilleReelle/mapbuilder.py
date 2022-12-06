@@ -34,7 +34,7 @@ _SHAB_AREA_RATIO = .91
 
 _TYPE_TO_TYPE = {
     'retail' : 0,
-    'commercial' : 0,
+    'commercial' : 6,
     'greenhouse' : 0, # ?
     'residential' : 1,
     'hotel' : 1,
@@ -59,7 +59,7 @@ _TYPE_TO_TYPE = {
     'kiosk' : 7,
     'public' : 8,
     'administration' : 8,
-    'civic' : 8
+    'civic' : 3
 }
 
 
