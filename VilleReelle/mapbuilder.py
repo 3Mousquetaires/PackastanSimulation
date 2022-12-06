@@ -287,8 +287,10 @@ class MapBuilder:
         min_ =  -1
         bmin_ = None
         
+        i = 0
         for bat in self.batlist:
-            if bat.type != type2find or bat.coos == coos0:
+            if bat.type != type2find:
+                i += 1
                 continue
             else:
                 nnorm = np.linalg.norm( np.array(bat.coos) - np.array(coos0), 2)
@@ -296,6 +298,7 @@ class MapBuilder:
                     min_ = nnorm
                     bmin_ = bat
                     
+        print(i)
         return bmin_    
 
 
@@ -494,3 +497,6 @@ if __name__ == "__main__":
             size = 1
         MB = MapBuilder( (float(sys.argv[1]), float(sys.argv[2])))
         MB.Initialise(size=size)
+
+MB = MapBuilder( (47.5042, 6.8252) )
+MB.Initialise(size=2)
