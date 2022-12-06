@@ -76,6 +76,7 @@ class MapBuilder:
         self.pfGraph = nx.MultiDiGraph()
         
         self.route_dico = {}
+        
        
         
     
@@ -285,15 +286,14 @@ class MapBuilder:
         """# Cherche le batiment le plus proche du coos0 correspondant au type en question"""
         bat_preums = self.batlist[0]
         
-        min_ = np.linalg.norm( np.array( bat_preums.coos) - np.array(coos0), 2)
-        bmin_ =  bat_preums
+        bmin_ =  -1
         
         for bat in self.batlist:
-            if bat.type != type2find:
+            if bat.type != type2find or bat.coos == coos0:
                 continue
             else:
                 nnorm = np.linalg.norm( np.array(bat.coos) - np.array(coos0), 2)
-                if nnorm < min_ :
+                if nnorm < min_ or bmin_ == -1:
                     min_ = nnorm
                     bmin_ = bat
                     
