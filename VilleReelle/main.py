@@ -78,10 +78,10 @@ maps = {
 
 
 if __name__ == "__main__":
-    C = Core((48.5825, 7.7477), 50_000)
+    C = Core((47.2737, 4.8264), 1000)
     #C = Core((48.86934, 2.31738), 500_000)
-    #C._lancer_simulation()
-    C.ReplaceBat(1, 4)
+    C._lancer_simulation()
+    #C.ReplaceBat(1, 4)
     
     print("fin")
 

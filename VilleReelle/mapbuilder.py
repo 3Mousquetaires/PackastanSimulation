@@ -495,7 +495,3 @@ if __name__ == "__main__":
             size = 1
         MB = MapBuilder( (float(sys.argv[1]), float(sys.argv[2])))
         MB.Initialise(size=size)
-        
-        
-MB = MapBuilder((47.2737, 4.8264))
-MB.Initialise(size=1)
