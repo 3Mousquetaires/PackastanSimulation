@@ -12,7 +12,6 @@ class TypeBesoin (Enum) :
     GESTION = 8
     DEPLACEMENT = 9
 
-
 StrToTypeBesoin = {"alimentation":TypeBesoin.ALIMENTATION, "habitation":TypeBesoin.HABITATION,
     "sante":TypeBesoin.SANTE, "securite":TypeBesoin.SECURITE, "emploi":TypeBesoin.EMPLOI,
     "moralite":TypeBesoin.MORALITE, "fete":TypeBesoin.FETE, "physique":TypeBesoin.PHYSIQUE,
