@@ -128,8 +128,9 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# Memoire 
+
 memoire/
-memoire/(47.5206, 6.6652)/map.json
 
 
 # Pour les pelo sur mac
