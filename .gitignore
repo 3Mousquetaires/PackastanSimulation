@@ -128,7 +128,9 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-VilleReelle/memoire/*
+# Memoire 
+
+memoire/
 
 
 # Pour les pelo sur mac
