@@ -228,8 +228,6 @@ class Ville:
         pts = ax_kbien.scatter(self.coos_listx, self.coos_listy, s=self.size_list, c=self.kbien_list, cmap="plasma")
         fig.colorbar(pts)
             
-            
-            
         plt.show()
         
         

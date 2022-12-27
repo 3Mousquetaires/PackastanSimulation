@@ -101,6 +101,10 @@ class MapBuilder:
         
         self.bbox = (self.N, self.S, self.E, self.W)
         
+        print(" --- Checkup dénombrement :")
+        for k in range(9):
+            print(f" --- \t{k} : {len([b for b in self.batlist if b.type == k])}")
+        
         
         print(" --- \tCréation du graphe de déplacement.")
         self.pfGraph = grph.graph_from_bbox(self.N, self.S, self.E, self.W, network_type="all")
@@ -123,8 +127,11 @@ class MapBuilder:
                     batf = self.find_closer(m.coos, k)
                     
                     chemin = [m.id]
-                    chemin += self._get_itineraire(m.coos, batf.coos)          
-                    chemin.append(batf.id)
+                    
+                    if batf != None:
+                        chemin += self._get_itineraire(m.coos, batf.coos)          
+                        chemin.append(batf.id)
+                        
                     m.Update_Bats(k, chemin)
                     
         deltat = time.time()-t0
@@ -146,12 +153,11 @@ class MapBuilder:
         for m in self.maisonliste:
             k = m.IsRelated(i)
             if k != [-1] :
-                print(m)
-                for t in k:
+                for tP in k:
+                    t = int(tP)
                     if t == 1:
                         continue
                     batf = self.find_closer(m.coos, t)
-                    print("hello ?")
                     chemin = [m.id]
                     chemin += self._get_itineraire(m.coos, batf.coos)          
                     chemin.append(batf.id)
@@ -221,8 +227,13 @@ class MapBuilder:
                 batlist_raw = json.loads(data)
                 self._loadsBatList(batlist_raw)
                 
-            self.pfGraph(f"{path}\\graph.xml")
+            self.pfGraph = load_graphml(f"{path}\\graph.xml")
             
+            
+        
+        print(" --- Checkup dénombrement :")
+        for k in range(9):
+            print(f" --- \t{k} : {len([b for b in self.batlist if b.type == k])}")    
             
         print(" --- Fin du chargement de la map")
         return
@@ -298,7 +309,7 @@ class MapBuilder:
                     min_ = nnorm
                     bmin_ = bat
                     
-        print(i)
+        #print(i)
         return bmin_    
 
 
@@ -498,5 +509,5 @@ if __name__ == "__main__.":
         MB = MapBuilder( (float(sys.argv[1]), float(sys.argv[2])))
         MB.Initialise(size=size)
 
-MB = MapBuilder( (47.5042, 6.8252) )
-MB.Initialise(size=2)
+#MB = MapBuilder( (47.5042, 6.8252) )
+#MB.Initialise(size=2)

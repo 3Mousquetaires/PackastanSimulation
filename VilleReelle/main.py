@@ -24,7 +24,7 @@ class Core():
         
         
         
-    def _lancer_simulation(self):
+    def _lancer_simulation(self, should_show = True):
         """Lance une simulation qui s'arrête à l'asymptote. Renvoie la kbien."""
         V = Ville(self.center, self.mb.GetBatList(), self.population)
         
@@ -33,7 +33,14 @@ class Core():
         kbien = self._compute_mean(data)
         print(" --- RESULTAT FINAL :", kbien)
         
-        V.show_realistic()
+        if should_show:
+            V.show_realistic()
+        
+        print(" -- Tableau des catégories :")
+        for k in range(9):
+            print(f"--\t {k} : {self._mean_kbien(data, k)}")
+            
+        
         # return kbien
         
         
@@ -51,9 +58,11 @@ class Core():
         else :
             newbat = bat.Batiment(type_, oldbat.coos, props)
             
-        self.mb.SetBat(i, newbat)
+        self.mb.batlist[i] = newbat
             
         self.mb.ActualiseGraphe(i)
+        
+        print(" -- Echange réalisé.")
         
         
     def _compute_mean(self, data):
@@ -63,11 +72,22 @@ class Core():
         return (sum(data) + k*.5)/n
     
     
-    def _mean_kbien(self, k):
+    def _mean_kbien(self, data, k):
         """Renvoie la moyenne bien calculée de tous les batiments du type k"""
+        somme = 0
+        n = 0
         
-        for i in range(len(self.MB.batlist)):
-            pass
+        l = [b.id for b in self.mb.batlist if b.type == k]
+        for i in l:
+            somme += data[i]
+            n += 1
+            
+        try:    
+            return somme/n
+        except ZeroDivisionError:
+            return 0 #Si le type n'existe pas : 0. TODO : Vérifier la stratégie
+                
+            
         
 
 maps = {
@@ -78,18 +98,15 @@ maps = {
 
 
 if __name__ == "__main__":
-    C = Core((47.2737, 4.8264), 1000)
+    C = Core((47.5042, 6.8252), 1000)
     #C = Core((48.86934, 2.31738), 500_000)
-    C._lancer_simulation()
-    #C.ReplaceBat(1, 4)
+    C._lancer_simulation(should_show=False)
+    
+    C.ReplaceBat(238, 4)
     
     print("fin")
 
 
-
-    
-    
-    
 #   Grande Tailles :
 # Strasbourg centré sur la grande île : (48.5825, 7.7477)
 # Strasbourg centré sur le Kléber : (48.5944, 7.7540)
