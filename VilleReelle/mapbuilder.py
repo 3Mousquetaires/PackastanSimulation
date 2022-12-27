@@ -163,11 +163,8 @@ class MapBuilder:
                     chemin += self._get_itineraire(m.coos, batf.coos)          
                     chemin.append(batf.id)
                     
-                    self.batlist[m.id-1].Update_Bats(t, chemin)
-                    #m.Update_Bats(t, chemin) 
-                    #print(self.batlist[m.id-1].memoire_batiments[0])
-                    #print("hhh")
-        print(self.batlist[23].memoire_batiments[0])
+                    self.batlist[m.id-1].Update_Bats(str(t), chemin)
+
         print(" --- \tFini")                                   
         
         
