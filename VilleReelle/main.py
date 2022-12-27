@@ -58,7 +58,7 @@ class Core():
         else :
             newbat = bat.Batiment(type_, oldbat.coos, props)
             
-        self.mb.batlist[i] = newbat
+        self.mb.batlist[i-1] = newbat
             
         self.mb.ActualiseGraphe(i)
         
@@ -102,7 +102,7 @@ if __name__ == "__main__":
     #C = Core((48.86934, 2.31738), 500_000)
     C._lancer_simulation(should_show=False)
     
-    C.ReplaceBat(238, 4)
+    C.ReplaceBat(237, 4)
     
     print("fin")
 
