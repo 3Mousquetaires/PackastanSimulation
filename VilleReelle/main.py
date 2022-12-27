@@ -104,6 +104,7 @@ if __name__ == "__main__":
     
     C.ReplaceBat(237, 4)
     
+    print("freed from desire")
     print("fin")
 
 

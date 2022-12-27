@@ -157,6 +157,7 @@ class MapBuilder:
                     t = int(tP)
                     if t == 1:
                         continue
+                    
                     batf = self.find_closer(m.coos, t)
                     chemin = [m.id]
                     chemin += self._get_itineraire(m.coos, batf.coos)          
@@ -164,7 +165,9 @@ class MapBuilder:
                     
                     self.batlist[m.id-1].Update_Bats(t, chemin)
                     #m.Update_Bats(t, chemin) 
-                    print("hhh")
+                    #print(self.batlist[m.id-1].memoire_batiments[0])
+                    #print("hhh")
+        print(self.batlist[23].memoire_batiments[0])
         print(" --- \tFini")                                   
         
         
