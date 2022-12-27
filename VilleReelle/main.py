@@ -41,7 +41,7 @@ class Core():
             print(f"--\t {k} : {self._mean_kbien(data, k)}")
             
         
-        # return kbien
+        return data, kbien
         
         
     def ReplaceBat(self, i, type_):
@@ -103,8 +103,7 @@ if __name__ == "__main__":
     C._lancer_simulation(should_show=False)
     
     C.ReplaceBat(237, 4)
-    
-    print("fin")
+
 
 
 #   Grande Tailles :
