@@ -154,6 +154,8 @@ class MapBuilder:
         """Actualise le graphe de déplacement, en supposant
         que seul le ie batiment ait été changé."""
         print(" --- Actualisation de l'annuaire des maisons concernées.")
+        self.maisonliste = [b for b in self.batlist if b.type == 1]
+
         for m in self.maisonliste:
             k = m.IsRelated(i)
             if k != [-1] :
