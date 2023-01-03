@@ -1,8 +1,0 @@
-replace i, type
-
-
-min_kbien
-
-mean_kbien(type)
-
-Reset map
