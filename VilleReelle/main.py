@@ -24,7 +24,7 @@ class Core():
         
         
         
-    def _lancer_simulation(self, should_show = True):
+    def Lancer_simulation(self, should_show = True):
         """Lance une simulation qui s'arrête à l'asymptote. Renvoie la kbien."""
         V = Ville(self.center, self.mb.GetBatList(), self.population)
         
