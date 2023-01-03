@@ -165,9 +165,11 @@ class MapBuilder:
                         continue
                     
                     batf = self.find_closer(m.coos, t)
+
                     chemin = [m.id]
-                    chemin += self._get_itineraire(m.coos, batf.coos)          
-                    chemin.append(batf.id)
+                    if batf != None:
+                        chemin += self._get_itineraire(m.coos, batf.coos)          
+                        chemin.append(batf.id)
                     
                     self.batlist[m.id-1].Update_Bats(str(t), chemin)
 

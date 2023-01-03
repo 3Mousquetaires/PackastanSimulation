@@ -45,6 +45,7 @@ class Core():
         
         kbien_moy = self._compute_mean(data)
         print(" --- RESULTAT FINAL :", kbien_moy)
+        print("\n\n")
         
         if should_show:
             V.show_realistic()
@@ -67,7 +68,7 @@ class Core():
         
         if type_ == 1:
             #maison
-            newbat = bat.Maison(i, oldbat.coos, props)
+            newbat = bat.Maison(oldbat.coos, props)
         else :
             newbat = bat.Batiment(type_, oldbat.coos, props)
             
@@ -129,12 +130,7 @@ def getMaxDeltaKb(oldbat):
     else:
         return maxbat
 
-def customMapKbien(map, mapkbien):
-    for i in range(len(map)):
-        if map[i] == 1 or map[i] == 9:
-            mapkbien[i] = 1000
-    return mapkbien
-
+    
 
 def exploitation():
     map = C.mb.GetTypeList()
@@ -151,7 +147,6 @@ def exploitation():
 def exploration():
     map = C.mb.GetTypeList()
     map_kbien, kbien_moyen = C.Lancer_simulation()
-    map_kbien = customMapKbien(map, map_kbien)
     pire_bat = np.argmin(map_kbien)
     oldType = map[pire_bat]
     nextType = random.randint(0, 8)
@@ -176,9 +171,12 @@ def renforcement():
                 kbmoy = exploitation()
             except ValueError:
                 kbmoy = exploration()
-        print(kbmoy)
     C.Lancer_simulation(True, True)
     
+    
+    
+    
+
 
 if __name__ == "__main__":
     renforcement()
