@@ -137,7 +137,7 @@ def exploitation():
     pire_bat = np.argmin(map_kbien)
     oldType = map[pire_bat]
     newType = getMaxDeltaKb(oldType)
-    C.replaceBat(pire_bat, newType)
+    C.ReplaceBat(pire_bat, newType)
     newmap = C.mb.GetTypeList()
     newmap_kbien, newkbien_moyen = C.Lancer_simulation()
     listeActions.append((oldType, newType, newkbien_moyen - kbien_moyen))
@@ -151,7 +151,7 @@ def exploration():
     nextType = random.randint(0, 8)
     if(nextType == oldType):
         nextType = 8-nextType
-    C.replaceBat(pire_bat, nextType)
+    C.ReplaceBat(pire_bat, nextType)
     newmap = C.mb.GetTypeList()
     newmap_kbien, newkbien_moyen = C.Lancer_simulation()
     listeActions.append((oldType, nextType, newkbien_moyen - kbien_moyen))

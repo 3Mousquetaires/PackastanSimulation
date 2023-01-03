@@ -114,7 +114,7 @@ class Maison(Batiment):
         Renvoie -1 sinon."""
         a = []
         for k in self.memoire_batiments:
-            if i in self.memoire_batiments[k]:
+            if int(k) != 1 and i in self.memoire_batiments[k]:
                 a.append(k)
         
         if a == []:
