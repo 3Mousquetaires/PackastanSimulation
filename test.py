@@ -56,24 +56,7 @@ print(deg2num(48.58310, 7.74863, 14))
 
 #aire moyenne : 471 m², taille moyenne : 14.7 m
 
-#coordonée du centre de strasbourg :
-#   (48.58310, 7.74863)
 
-#Paris 17e:
-#   (48.882970, 2.299415)
-
-#Montbéliard :
-#   (47.505684, 6.803161)
-
-#Arcey :
-#  47.522363, 6.660636
-
-#Londres en plein sur Westminster
-#   51.500948, -0.124542
-
-#Central Park
-#   40.771300, -73.973902
-# Je m'amuse comme un fou
 
 def f(x):
   print(.0681*x)
