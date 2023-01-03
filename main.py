@@ -9,7 +9,12 @@ import matplotlib.pyplot as plt
 import batiment_r as bat
 
 import time
+import random
+import sys
 
+np.set_printoptions(threshold=sys.maxsize)
+
+SEUIL = 0.5
 
 class Core():
     def __init__(self, center, population):
@@ -96,18 +101,17 @@ maps = {
     "Strasbourg centre 2": (48.5825, 7.7477)
 }
 
+def renforcement():
+    C = Core((47.5042, 6.8252), 1000)
+    lkbien, kbienmoyen = C.Lancer_simulation(False)
+    while(kbienmoyen <= SEUIL):
+        rd = random.randint(0, 100)
+        if rd < 20:
+            
+        else:
+            
+
 
 if __name__ == "__main__":
-    C = Core((47.5042, 6.8252), 1000)
-    #C = Core((48.86934, 2.31738), 500_000)
-    C._lancer_simulation(should_show=False)
     
-    C.ReplaceBat(237, 4)
-    
-    print("fin")
 
-
-#   Grande Tailles :
-# Strasbourg centré sur la grande île : (48.5825, 7.7477)
-# Strasbourg centré sur le Kléber : (48.5944, 7.7540)
-# Paris centré sur l'Elysée : (48.86934, 2.31738)
