@@ -102,6 +102,7 @@ maps = {
 }
 
 def renforcement():
+    listeActions = []
     C = Core((47.5042, 6.8252), 1000)
     lkbien, kbienmoyen = C.Lancer_simulation(False)
     while(kbienmoyen <= SEUIL):
