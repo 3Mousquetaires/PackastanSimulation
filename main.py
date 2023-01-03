@@ -114,7 +114,7 @@ maps = {
 C = Core((47.5042, 6.8252), 1000)
 
 """"
-  liste = C.mb.GetTypeList()
+  
 """
 
 def getMaxDeltaKb(oldbat):
@@ -132,30 +132,35 @@ def getMaxDeltaKb(oldbat):
     
 
 def exploitation():
-    map, map_kbien, kbien_moyen = C.Lancer_simulation()
+    map = C.mb.GetTypeList()
+    map_kbien, kbien_moyen = C.Lancer_simulation()
     pire_bat = np.argmin(map_kbien)
     oldType = map[pire_bat]
     newType = getMaxDeltaKb(oldType)
     C.replaceBat(pire_bat, newType)
-    newmap, newmap_kbien, newkbien_moyen = C.Lancer_simulation()
+    newmap = C.mb.GetTypeList()
+    newmap_kbien, newkbien_moyen = C.Lancer_simulation()
     listeActions.append((oldType, newType, newkbien_moyen - kbien_moyen))
     return newkbien_moyen
 
 def exploration():
-    map, map_kbien, kbien_moyen = C.Lancer_simulation()
+    map = C.mb.GetTypeList()
+    map_kbien, kbien_moyen = C.Lancer_simulation()
     pire_bat = np.argmin(map_kbien)
     oldType = map[pire_bat]
     nextType = random.randint(0, 8)
     if(nextType == oldType):
         nextType = 8-nextType
     C.replaceBat(pire_bat, nextType)
-    newmap, newmap_kbien, newkbien_moyen = C.Lancer_simulation()
+    newmap = C.mb.GetTypeList()
+    newmap_kbien, newkbien_moyen = C.Lancer_simulation()
     listeActions.append((oldType, nextType, newkbien_moyen - kbien_moyen))
     return newkbien_moyen
 
 
 def renforcement():
-    map, map_kbien, kbienmoyen = C.Lancer_simulation()
+    newmap = C.mb.GetTypeList()
+    map_kbien, kbienmoyen = C.Lancer_simulation()
     while(kbienmoyen <= SEUIL):
         rd = random.randint(0, 100)
         if(rd < 20):
