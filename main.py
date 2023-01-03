@@ -3,6 +3,8 @@
 from mapbuilder import MapBuilder
 from ville import Ville
 
+from copy import copy
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -15,6 +17,10 @@ import sys
 np.set_printoptions(threshold=sys.maxsize)
 
 SEUIL = 0.5
+listeActions = []
+
+ARCHIVE = None
+
 
 class Core():
     def __init__(self, center, population):
@@ -22,31 +28,33 @@ class Core():
         self.mb = MapBuilder(center)
         self.mb.LoadFromMemory()
         
-        
         self.center = center
         self.population = population
         
+        global ARCHIVE
+        ARCHIVE = copy(self.mb)
         
         
         
-    def _lancer_simulation(self, should_show = True):
+        
+    def Lancer_simulation(self, should_show = False, should_print = False):
         """Lance une simulation qui s'arrête à l'asymptote. Renvoie la kbien."""
         V = Ville(self.center, self.mb.GetBatList(), self.population)
         
         data = V.start()
         
-        kbien = self._compute_mean(data)
-        print(" --- RESULTAT FINAL :", kbien)
+        kbien_moy = self._compute_mean(data)
+        print(" --- RESULTAT FINAL :", kbien_moy)
         
         if should_show:
             V.show_realistic()
         
-        print(" -- Tableau des catégories :")
-        for k in range(9):
-            print(f"--\t {k} : {self._mean_kbien(data, k)}")
+        if should_print:
+            print(" -- Tableau des catégories :")
+            for k in range(9):
+                print(f"--\t {k} : {self._mean_kbien(data, k)}")
             
-        
-        # return kbien
+        return data, kbien_moy
         
         
     def ReplaceBat(self, i, type_):
@@ -101,18 +109,69 @@ maps = {
     "Strasbourg centre 2": (48.5825, 7.7477)
 }
 
+### Renforcement
+
+C = Core((47.5042, 6.8252), 1000)
+
+""""
+  liste = C.mb.GetTypeList()
+"""
+
+def getMaxDeltaKb(oldbat):
+    maxdelta = -1
+    maxbat = -1
+    for (old, new, delta)in listeActions:
+        if(old == oldbat):
+            if delta > maxdelta:
+                maxbat = new
+    if(maxdelta < 0 or maxbat == -1):
+        raise ValueError
+    else:
+        return maxbat
+
+    
+
+def exploitation():
+    map, map_kbien, kbien_moyen = C.Lancer_simulation()
+    pire_bat = np.argmin(map_kbien)
+    oldType = map[pire_bat]
+    newType = getMaxDeltaKb(oldType)
+    C.replaceBat(pire_bat, newType)
+    newmap, newmap_kbien, newkbien_moyen = C.Lancer_simulation()
+    listeActions.append((oldType, newType, newkbien_moyen - kbien_moyen))
+    return newkbien_moyen
+
+def exploration():
+    map, map_kbien, kbien_moyen = C.Lancer_simulation()
+    pire_bat = np.argmin(map_kbien)
+    oldType = map[pire_bat]
+    nextType = random.randint(0, 8)
+    if(nextType == oldType):
+        nextType = 8-nextType
+    C.replaceBat(pire_bat, nextType)
+    newmap, newmap_kbien, newkbien_moyen = C.Lancer_simulation()
+    listeActions.append((oldType, nextType, newkbien_moyen - kbien_moyen))
+    return newkbien_moyen
+
+
 def renforcement():
-    listeActions = []
-    C = Core((47.5042, 6.8252), 1000)
-    lkbien, kbienmoyen = C.Lancer_simulation(False)
+    map, map_kbien, kbienmoyen = C.Lancer_simulation()
     while(kbienmoyen <= SEUIL):
         rd = random.randint(0, 100)
-        if rd < 20:
-            
+        if(rd < 20):
+            kbmoy = exploration()
         else:
-            
+            try:
+                kbmoy = exploitation()
+            except ValueError:
+                kbmoy = exploration()
+        print(kbmoy)
+    C.Lancer_simulation(True, True)
+    
+    
+    
+    
 
 
 if __name__ == "__main__":
-    
-
+    renforcement()

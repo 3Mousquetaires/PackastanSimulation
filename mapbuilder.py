@@ -143,6 +143,10 @@ class MapBuilder:
         self.SelfSerialize()
         
         print(" --- \tterminé !")
+        
+        
+    def GetTypeList(self):
+        return [b.type for b in self.batlist]
                     
                     
                     
