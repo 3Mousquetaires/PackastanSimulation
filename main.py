@@ -20,6 +20,13 @@ SEUIL = 0.5
 listeActions = []
 
 
+        
+type_to_c = {0:'#ed1c24', 1:'#6ABE30', 2:'#5B6EE1',
+                3:'#5FCDE4', 4:'#76428A', 5:'#FBF236', 
+                6:'#DF7126', 7:'#D77BBA', 8:'#544406',
+                9:'#424258'} #types des batiments en couleurs plt
+
+
 SHOULD_FLEX = False
 
 ARCHIVE = None
@@ -42,11 +49,48 @@ class Core():
         if SHOULD_FLEX:
             self.flex()
 
+    def show_realistic(self, ville):
+        plt.style.use('dark_background')
+        fig, axes = plt.subplots(1, 2, figsize=(12, 6))
+        
+        bbox = (ville.W, ville.E, ville.S, ville.N)
+        
+        print(" --- \tploting", len(ville.batlist), "batiments")
+        
+        # ====== VILLE ==========
+        ax_ville = axes[0]
+        
+        ax_ville.set_box_aspect(1)
+        dico = {0:"Commerces", 1:"habitat", 2:"santé", 3:"securité",
+                4:"emploi", 5:"moralité", 6:"fete", 7:"physique",
+                8:"gestion", 9:"routes"}
+        
+        ax_ville.scatter(ville.coos_listx, ville.coos_listy, c=ville.color_list, s=ville.size_list)
+        
+        for t in dico:
+            ax_ville.scatter([], [], c=type_to_c[t], label=dico[t])
+
+
+        ax_ville.legend(loc="center left", bbox_transform=fig.transFigure)
+        box = ax_ville.get_position()
+        ax_ville.set_position([box.x0, box.y0 + box.height * 0.1, box.width, box.height * 0.9])
+        ax_ville.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),fancybox=True, shadow=True, ncol=5)
+            
+        plt.title("Carte des kbiens")
+            
+        # ====== MAP KBIEN ========
+        ax_kbien = axes[1]
+        ax_kbien.set_box_aspect(1)    
+        
+        #cmap = plt.get_cmap('gist_ncar', 1)
+        pts = ax_kbien.scatter(ville.coos_listx, ville.coos_listy, s=ville.size_list, c=ville.kbien_list, cmap="plasma")
+        fig.colorbar(pts)
+        plt.draw()
 
     def flex(self):
         V = Ville(self.center, self.mb.GetBatList(), self.population)
         V.start()
-        V.show_realistic()
+        self.show_realistic(V)
         
         
         
