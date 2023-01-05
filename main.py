@@ -70,6 +70,8 @@ class Core():
         self.inistializingGraph = True
 
     def show_realistic(self, ville):
+        self.ax_ville.clear()
+        self.ax_kbien.clear()
         
         bbox = (ville.W, ville.E, ville.S, ville.N)
         
