@@ -516,7 +516,7 @@ class MapBuilder:
 
 import sys
 
-if __name__ == "__main__.":
+if __name__ == "__main__":
     if len(sys.argv) < 3:
         print("Erreur : il manque des arguments\nSynthaxe : mapbuilder.py latitude longitude")
     else:    
