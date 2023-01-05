@@ -41,13 +41,14 @@ class Core():
         self.center = center
         self.population = population
         
-        global ARCHIVE
-        ARCHIVE = copy(self.mb)
-
+ 
+        self.firstV = None
         self.lastV = None
 
         if SHOULD_FLEX:
             self.flex()
+            
+            
 
     def show_realistic(self, ville):
         plt.style.use('dark_background')
@@ -86,6 +87,7 @@ class Core():
         pts = ax_kbien.scatter(ville.coos_listx, ville.coos_listy, s=ville.size_list, c=ville.kbien_list, cmap="plasma")
         fig.colorbar(pts)
         plt.draw()
+        
 
     def flex(self):
         V = Ville(self.center, self.mb.GetBatList(), self.population)
@@ -95,7 +97,7 @@ class Core():
         
         
         
-    def Lancer_simulation(self, should_show = False, should_print = False):
+    def Lancer_simulation(self, should_init = False, should_show = False, should_print = False):
         """Lance une simulation qui s'arrête à l'asymptote. Renvoie la kbien."""
         V = Ville(self.center, self.mb.GetBatList(), self.population)
         self.lastV = V
@@ -113,6 +115,10 @@ class Core():
             print(" -- Tableau des catégories :")
             for k in range(9):
                 print(f"--\t {k} : {self._mean_kbien(data, k)}")
+        
+        if should_init:
+            self.firstV = copy(V)
+            
             
         return data, kbien_moy
         
@@ -221,7 +227,7 @@ def exploration():
 def renforcement():
     plt.ion()
     newmap = C.mb.GetTypeList()
-    map_kbien, kbienmoyen = C.Lancer_simulation(True, True)
+    map_kbien, kbienmoyen = C.Lancer_simulation(True, True, True)
     
     deltakbn = 1000
     kbns = []
