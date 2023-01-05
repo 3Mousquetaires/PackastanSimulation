@@ -16,7 +16,7 @@ import sys
 
 np.set_printoptions(threshold=sys.maxsize)
 
-SEUIL = 0.5
+SEUIL = 1e-3
 listeActions = []
 
 
@@ -222,18 +222,27 @@ def renforcement():
     plt.ion()
     newmap = C.mb.GetTypeList()
     map_kbien, kbienmoyen = C.Lancer_simulation(True, True)
-    while(kbienmoyen <= SEUIL):
+    
+    deltakbn = 1000
+    kbns = []
+    
+    while(deltakbn <= SEUIL):
         rd = random.randint(0, 100)
         if(rd < 20):
-            kbmoy = exploration()
+            kbienmoyen = exploration()
         else:
             try:
-                kbmoy = exploitation()
+                kbienmoyen = exploitation()
             except ValueError:
-                kbmoy = exploration()
+                kbienmoyen = exploration()
+            
+        #Le programme s'arrête tout seul à l'approche de l'asymptote
+        if len(kbns) > 5:
+            deltakbn = kbienmoyen - kbns[-3]
+        kbns.append(kbienmoyen)
+        
+        
     C.Lancer_simulation(True, True)
-    
-    
     
 
 
