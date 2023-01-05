@@ -20,6 +20,9 @@ from osmnx import save_graphml, load_graphml
 
 
 
+class Bug (Exception):
+    pass
+
 
 
 def _deg2rad(angle):
@@ -157,7 +160,11 @@ class MapBuilder:
         self.maisonliste = [b for b in self.batlist if b.type == 1]
 
         for m in self.maisonliste:
-            k = m.IsRelated(i)
+            try:
+                k = m.IsRelated(i)
+            except TypeError:
+                raise Bug("Y'a du None")
+
             if k != [-1] :
                 for tP in k:
                     t = int(tP)

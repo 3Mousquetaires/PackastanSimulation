@@ -1,6 +1,6 @@
 """Fichier central, gère la génération du jeu, des villes et leurs exploitation"""
 
-from mapbuilder import MapBuilder
+from mapbuilder import MapBuilder, Bug
 from ville import Ville
 
 from copy import copy
@@ -19,6 +19,9 @@ np.set_printoptions(threshold=sys.maxsize)
 SEUIL = 0.5
 listeActions = []
 
+
+SHOULD_FLEX = False
+
 ARCHIVE = None
 
 
@@ -33,6 +36,17 @@ class Core():
         
         global ARCHIVE
         ARCHIVE = copy(self.mb)
+
+        self.lastV = None
+
+        if SHOULD_FLEX:
+            self.flex()
+
+
+    def flex(self):
+        V = Ville(self.center, self.mb.GetBatList(), self.population)
+        V.start()
+        V.show_realistic()
         
         
         
@@ -40,6 +54,7 @@ class Core():
     def Lancer_simulation(self, should_show = False, should_print = False):
         """Lance une simulation qui s'arrête à l'asymptote. Renvoie la kbien."""
         V = Ville(self.center, self.mb.GetBatList(), self.population)
+        self.lastV = V
         
         data = V.start()
         
@@ -74,7 +89,10 @@ class Core():
             
         self.mb.batlist[i-1] = newbat
             
-        self.mb.ActualiseGraphe(i)
+        try:
+            self.mb.ActualiseGraphe(i)
+        except Bug:
+            self.lastV.show_realistic()
         
         print(" -- Echange réalisé.")
         
@@ -114,9 +132,6 @@ maps = {
 
 C = Core((47.5042, 6.8252), 1000)
 
-""""
-  
-"""
 
 def getMaxDeltaKb(oldbat):
     maxdelta = -1
@@ -134,19 +149,19 @@ def getMaxDeltaKb(oldbat):
 
 def exploitation():
     map = C.mb.GetTypeList()
-    map_kbien, kbien_moyen = C.Lancer_simulation()
+    map_kbien, kbien_moyen = C.Lancer_simulation(True, True)
     pire_bat = np.argmin(map_kbien)
     oldType = map[pire_bat]
     newType = getMaxDeltaKb(oldType)
     C.ReplaceBat(pire_bat, newType)
     newmap = C.mb.GetTypeList()
-    newmap_kbien, newkbien_moyen = C.Lancer_simulation()
+    newmap_kbien, newkbien_moyen = C.Lancer_simulation(True, True)
     listeActions.append((oldType, newType, newkbien_moyen - kbien_moyen))
     return newkbien_moyen
 
 def exploration():
     map = C.mb.GetTypeList()
-    map_kbien, kbien_moyen = C.Lancer_simulation()
+    map_kbien, kbien_moyen = C.Lancer_simulation(True, True)
     pire_bat = np.argmin(map_kbien)
     oldType = map[pire_bat]
     nextType = random.randint(0, 8)
@@ -154,14 +169,15 @@ def exploration():
         nextType = 8-nextType
     C.ReplaceBat(pire_bat, nextType)
     newmap = C.mb.GetTypeList()
-    newmap_kbien, newkbien_moyen = C.Lancer_simulation()
+    newmap_kbien, newkbien_moyen = C.Lancer_simulation(True, True)
     listeActions.append((oldType, nextType, newkbien_moyen - kbien_moyen))
     return newkbien_moyen
 
 
 def renforcement():
+    plt.ion()
     newmap = C.mb.GetTypeList()
-    map_kbien, kbienmoyen = C.Lancer_simulation()
+    map_kbien, kbienmoyen = C.Lancer_simulation(True, True)
     while(kbienmoyen <= SEUIL):
         rd = random.randint(0, 100)
         if(rd < 20):
@@ -175,7 +191,7 @@ def renforcement():
     
     
     
-    
+
 
 
 if __name__ == "__main__":
