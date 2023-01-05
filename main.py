@@ -64,7 +64,10 @@ class Core():
         self.ax_ville.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),fancybox=True, shadow=True, ncol=5)
         plt.title("Carte des kbiens")
         self.ax_kbien = self.axes[1]
-        self.ax_kbien.set_box_aspect(1)    
+        self.ax_kbien.set_box_aspect(1)
+        self.ax_kbien = self.axes[1]
+        self.ax_kbien.set_box_aspect(1)
+        self.inistializingGraph = True
 
     def show_realistic(self, ville):
         
@@ -82,12 +85,13 @@ class Core():
         plt.title(title)
             
         # ====== MAP KBIEN ========
-        self.ax_kbien = self.axes[1]
-        self.ax_kbien.set_box_aspect(1)    
+        
         #cmap = plt.get_cmap('gist_ncar', 1)
         self.pts = self.ax_kbien.scatter(ville.coos_listx, ville.coos_listy, s=ville.size_list, c=ville.kbien_list, cmap="plasma")
-        self.fig.colorbar(self.pts)
-        plt.draw()
+        if self.inistializingGraph :
+            self.fig.colorbar(self.pts)
+            self.inistializingGraph = False
+        plt.pause(0.01)
 
     def flex(self):
         V = Ville(self.center, self.mb.GetBatList(), self.population)
@@ -109,7 +113,7 @@ class Core():
         print("\n\n")
         
         if should_show:
-            V.show_realistic()
+            self.show_realistic(V)
         
         if should_print:
             print(" -- Tableau des catégories :")
@@ -138,7 +142,7 @@ class Core():
         try:
             self.mb.ActualiseGraphe(i)
         except Bug:
-            self.lastV.show_realistic()
+            self.show_realistic(self.lastV)
         
         print(" -- Echange réalisé.")
         
@@ -222,7 +226,7 @@ def exploration():
 
 def renforcement():
     plt.ion()
-    C.startGraphing()
+    C.start_graphing()
     newmap = C.mb.GetTypeList()
     map_kbien, kbienmoyen = C.Lancer_simulation(True, True)
     while(kbienmoyen <= SEUIL):
