@@ -16,7 +16,7 @@ import sys
 
 np.set_printoptions(threshold=sys.maxsize)
 
-SEUIL = 0.5
+SEUIL = 1
 listeActions = []
 
 
@@ -182,7 +182,7 @@ maps = {
 
 ### Renforcement
 
-C = Core((47.5042, 6.8252), 1000)
+C = Core((47.5042, 6.8252), 2000)
 
 
 def getMaxDeltaKb(oldbat):
@@ -234,12 +234,12 @@ def renforcement():
     while(kbienmoyen <= SEUIL):
         rd = random.randint(0, 100)
         if(rd < 20):
-            kbmoy = exploration()
+            kbienmoyen = exploration()
         else:
             try:
-                kbmoy = exploitation()
+                kbienmoyen = exploitation()
             except ValueError:
-                kbmoy = exploration()
+                kbienmoyen = exploration()
     C.Lancer_simulation(True, True)
     
 
