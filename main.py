@@ -253,9 +253,5 @@ def renforcement():
     C.Lancer_simulation(True, True)
     
 
-    
-
-
-
 if __name__ == "__main__":
     renforcement()

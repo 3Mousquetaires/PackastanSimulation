@@ -4,7 +4,7 @@ from collections import deque
 
 import batiment_r
 
-BESOINS_COEFFS = {0:16, 1:16, 2:16, 3:8, 4:8, 5:8, 6:4, 7:4, 8:2}
+BESOINS_COEFFS = {0:4, 1:4, 2:4, 3:3, 4:3, 5:3, 6:2, 7:2, 8:1}
 
 # L'uniformisation du kbien est une gaussienne dont la décroissance est gérée
 # par ce paramètre. Il faut l'adapter à la taille de la map pour que les kbiens
@@ -194,7 +194,7 @@ class Citoyen :
         #on update tous les autres
         for i_b in range(len(self.besoins)):
             if i_b != besoin_i:
-                self.besoins[i_b] *= 1/(log2(BESOINS_COEFFS[i_b])+1)
+                self.besoins[i_b] *= 1/(BESOINS_COEFFS[i_b]+1)
             else:
                 self.besoins[i_b] = 1
 
