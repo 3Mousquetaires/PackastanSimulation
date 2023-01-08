@@ -109,22 +109,16 @@ Nous montrons dans les détails le premier résultat fonctionnel de PackastanSim
 ![Alt text](readme/Stras%203%20asymptote%20tour.png)
 
 
+## Banque de coordonnées
 
-#coordonée du centre de strasbourg :
-#   (48.58310, 7.74863)
+* coordonnées du centre de strasbourg : 48.58310, 7.748)
 
-#Paris 17e:
-#   (48.882970, 2.299415)
+* Paris 17e: (48.882970, 2.299415)
 
-#Montbéliard :
-#   (47.505684, 6.803161)
+* Montbéliard : (47.505684, 6.803161)
 
-#Arcey :
-#  47.522363, 6.660636
+* Arcey : (47.522363, 6.660636)
 
-#Londres en plein sur Westminster
-#   51.500948, -0.124542
+* Londres en plein sur Westminster : (51.500948, -0.124542)
 
-#Central Park
-#   40.771300, -73.973902
-# Je m'amuse comme un fou
+* Central Park : (40.771300, -73.973902)
