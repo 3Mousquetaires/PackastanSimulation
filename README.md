@@ -61,18 +61,7 @@ Le temps d'exécution de ce programme est très long. La plus grande surface sur
 
 ## Visite du repo 
 
-Pour que les différent fichiers fonctionnent correctement, il faut que les bibliothèques suivantes soient installées :
-
-* numpy
-* matplotlib
-* pynput
-* csv
-* collections
-* keyboard
-* requests
-* json
-* osmnx
-
+ > Pour que les différent fichiers fonctionnent correctement, il faut que les bibliothèques suivantes soient installées : numpy, matplotlib, csv, collections, requests, json, osmnx. D'autres peuvent s'ajouter pour les versions précédentes.
 
 
  * `main.py` : C'est d'ici qu'est exécuté le programme. Il contient la classe Core qui gère le deuxième étage de simulations et les procédures utilisées par l'algorithme d'apprentissage renforcé. Il désérialise la mémoire du programme, créé les villes et les modifie. Il est actuellement paramétré pour lancer Strasbourg centre en taille 3 à son exécution. Pour le lancer en simulation : `python main.py`.
@@ -97,11 +86,27 @@ Pour que les différent fichiers fonctionnent correctement, il faut que les bibl
 
  * `cache` : dossier utilisé par l'une de nos bibliothèques importées sans que l'on ne sache vraiment pourquoi.
 
+## Showcase : Strasbourg
 
+Nous montrons dans les détails le premier résultat fonctionnel de PackastanSimulation : l'implémentation de la ville de Strasbourg dans le programme.
 
-### Apprentissage par renforcement
+### Création de la carte 
 
-Pour plus d'informations sur l'apprentissage par renforcement, consultez [etape_renforcement.md](https://github.com/3Mousquetaires/PackastanSimulation/blob/main/etape_apprentissage.md)
+> Le fichier `mapbuilder` fut appelé, centré sur la Grande île de Strasbourg, au sud ouest de la cathédrale. Voici le résultat, affiché sur matplotlib :
+
+![Alt text](readme/Stras%203%20map.png)
+
+### Premier étage de la simulation
+
+ > Une fois que la ville est récupérée et instanciée, 1000 citoyens sont créés et vont se déplacer dans la ville pour lancer le calcul du kbien. Voici le résultat :
+
+ ![Alt text](readme/Stras%203%20premier%20tour.png)
+
+ ### Asymptote et Strasbourg optimal :
+
+ > Laissons tourner la simulation quelque temps :
+
+![Alt text](readme/Stras%203%20asymptote%20tour.png)
 
 
 
