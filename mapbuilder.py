@@ -1,4 +1,3 @@
-from fileinput import close
 import requests as rq
 import json
 import math
@@ -6,7 +5,6 @@ import numpy as np
 
 import time
 
-#import igraph as grf
 import networkx as nx
 import os
 # Vocabulaire anglais : Edges sont les arètes, Nodes sont les sommets
@@ -15,7 +13,6 @@ import batiment_r
 
 import osmnx.graph as grph
 import osmnx.distance as dist
-
 from osmnx import save_graphml, load_graphml
 
 
@@ -33,9 +30,13 @@ def _deg2rad(angle):
 _LVL_HEIGHT = 2.875
 _POP_DENSITY = 0.08333
 _EARTH_RADIUS = 6_371.009 * 10**3
-_SHAB_AREA_RATIO = .91
+
 
 _TYPE_TO_TYPE = {
+    """Dictionnaire de conversion des types d'OSM en types de batiments.
+    Obtenu empiriquement en testant les limites du programme en terme de surface
+    urbaine."""
+
     'retail' : 0,
     'commercial' : 6,
     'greenhouse' : 0, # ?
@@ -68,7 +69,11 @@ _TYPE_TO_TYPE = {
 
 
 class MapBuilder:
-    """Outil intégré de construction de graphe urbain basé sur la zone proche autour d'un point central."""
+    """ ## MapBuilder :
+    Outil intégré de construction de graphe urbain basé sur la zone proche autour d'un point central.
+    Contient deux attributs principaux :
+    \n\t - batlist : liste des instances batiments de la zone
+    \n\t - pfGraph : graphe routier de la zone, utilisé pour le pathfinding."""
     
     def __init__(self, center):
         """Exemple : centre de Strasbourg : (48.58310, 7.74863) (fonctionne sur les coordonées géographiques).\n"""
@@ -78,6 +83,7 @@ class MapBuilder:
         self.maisonliste = []
         self.pfGraph = nx.MultiDiGraph()
         
+        # Cet attribut sert à répertorier les routes déjà connues avec leur "NodeID"
         self.route_dico = {}
         
        
@@ -85,8 +91,10 @@ class MapBuilder:
     
     def Initialise(self, size):
         """Faut s'y frotter...\n
-            Préférer la déserialisation depuis le cache avec MapBuilder.LoadFromMemory\n
-            Temps d'exécution : 10 15 minutes."""
+        Démarre la construction de l'instance.\n
+        Il existe des méthodes pour sérialiser et déserialiser les instances MapBuilders.
+        Préférer la déserialisation depuis le cache avec MapBuilder.LoadFromMemory\n
+            Temps d'exécution : Strasbourg taille 3, 1h40"""
             
         self.size = size
             
@@ -116,16 +124,20 @@ class MapBuilder:
         t0 = time.time()
         print(f" --- \tInitialisation des maisons : {len(self.maisonliste)} trouvées.")
         
-        #print(json.dumps(self.maisonliste[0].__dict__))
-        # deuxième traitement : init des maisons
+        # deuxième traitement : init des maisons. Nous les relions toutes 
+        # batiments les plus proches pour chaque type de besoin.
+        # En même temps, on crée le graphe de déplacement, et on enregistre les routes
+        # qu'on emprunte. Elles deviennent des nouvelles instances de batiment_r.Road, ajoutée
+        # à la liste des batiments.
         self.route_dico = {}
         
         i = -1
         self.i_route = len(self.batlist)
         for m in self.maisonliste:
-            print(i)
             i += 1
-            for k in range(9):
+            print(i) # Quand ce compteur atteint len(self.maisonliste), la création de l'objet est terminée.
+            
+            for k in range(9): # Pour chaque type de besoin :
                 if k != 1:
                     batf = self.find_closer(m.coos, k)
                     
@@ -147,6 +159,7 @@ class MapBuilder:
         
         print(" --- \tterminé !")
         
+
         
     def GetTypeList(self):
         return [b.type for b in self.batlist]
@@ -159,10 +172,15 @@ class MapBuilder:
         print(" --- Actualisation de l'annuaire des maisons concernées.")
         self.maisonliste = [b for b in self.batlist if b.type == 1]
 
+        # Il faut parcourir toutes les maisons et mettre à jour 
+        # celles qui pointent sur le ie batiment.
         for m in self.maisonliste:
             try:
                 k = m.IsRelated(i)
             except TypeError:
+                # Un bug inconnu se propage à mesure que le deuxième étage de simulations 
+                # progresse. Des maisons ont tout leur annuaire à None. Ce bug ne survient qu'après 
+                # la convergence, même sur des grandes maps.
                 raise Bug("Y'a du None")
 
             if k != [-1] :
@@ -171,6 +189,7 @@ class MapBuilder:
                     if t == 1:
                         continue
                     
+                    #Le plus proche batiment du type k :
                     batf = self.find_closer(m.coos, t)
 
                     chemin = [m.id]
@@ -185,7 +204,8 @@ class MapBuilder:
         
         
     def _dumpsBatList(self):
-        """Les objets maisons ne sont pas sérialisables, """
+        """Renvoie une liste contenant les attributs __dict__ des batiments.
+        Python est incapable de séraliser toute la liste, les objets maisons ne sont pas sérialisables."""
         D = []
         
         for b in self.batlist:
@@ -195,6 +215,7 @@ class MapBuilder:
     
     
     def _loadsBatList(self, data):
+        """Charge une liste de dictionnaires, et crée une liste de batiments."""
         self.batlist = []
         
         for b in data:
@@ -210,9 +231,11 @@ class MapBuilder:
                 bat = batiment_r.Maison(b["coos"], props_dico)
                 self.maisonliste.append(bat)
                 bat.memoire_batiments = b["memoire_batiments"]
+
             elif b["type"] == 9:
                 bat = batiment_r.Road((b["coos"][1], b["coos"][0]), b["id"], b["node"])
                 self.route_dico[b["node"]] =b["id"]
+
             else:
                 bat = batiment_r.Batiment(b["type"], b["coos"], props_dico)
                 
@@ -221,6 +244,8 @@ class MapBuilder:
     
     
     def LoadFromMemory(self):
+        """Initialise l'instance à partir d'une sauvegarde sur le disque.\n
+        La mémoire du programme est dans le dossier memoire."""
         print(f" --- Initialisation de {self.center} commencée")
 
         try:
@@ -237,6 +262,8 @@ class MapBuilder:
             
 
         except FileNotFoundError:
+            # On va voir dans \memoire, puis dans \VilleReelle\memoire. Cette
+            # tolérance permet de lancer le programme depuis VilleReelle ou depuis la racine.
             path = os.path.join(os.getcwd(), "VilleReelle", "memoire",  f"{self.center}")
 
             with open(f"{path}\\map.json", "r") as file:
@@ -260,7 +287,7 @@ class MapBuilder:
 
     def SelfSerialize(self):
         """Ecrit l'instance actuelle dans [self.center]\map.json et [self.center]\graph.json\n
-        Appel automatique depuis Initialise, éviter de toucher."""
+        Appel automatique depuis Initialise, éviter de toucher depuis l'extérieur."""
         path = os.path.join(os.getcwd(), "memoire",  f"{self.center}")
         
         try:
@@ -275,12 +302,13 @@ class MapBuilder:
         
         
     def GetBat(self, i):
-        """get"""
+        """Renvoie le batiment d'id i. Les id commencent à 1."""
         return self.batlist[i-1]
 
  
     def _calculateCoos(self, liste_sommets):
-        """calcul la moyenne de tous les points passés en paramètres.
+        """calcule la moyenne de tous les points passés en paramètres.
+        Très concrètement, cette méthode calcule la valeur coos d'un batiment.\n
         Structure : float list list -> float tupple"""
         x = np.mean([pt[0] for pt in liste_sommets])
         y = np.mean([pt[1] for pt in liste_sommets])
@@ -303,7 +331,7 @@ class MapBuilder:
             diff = (s[0] - self.center[1], s[1] - self.center[0])
             liste_points.append(( self._deg2rad(diff[0]), self._deg2rad(diff[1]) ))
         
-        #1/2 Somme de i = 0 à (n-1) des |x_i y_i+1 - x_i+1 y_i|
+        # 1/2 Somme de i = 0 à (n-1) des |x_i y_i+1 - x_i+1 y_i|
         somme = 0
         for i in range(len(liste_points)-1):
             somme += liste_points[i][0]*liste_points[i+1][1] - liste_points[i+1][0]*liste_points[i][1] 
@@ -313,6 +341,7 @@ class MapBuilder:
     
     def find_closer(self, coos0, type2find):
         """# Cherche le batiment le plus proche du coos0 correspondant au type en question"""
+        # C'est une simple recherche de minimum.
         min_ =  -1
         bmin_ = None
         
@@ -327,14 +356,14 @@ class MapBuilder:
                     min_ = nnorm
                     bmin_ = bat
                     
-        #print(i)
         return bmin_    
 
 
     def _create_bat_list(self):
         """Utilise self._getdata_batiments pour renvoyer une liste de 
         Bâtiments formatés et avec les bonnes données."""
-        #Il faut tout d'abord récupérer toutes les informations sur les bâtiments.
+        # Il faut tout d'abord récupérer toutes les informations sur les bâtiments.
+        # Ne pas hésiter à aller voir le dossier étude pour voir la tête des données envoyées par OPENSTREETMAP
         batlist_json = self._getdata_batiments()
         print(f" --- \t{ len( batlist_json ) } batiments trouvés.")
 
@@ -380,7 +409,6 @@ class MapBuilder:
             }
             
             
-            
             if type_int == 1:
                 newbat = batiment_r.Maison(coos, props_dico)
                 self.maisonliste.append(newbat)
@@ -409,7 +437,7 @@ class MapBuilder:
         for r in itineraire:
             try:
                 chemin.append(self.batlist[ self.route_dico[r]].id)
-            except KeyError:
+            except KeyError: # Si la route n'est pas dans self.route_dico
                 #il faut créer la route.
                 coos = (self.pfGraph.nodes[r]['y'], self.pfGraph.nodes[r]['x'])
                 id_ = self.i_route
@@ -443,14 +471,13 @@ class MapBuilder:
 
     def _getdata_batiments(self):
         """Récupère l'intégralité des données sur les batiments contenus dans la zone."""
-        #Ca va être un peu le cirque.
-        #On déjà récupérer les coos des 4 maps que l'on doit aller chercher.
+        # Ca va être un peu le bazar.
+        # On va déjà récupérer les coos des size² maps que l'on doit aller chercher.
         center_map_id = self._deg2num(self.center[0], self.center[1], 15)
 
         if self.size == 1:
             map_ids = [(center_map_id[0], center_map_id[1])]
         else:
-            #On s'intéresse aux 4 maps autour du centre.
             map_ids = []
             for i in range(-self.size+1, self.size):
                 for j in range(-self.size+1, self.size):
@@ -505,20 +532,11 @@ class MapBuilder:
         self.batlist[i-1] = bat
         
 
-
-#print(_get_itineraire( (2.316068734550804,48.87037435), (-1.2770243425435213,46.1581427) ))
-#2.316068734550804,48.87037435;-1.2770243425435213,46.1581427
-
-#print(__getdata_batiments((48.58310, 7.74863))
-
-#MB = MapBuilder((48.58310, 7.74863))
-
-
 import sys
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
-        print("Erreur : il manque des arguments\nSynthaxe : mapbuilder.py latitude longitude")
+        print("Erreur : il manque des arguments\nSynthaxe : mapbuilder.py latitude longitude [size]")
     else:    
         try: 
             size = int(sys.argv[3])
@@ -526,6 +544,3 @@ if __name__ == "__main__":
             size = 1
         MB = MapBuilder( (float(sys.argv[1]), float(sys.argv[2])))
         MB.Initialise(size=size)
-
-#MB = MapBuilder( (47.5042, 6.8252) )
-#MB.Initialise(size=2)
