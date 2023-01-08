@@ -1,0 +1,302 @@
+{
+    "code": "Ok",
+    "routes": [
+        {
+            "distance": 593.8,
+            "duration": 94.3,
+            "legs": [
+                {
+                    "distance": 593.8,
+                    "duration": 94.3,
+                    "steps": [
+                        {
+                            "distance": 19.7,
+                            "driving_side": "right",
+                            "duration": 5.4,
+                            "geometry": "co`aHe~sg@Gr@",
+                            "intersections": [
+                                {
+                                    "bearings": [
+                                        282
+                                    ],
+                                    "entry": [
+                                        true
+                                    ],
+                                    "location": [
+                                        6.660986,
+                                        47.521304
+                                    ],
+                                    "out": 0
+                                }
+                            ],
+                            "maneuver": {
+                                "bearing_after": 282,
+                                "bearing_before": 0,
+                                "location": [
+                                    6.660986,
+                                    47.521304
+                                ],
+                                "modifier": "left",
+                                "type": "depart"
+                            },
+                            "mode": "driving",
+                            "name": "",
+                            "weight": 5.4
+                        },
+                        {
+                            "distance": 16,
+                            "driving_side": "right",
+                            "duration": 3.2,
+                            "geometry": "ko`aHq|sg@P`@",
+                            "intersections": [
+                                {
+                                    "bearings": [
+                                        45,
+                                        105,
+                                        225
+                                    ],
+                                    "entry": [
+                                        true,
+                                        false,
+                                        true
+                                    ],
+                                    "in": 1,
+                                    "location": [
+                                        6.660729,
+                                        47.521341
+                                    ],
+                                    "out": 2
+                                }
+                            ],
+                            "maneuver": {
+                                "bearing_after": 232,
+                                "bearing_before": 281,
+                                "location": [
+                                    6.660729,
+                                    47.521341
+                                ],
+                                "modifier": "left",
+                                "type": "turn"
+                            },
+                            "mode": "driving",
+                            "name": "Rue des Lilas",
+                            "weight": 3.2
+                        },
+                        {
+                            "distance": 54.3,
+                            "driving_side": "right",
+                            "duration": 13.2,
+                            "geometry": "yn`aHo{sg@\\?b@OZQ",
+                            "intersections": [
+                                {
+                                    "bearings": [
+                                        45,
+                                        180,
+                                        330
+                                    ],
+                                    "entry": [
+                                        false,
+                                        true,
+                                        true
+                                    ],
+                                    "in": 0,
+                                    "location": [
+                                        6.660561,
+                                        47.521253
+                                    ],
+                                    "out": 1
+                                },
+                                {
+                                    "bearings": [
+                                        0,
+                                        165,
+                                        255
+                                    ],
+                                    "entry": [
+                                        false,
+                                        true,
+                                        true
+                                    ],
+                                    "in": 0,
+                                    "location": [
+                                        6.660564,
+                                        47.521099
+                                    ],
+                                    "out": 1
+                                }
+                            ],
+                            "maneuver": {
+                                "bearing_after": 178,
+                                "bearing_before": 232,
+                                "location": [
+                                    6.660561,
+                                    47.521253
+                                ],
+                                "modifier": "left",
+                                "type": "turn"
+                            },
+                            "mode": "driving",
+                            "name": "Rue de la Nouvelle",
+                            "weight": 13.2
+                        },
+                        {
+                            "distance": 163.1,
+                            "driving_side": "right",
+                            "duration": 23.5,
+                            "geometry": "{k`aHq|sg@u@uEc@uAk@oA",
+                            "intersections": [
+                                {
+                                    "bearings": [
+                                        75,
+                                        180,
+                                        345
+                                    ],
+                                    "entry": [
+                                        true,
+                                        true,
+                                        false
+                                    ],
+                                    "in": 2,
+                                    "location": [
+                                        6.660725,
+                                        47.520784
+                                    ],
+                                    "out": 0
+                                }
+                            ],
+                            "maneuver": {
+                                "bearing_after": 68,
+                                "bearing_before": 160,
+                                "location": [
+                                    6.660725,
+                                    47.520784
+                                ],
+                                "modifier": "left",
+                                "type": "turn"
+                            },
+                            "mode": "driving",
+                            "name": "Rue des Chenevi\u00e8res",
+                            "weight": 23.5
+                        },
+                        {
+                            "distance": 340.8,
+                            "driving_side": "right",
+                            "duration": 49,
+                            "geometry": "ap`aHmhtg@{E}HaFqH",
+                            "intersections": [
+                                {
+                                    "bearings": [
+                                        45,
+                                        135,
+                                        225,
+                                        315
+                                    ],
+                                    "entry": [
+                                        true,
+                                        true,
+                                        false,
+                                        true
+                                    ],
+                                    "in": 2,
+                                    "location": [
+                                        6.662633,
+                                        47.521452
+                                    ],
+                                    "out": 0
+                                },
+                                {
+                                    "bearings": [
+                                        45,
+                                        225,
+                                        315
+                                    ],
+                                    "entry": [
+                                        true,
+                                        false,
+                                        true
+                                    ],
+                                    "in": 1,
+                                    "location": [
+                                        6.664219,
+                                        47.52255
+                                    ],
+                                    "out": 0
+                                }
+                            ],
+                            "maneuver": {
+                                "bearing_after": 43,
+                                "bearing_before": 50,
+                                "location": [
+                                    6.662633,
+                                    47.521452
+                                ],
+                                "modifier": "straight",
+                                "type": "new name"
+                            },
+                            "mode": "driving",
+                            "name": "Rue des Pinsons",
+                            "weight": 49
+                        },
+                        {
+                            "distance": 0,
+                            "driving_side": "right",
+                            "duration": 0,
+                            "geometry": "_~`aH}{tg@",
+                            "intersections": [
+                                {
+                                    "bearings": [
+                                        223
+                                    ],
+                                    "entry": [
+                                        true
+                                    ],
+                                    "in": 0,
+                                    "location": [
+                                        6.665754,
+                                        47.523675
+                                    ]
+                                }
+                            ],
+                            "maneuver": {
+                                "bearing_after": 0,
+                                "bearing_before": 43,
+                                "location": [
+                                    6.665754,
+                                    47.523675
+                                ],
+                                "type": "arrive"
+                            },
+                            "mode": "driving",
+                            "name": "Rue des Pinsons",
+                            "weight": 0
+                        }
+                    ],
+                    "summary": "Rue des Chenevi\u00e8res, Rue des Pinsons",
+                    "weight": 94.3
+                }
+            ],
+            "weight": 94.3,
+            "weight_name": "routability"
+        }
+    ],
+    "waypoints": [
+        {
+            "distance": 12.619411,
+            "hint": "X2H-jWBh_o0vAAAACwAAAAAAAAAAAAAA3kueQY5IjEAAAAAAAAAAAC8AAAALAAAAAAAAAAAAAABj7QAAeqNlABge1QJXo2UAqR3VAgAAXwb2yMUk",
+            "location": [
+                6.660986,
+                47.521304
+            ],
+            "name": ""
+        },
+        {
+            "distance": 4.471189,
+            "hint": "vkFygWunnYP0AAAAMQAAAAAAAAAAAAAAZFEqQ_nsBUIAAAAAAAAAAPQAAAAxAAAAAAAAAAAAAABj7QAAGrZlAFsn1QJGtmUAQCfVAgAArwL2yMUk",
+            "location": [
+                6.665754,
+                47.523675
+            ],
+            "name": "Rue des Pinsons"
+        }
+    ]
+}
