@@ -16,7 +16,7 @@ import sys
 
 np.set_printoptions(threshold=sys.maxsize)
 
-SEUIL = 1e-3
+SEUIL = 1
 listeActions = []
 
 
@@ -43,6 +43,10 @@ class Core():
         
  
         self.firstV = None
+        self.needToGraph = False
+        global ARCHIVE
+        ARCHIVE = copy(self.mb)
+
         self.lastV = None
 
         if SHOULD_FLEX:
@@ -50,44 +54,51 @@ class Core():
             
             
 
-    def show_realistic(self, ville):
+    def start_graphing(self):
+        self.needToGraph = True
         plt.style.use('dark_background')
-        fig, axes = plt.subplots(1, 2, figsize=(12, 6))
+        self.fig, self.axes = plt.subplots(1, 2, figsize=(12, 6))
+        self.ax_ville = self.axes[0]
+        self.ax_ville.set_box_aspect(1)
+        self.dico = {0:"Commerces", 1:"habitat", 2:"santé", 3:"securité",
+                4:"emploi", 5:"moralité", 6:"fete", 7:"physique",
+                8:"gestion", 9:"routes"}
+        self.ax_ville.legend(loc="center left", bbox_transform=self.fig.transFigure)
+        self.box = self.ax_ville.get_position()
+        self.ax_ville.set_position([self.box.x0, self.box.y0 + self.box.height * 0.1, self.box.width, self.box.height * 0.9])
+        self.ax_ville.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),fancybox=True, shadow=True, ncol=5)
+        plt.title("Carte des kbiens")
+        self.ax_kbien = self.axes[1]
+        self.ax_kbien.set_box_aspect(1)
+        self.ax_kbien = self.axes[1]
+        self.ax_kbien.set_box_aspect(1)
+        self.inistializingGraph = True
+
+    def show_realistic(self, ville):
+        self.ax_ville.clear()
+        self.ax_kbien.clear()
         
         bbox = (ville.W, ville.E, ville.S, ville.N)
         
         print(" --- \tploting", len(ville.batlist), "batiments")
         
         # ====== VILLE ==========
-        ax_ville = axes[0]
         
-        ax_ville.set_box_aspect(1)
-        dico = {0:"Commerces", 1:"habitat", 2:"santé", 3:"securité",
-                4:"emploi", 5:"moralité", 6:"fete", 7:"physique",
-                8:"gestion", 9:"routes"}
+        self.ax_ville.scatter(ville.coos_listx, ville.coos_listy, c=ville.color_list, s=ville.size_list)
         
-        ax_ville.scatter(ville.coos_listx, ville.coos_listy, c=ville.color_list, s=ville.size_list)
-        
-        for t in dico:
-            ax_ville.scatter([], [], c=type_to_c[t], label=dico[t])
-
-
-        ax_ville.legend(loc="center left", bbox_transform=fig.transFigure)
-        box = ax_ville.get_position()
-        ax_ville.set_position([box.x0, box.y0 + box.height * 0.1, box.width, box.height * 0.9])
-        ax_ville.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),fancybox=True, shadow=True, ncol=5)
-            
-        plt.title("Carte des kbiens")
+        for t in self.dico:
+            self.ax_ville.scatter([], [], c=type_to_c[t], label=self.dico[t])
+        title = f"Carte des kbiens {self._compute_mean(ville.kbien_list)}"
+        plt.title(title)
             
         # ====== MAP KBIEN ========
-        ax_kbien = axes[1]
-        ax_kbien.set_box_aspect(1)    
         
         #cmap = plt.get_cmap('gist_ncar', 1)
-        pts = ax_kbien.scatter(ville.coos_listx, ville.coos_listy, s=ville.size_list, c=ville.kbien_list, cmap="plasma")
-        fig.colorbar(pts)
-        plt.draw()
-        
+        self.pts = self.ax_kbien.scatter(ville.coos_listx, ville.coos_listy, s=ville.size_list, c=ville.kbien_list, cmap="plasma")
+        if self.inistializingGraph :
+            self.fig.colorbar(self.pts)
+            self.inistializingGraph = False
+        plt.pause(0.01)
 
     def flex(self):
         V = Ville(self.center, self.mb.GetBatList(), self.population)
@@ -109,7 +120,7 @@ class Core():
         print("\n\n")
         
         if should_show:
-            V.show_realistic()
+            self.show_realistic(V)
         
         if should_print:
             print(" -- Tableau des catégories :")
@@ -142,7 +153,7 @@ class Core():
         try:
             self.mb.ActualiseGraphe(i)
         except Bug:
-            self.lastV.show_realistic()
+            self.show_realistic(self.lastV)
         
         print(" -- Echange réalisé.")
         
@@ -180,7 +191,7 @@ maps = {
 
 ### Renforcement
 
-C = Core((47.5042, 6.8252), 1000)
+C = Core((47.5042, 6.8252), 2000)
 
 
 def getMaxDeltaKb(oldbat):
@@ -226,6 +237,7 @@ def exploration():
 
 def renforcement():
     plt.ion()
+    C.start_graphing()
     newmap = C.mb.GetTypeList()
     map_kbien, kbienmoyen = C.Lancer_simulation(True, True, True)
     
@@ -241,14 +253,9 @@ def renforcement():
                 kbienmoyen = exploitation()
             except ValueError:
                 kbienmoyen = exploration()
-            
-        #Le programme s'arrête tout seul à l'approche de l'asymptote
-        if len(kbns) > 5:
-            deltakbn = kbienmoyen - kbns[-3]
-        kbns.append(kbienmoyen)
-        
-        
     C.Lancer_simulation(True, True)
+    
+
     
 
 
