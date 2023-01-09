@@ -6,6 +6,8 @@ Ce repo contient les fichiers sources du projet TIPE 2022-2023 du groupe des 3 m
 * Damien Maître [@DobbyOff](https://github.com/DobbyOff)
 * Ethan Petitjean [@Slordeee](https://github.com/Slordeee)
 
+$$bonjour$$
+
 ## Introduction
 
 PackastanSimulation est un programme mesurant puis optimisant la disposition des bâtiments dans une ville donnée en fonction des besoins répondus par ces derniers. Face aux nombreux modèles mathématiques déterminant l'évolution d'une ville, nous avons opté pour une démarche empirique visant à calculer la vertue du positionnement des bâtiments. Nous appliquons ensuite des méthodes d'apprentissage renforcé pour tendre, simulation après simulation, vers une ville idéale.
