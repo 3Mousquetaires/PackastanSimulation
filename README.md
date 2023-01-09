@@ -6,7 +6,7 @@ Ce repo contient les fichiers sources du projet TIPE 2022-2023 du groupe des 3 m
 * Damien Maître [@DobbyOff](https://github.com/DobbyOff)
 * Ethan Petitjean [@Slordeee](https://github.com/Slordeee)
 
-$$bonjour$$
+$$\int_0^{+\infty} \frac{sh(t)}{ch(t+ln(1+\frac{1}{t}} dt$$
 
 ## Introduction
 
