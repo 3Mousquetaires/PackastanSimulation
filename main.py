@@ -71,6 +71,7 @@ class Core():
         self.ax_kbien.set_box_aspect(1)
         self.inistializingGraph = True
 
+
     def show_realistic(self, ville):
         self.ax_ville.clear()
         self.ax_kbien.clear()
