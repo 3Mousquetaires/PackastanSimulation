@@ -1,0 +1,136 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><key id="d14" for="edge" attr.name="name" attr.type="string"/>
+<key id="d13" for="edge" attr.name="ref" attr.type="string"/>
+<key id="d12" for="edge" attr.name="geometry" attr.type="string"/>
+<key id="d11" for="edge" attr.name="length" attr.type="string"/>
+<key id="d10" for="edge" attr.name="reversed" attr.type="string"/>
+<key id="d9" for="edge" attr.name="oneway" attr.type="string"/>
+<key id="d8" for="edge" attr.name="highway" attr.type="string"/>
+<key id="d7" for="edge" attr.name="osmid" attr.type="string"/>
+<key id="d6" for="node" attr.name="street_count" attr.type="string"/>
+<key id="d5" for="node" attr.name="x" attr.type="string"/>
+<key id="d4" for="node" attr.name="y" attr.type="string"/>
+<key id="d3" for="graph" attr.name="simplified" attr.type="string"/>
+<key id="d2" for="graph" attr.name="crs" attr.type="string"/>
+<key id="d1" for="graph" attr.name="created_with" attr.type="string"/>
+<key id="d0" for="graph" attr.name="created_date" attr.type="string"/>
+<graph edgedefault="directed"><data key="d0">2022-12-06 14:37:55</data>
+<data key="d1">OSMnx 1.2.2</data>
+<data key="d2">epsg:4326</data>
+<data key="d3">True</data>
+<node id="1874844529">
+  <data key="d4">47.2759969</data>
+  <data key="d5">4.8275415</data>
+  <data key="d6">3</data>
+</node>
+<node id="1874844534">
+  <data key="d4">47.2765773</data>
+  <data key="d5">4.8277497</data>
+  <data key="d6">3</data>
+</node>
+<node id="1874844542">
+  <data key="d4">47.2763448</data>
+  <data key="d5">4.8274072</data>
+  <data key="d6">3</data>
+</node>
+<node id="1874844566">
+  <data key="d4">47.2740789</data>
+  <data key="d5">4.8271714</data>
+  <data key="d6">3</data>
+</node>
+<node id="1934790381">
+  <data key="d4">47.274529</data>
+  <data key="d5">4.8288258</data>
+  <data key="d6">1</data>
+</node>
+<edge source="1874844529" target="1874844542" id="0">
+  <data key="d7">177014170</data>
+  <data key="d8">residential</data>
+  <data key="d9">False</data>
+  <data key="d10">False</data>
+  <data key="d11">40.863</data>
+  <data key="d12">LINESTRING (4.8275415 47.2759969, 4.8274206 47.276161, 4.8274072 47.2763448)</data>
+</edge>
+<edge source="1874844529" target="1874844566" id="0">
+  <data key="d7">183115618</data>
+  <data key="d13">D 104J</data>
+  <data key="d14">Grande Rue</data>
+  <data key="d8">tertiary</data>
+  <data key="d9">False</data>
+  <data key="d10">True</data>
+  <data key="d11">217.239</data>
+  <data key="d12">LINESTRING (4.8275415 47.2759969, 4.8275257 47.2755452, 4.8274533 47.2750093, 4.8274554 47.2747853, 4.8274529 47.27461, 4.8271714 47.2740789)</data>
+</edge>
+<edge source="1874844529" target="1874844534" id="0">
+  <data key="d7">325547356</data>
+  <data key="d13">D 104J</data>
+  <data key="d14">Rue des Écrevisses</data>
+  <data key="d8">tertiary</data>
+  <data key="d9">False</data>
+  <data key="d10">False</data>
+  <data key="d11">66.619</data>
+  <data key="d12">LINESTRING (4.8275415 47.2759969, 4.8275574 47.2761191, 4.8276862 47.2764358, 4.8277497 47.2765773)</data>
+</edge>
+<edge source="1874844534" target="1874844529" id="0">
+  <data key="d7">325547356</data>
+  <data key="d13">D 104J</data>
+  <data key="d14">Rue des Écrevisses</data>
+  <data key="d8">tertiary</data>
+  <data key="d9">False</data>
+  <data key="d10">True</data>
+  <data key="d11">66.619</data>
+  <data key="d12">LINESTRING (4.8277497 47.2765773, 4.8276862 47.2764358, 4.8275574 47.2761191, 4.8275415 47.2759969)</data>
+</edge>
+<edge source="1874844534" target="1874844542" id="0">
+  <data key="d7">325547357</data>
+  <data key="d8">unclassified</data>
+  <data key="d9">False</data>
+  <data key="d10">True</data>
+  <data key="d11">36.687</data>
+  <data key="d12">LINESTRING (4.8277497 47.2765773, 4.8275869 47.2764467, 4.8274072 47.2763448)</data>
+</edge>
+<edge source="1874844542" target="1874844529" id="0">
+  <data key="d7">177014170</data>
+  <data key="d8">residential</data>
+  <data key="d9">False</data>
+  <data key="d10">True</data>
+  <data key="d11">40.863</data>
+  <data key="d12">LINESTRING (4.8274072 47.2763448, 4.8274206 47.276161, 4.8275415 47.2759969)</data>
+</edge>
+<edge source="1874844542" target="1874844534" id="0">
+  <data key="d7">325547357</data>
+  <data key="d8">unclassified</data>
+  <data key="d9">False</data>
+  <data key="d10">False</data>
+  <data key="d11">36.687</data>
+  <data key="d12">LINESTRING (4.8274072 47.2763448, 4.8275869 47.2764467, 4.8277497 47.2765773)</data>
+</edge>
+<edge source="1874844566" target="1874844529" id="0">
+  <data key="d7">183115618</data>
+  <data key="d13">D 104J</data>
+  <data key="d14">Grande Rue</data>
+  <data key="d8">tertiary</data>
+  <data key="d9">False</data>
+  <data key="d10">False</data>
+  <data key="d11">217.23899999999998</data>
+  <data key="d12">LINESTRING (4.8271714 47.2740789, 4.8274529 47.27461, 4.8274554 47.2747853, 4.8274533 47.2750093, 4.8275257 47.2755452, 4.8275415 47.2759969)</data>
+</edge>
+<edge source="1874844566" target="1934790381" id="0">
+  <data key="d7">183115619</data>
+  <data key="d14">Rue de l'Église</data>
+  <data key="d8">residential</data>
+  <data key="d9">False</data>
+  <data key="d10">False</data>
+  <data key="d11">158.364</data>
+  <data key="d12">LINESTRING (4.8271714 47.2740789, 4.8278507 47.2739788, 4.8283569 47.2740228, 4.8285606 47.274155, 4.8288258 47.274529)</data>
+</edge>
+<edge source="1934790381" target="1874844566" id="0">
+  <data key="d7">183115619</data>
+  <data key="d14">Rue de l'Église</data>
+  <data key="d8">residential</data>
+  <data key="d9">False</data>
+  <data key="d10">True</data>
+  <data key="d11">158.364</data>
+  <data key="d12">LINESTRING (4.8288258 47.274529, 4.8285606 47.274155, 4.8283569 47.2740228, 4.8278507 47.2739788, 4.8271714 47.2740789)</data>
+</edge>
+</graph></graphml>

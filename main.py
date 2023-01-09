@@ -10,7 +10,6 @@ import matplotlib.pyplot as plt
 
 import batiment_r as bat
 
-import time
 import random
 import sys
 
@@ -45,9 +44,11 @@ class Core():
         ARCHIVE = copy(self.mb)
 
         self.lastV = None
+        self.firstV = None
 
         if SHOULD_FLEX:
             self.flex()
+
 
     def start_graphing(self):
         self.needToGraph = True
@@ -60,14 +61,16 @@ class Core():
                 8:"gestion", 9:"routes"}
         self.ax_ville.legend(loc="center left", bbox_transform=self.fig.transFigure)
         self.box = self.ax_ville.get_position()
-        self.ax_ville.set_position([self.box.x0, self.box.y0 + self.box.height * 0.1, self.box.width, self.box.height * 0.9])
-        self.ax_ville.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),fancybox=True, shadow=True, ncol=5)
+
+        box = self.ax_ville.get_position()
+        self.ax_ville.set_position([box.x0, box.y0 + box.height * 0.1,box.width, box.height * 0.9])
         plt.title("Carte des kbiens")
         self.ax_kbien = self.axes[1]
         self.ax_kbien.set_box_aspect(1)
         self.ax_kbien = self.axes[1]
         self.ax_kbien.set_box_aspect(1)
         self.inistializingGraph = True
+
 
     def show_realistic(self, ville):
         self.ax_ville.clear()
@@ -79,10 +82,12 @@ class Core():
         
         # ====== VILLE ==========
         
-        self.ax_ville.scatter(ville.coos_listx, ville.coos_listy, c=ville.color_list, s=ville.size_list)
+        self.ax_ville.scatter(ville.coos_listx, ville.coos_listy, c= ville.color_list, s= ville.size_list)
         
         for t in self.dico:
             self.ax_ville.scatter([], [], c=type_to_c[t], label=self.dico[t])
+
+        self.ax_ville.legend(loc="upper center", bbox_to_anchor=(0.5, -0.05), fancybox=True, ncol=4)
         title = f"Carte des kbiens {self._compute_mean(ville.kbien_list)}"
         plt.title(title)
             
@@ -95,6 +100,7 @@ class Core():
             self.inistializingGraph = False
         plt.pause(0.01)
 
+
     def flex(self):
         V = Ville(self.center, self.mb.GetBatList(), self.population)
         V.start()
@@ -103,10 +109,13 @@ class Core():
         
         
         
-    def Lancer_simulation(self, should_show = False, should_print = False):
+    def Lancer_simulation(self, should_show = False, should_print = False, should_init = True):
         """Lance une simulation qui s'arrête à l'asymptote. Renvoie la kbien."""
         V = Ville(self.center, self.mb.GetBatList(), self.population)
         self.lastV = V
+
+        if should_init:
+            self.firstV = V
         
         data = V.start()
         
@@ -182,7 +191,7 @@ maps = {
 
 ### Renforcement
 
-C = Core((47.5042, 6.8252), 1000)
+C = Core(((48.5825, 7.748)), 25_000)
 
 
 def getMaxDeltaKb(oldbat):
@@ -230,22 +239,24 @@ def renforcement():
     plt.ion()
     C.start_graphing()
     newmap = C.mb.GetTypeList()
-    map_kbien, kbienmoyen = C.Lancer_simulation(True, True)
+    map_kbien, kbienmoyen = C.Lancer_simulation(True, True, should_init=True)
+
     while(kbienmoyen <= SEUIL):
-        rd = random.randint(0, 100)
-        if(rd < 20):
-            kbmoy = exploration()
-        else:
-            try:
-                kbmoy = exploitation()
-            except ValueError:
+        try:
+            rd = random.randint(0, 100)
+            if(rd < 20):
                 kbmoy = exploration()
+            else:
+                try:
+                    kbmoy = exploitation()
+                except ValueError:
+                    kbmoy = exploration()
+        except KeyboardInterrupt:
+            #C.show_realistic(C.lastV)
+            #C.show_realistic(C.firstV)
+            break
     C.Lancer_simulation(True, True)
     
-
-    
-
-
 
 if __name__ == "__main__":
     renforcement()

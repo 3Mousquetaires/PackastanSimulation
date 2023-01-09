@@ -1,36 +1,44 @@
-from numpy import array, where, log2, where 
-
-#from pygame.locals import *
-import numpy as np
-
+from numpy import array, where, log2, where, log, exp
 from random import choice
-
 from collections import deque
 
 import batiment_r
 
-BESOINS_COEFFS = {0:16, 1:16, 2:16, 3:8, 4:8, 5:8, 6:4, 7:4, 8:2}
+BESOINS_COEFFS = {0:4, 1:4, 2:4, 3:3, 4:3, 5:3, 6:2, 7:2, 8:1}
 
-coeff_uniform = np.log(.94)
+# L'uniformisation du kbien est une gaussienne dont la décroissance est gérée
+# par ce paramètre. Il faut l'adapter à la taille de la map pour que les kbiens
+# soient lisibles.
+coeff_uniform = log(.94)
 
 
 class Citoyen :
+    """## Citoyen :
+    \nLes instances de Citoyen simulent les déplacement des citoyens de la ville.
+    Voir le paragraphe stratégie pour plus d'infos.
+    """
+
     def __init__(self, maison):
-        self.age = 0
-        self.besoins = array([.99 for _ in range(0, 9)]) #array([uniform(.5, 1) for _ in range(0, 9)])
+        # voir la méthode selectionner_besoin pour plus d'infos
+        self.besoins = array([.99 for _ in range(0, 9)])
+
+        # maison est une instance de batiment_r.Maison
         self.maison = maison
+
+        # la position actuelle du citoyen, toujours sur un batiment de la carte.
         self.pos = maison.id
-        #0 : chez lui; 1 : en marche; 2 : là bas; 3 : en retour
+
+        # 0 : chez lui; 1 : en marche; 2 : là bas; 3 : en retour
         self.tour_state = 0
 
 
 
     def tour(self, batlist, should_print = False):
-        """Il faut transmettre l'instance de batiment de position 
-        Citoyen.pos à la méthode."""
-        #========= EXPLICATIONS ==============
-        # méthode de fou furieux
-        # La chronologie du programme est eclatée par la while de game.run
+        """Gère une action du citoyen, est appelée à chaque tour de jeu sur chaque
+        citoyen. Renvoie un tuple (kbien, batiment) si le citoyen a terminé son voyage
+        vers un batiment, None sinon."""
+        # ========= EXPLICATIONS ==============
+        # La chronologie du programme est eclatée par la while de Ville.start()
         # Je peux pas faire jouer un citoyen puis celui d'après : il
         # faut que tout le monde fasse tout en même temps.
 
@@ -58,9 +66,8 @@ class Citoyen :
         #     un kbien et l'adresse du bat qu'on était allé chercher.
 
 
-
-        #J'ai faim !
         if self.tour_state == 0:
+            # J'ai faim !
             besoin = self.selectionnerBesoin()
 
             #on cherche l'adresse du o'Tacos dans le GPS
@@ -79,11 +86,11 @@ class Citoyen :
                 print("======================\n")
 
 
-            return # TESTS : jusqu'ici tout s'passe bien
+            return
             
             
         elif self.tour_state == 1:
-            #On vroum vroum jusqu'à Esplanade
+            #On se déplace case par case jusqu'à Esplanade
             self.temps_parcours += 1
             next_step = self.route[0]
 
@@ -117,8 +124,7 @@ class Citoyen :
             
             else:
                 print("Bouchon en", next_step)
-                return #on ne peut rien faire, la route de devant
-                #est bloquée
+                return #on ne peut rien faire, la route de devant est saturée
 
         elif self.tour_state == 2:
             self.batiment_cible = self.pos
@@ -146,8 +152,7 @@ class Citoyen :
                 if len(self.chemin_retour) == 0:
                     #on est rentrés
                     self.tour_state = 0
-                    kbien = np.exp(- ( coeff_uniform *self.temps_parcours)**2 )
-                    #kbien = self.temps_parcours
+                    kbien = exp(- ( coeff_uniform *self.temps_parcours)**2 )
 
                     if should_print:
                         print("== Etape quatre : Finie ! ==")
@@ -163,8 +168,7 @@ class Citoyen :
             
             else:
                 print("Bouchon en", next_step)
-                return #on ne peut rien faire, la route de devant
-                #est bloquée
+                return #on ne peut rien faire, la route de devant est saturée
     
 
     def getbesoins(self):
@@ -180,6 +184,7 @@ class Citoyen :
 
 
     def selectionnerBesoin(self):
+        """Renvoie l'indice du besoin le plus urgent, décroit les autres."""
         #on prend les 3 derniers
         besoins_min_list = sorted([self.besoins[t] for t in range(len(self.besoins)) 
                                    if t != 1])
@@ -189,15 +194,8 @@ class Citoyen :
         #on update tous les autres
         for i_b in range(len(self.besoins)):
             if i_b != besoin_i:
-                self.besoins[i_b] *= 1/(log2(BESOINS_COEFFS[i_b])+1)
+                self.besoins[i_b] *= 1/(BESOINS_COEFFS[i_b]+1)
             else:
                 self.besoins[i_b] = 1
 
         return besoin_i
-            
-
-        
-    def _rechercherBatiments(self):
-        """renvoie l'adresse du premier batiment trouvé répondant
-        à *besoin*."""
-        pass
