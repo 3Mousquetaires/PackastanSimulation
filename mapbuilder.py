@@ -529,7 +529,11 @@ class MapBuilder:
             print(" -- \t tile id", id)
             response = rq.get(f"https://data.osmbuildings.org/0.2/anonymous/tile/15/{id[0]}/{id[1]}.json", headers=HEADER)
 
-            if not response.status_code in [200, 201, 202, 203]:
+            if response.status_code != 200:
+                if response.status_code == 204:
+                    #aucun batiment :)))
+                    continue
+                
                 print("Aie aie aie, internet n'est pas d'accord :(")
                 print(response.status_code)
                 return
