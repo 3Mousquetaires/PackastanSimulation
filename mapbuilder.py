@@ -250,14 +250,22 @@ class MapBuilder:
 
         try:
             path = os.path.join(os.getcwd(), "memoire",  f"{self.center}")
-
-            with open(f"{path}\\map.json", "r") as file:
-                print(f" --- \tTrouvé dans la mémoire !")
-                data = file.read()
-                batlist_raw = json.loads(data)
-                self._loadsBatList(batlist_raw)
-            
-            self.pfGraph = load_graphml(f"{path}\\graph.xml")
+            try : 
+                with open(f"{path}\\map.json", "r") as file:
+                    print(f" --- \tTrouvé dans la mémoire !")
+                    data = file.read()
+                    batlist_raw = json.loads(data)
+                    self._loadsBatList(batlist_raw)
+                
+                self.pfGraph = load_graphml(f"{path}\\graph.xml")
+            except FileNotFoundError:
+                with open(f"{path}/map.json", "r") as file:
+                    print(f" --- \tTrouvé dans la mémoire !")
+                    data = file.read()
+                    batlist_raw = json.loads(data)
+                    self._loadsBatList(batlist_raw)
+                
+                self.pfGraph = load_graphml(f"{path}/graph.xml")
             
             
 
@@ -265,15 +273,22 @@ class MapBuilder:
             # On va voir dans \memoire, puis dans \VilleReelle\memoire. Cette
             # tolérance permet de lancer le programme depuis VilleReelle ou depuis la racine.
             path = os.path.join(os.getcwd(), "VilleReelle", "memoire",  f"{self.center}")
-
-            with open(f"{path}\\map.json", "r") as file:
-                print(f" --- \tTrouvé dans la mémoire !")
-                data = file.read()
-                batlist_raw = json.loads(data)
-                self._loadsBatList(batlist_raw)
+            try:
+                with open(f"{path}\\map.json", "r") as file:
+                    print(f" --- \tTrouvé dans la mémoire !")
+                    data = file.read()
+                    batlist_raw = json.loads(data)
+                    self._loadsBatList(batlist_raw)
+                    
+                self.pfGraph = load_graphml(f"{path}\\graph.xml")
+            except FileNotFoundError:
+                with open(f"{path}/map.json", "r") as file:
+                    print(f" --- \tTrouvé dans la mémoire !")
+                    data = file.read()
+                    batlist_raw = json.loads(data)
+                    self._loadsBatList(batlist_raw)
                 
-            self.pfGraph = load_graphml(f"{path}\\graph.xml")
-            
+                self.pfGraph = load_graphml(f"{path}/graph.xml")
             
         
         print(" --- Checkup dénombrement :")
@@ -294,11 +309,16 @@ class MapBuilder:
             os.makedirs(path)
         except FileExistsError:
             pass
-        
-        with open(os.path.join(f"{path}\\map.json"), 'w') as file:
-            file.write(json.dumps(self._dumpsBatList(), sort_keys=True, indent=4 ))
-            
-        save_graphml(self.pfGraph, f"{path}\\graph.xml")
+        if os.name == "nt":
+            with open(os.path.join(f"{path}\\map.json"), 'w') as file:
+                file.write(json.dumps(self._dumpsBatList(), sort_keys=True, indent=4 ))
+                
+            save_graphml(self.pfGraph, f"{path}\\graph.xml")
+        else:
+            with open(os.path.join(f"{path}/map.json"), 'w') as file:
+                file.write(json.dumps(self._dumpsBatList(), sort_keys=True, indent=4 ))
+                
+            save_graphml(self.pfGraph, f"{path}/graph.xml")
         
         
     def GetBat(self, i):

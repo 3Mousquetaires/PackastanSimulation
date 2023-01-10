@@ -61,14 +61,16 @@ class Core():
                 8:"gestion", 9:"routes"}
         self.ax_ville.legend(loc="center left", bbox_transform=self.fig.transFigure)
         self.box = self.ax_ville.get_position()
-        self.ax_ville.set_position([self.box.x0, self.box.y0 + self.box.height * 0.1, self.box.width, self.box.height * 0.9])
-        self.ax_ville.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),fancybox=True, shadow=True, ncol=5)
+
+        box = self.ax_ville.get_position()
+        self.ax_ville.set_position([box.x0, box.y0 + box.height * 0.1,box.width, box.height * 0.9])
         plt.title("Carte des kbiens")
         self.ax_kbien = self.axes[1]
         self.ax_kbien.set_box_aspect(1)
         self.ax_kbien = self.axes[1]
         self.ax_kbien.set_box_aspect(1)
         self.inistializingGraph = True
+
 
     def show_realistic(self, ville):
         self.ax_ville.clear()
@@ -84,6 +86,8 @@ class Core():
         
         for t in self.dico:
             self.ax_ville.scatter([], [], c=type_to_c[t], label=self.dico[t])
+
+        self.ax_ville.legend(loc="upper center", bbox_to_anchor=(0.5, -0.05), fancybox=True, ncol=4)
         title = f"Carte des kbiens {self._compute_mean(ville.kbien_list)}"
         plt.title(title)
             
@@ -187,7 +191,7 @@ maps = {
 
 ### Renforcement
 
-C = Core(((48.5825, 7.748)), 1000)
+C = Core(((48.5825, 7.748)), 25_000)
 
 
 def getMaxDeltaKb(oldbat):
@@ -236,6 +240,7 @@ def renforcement():
     C.start_graphing()
     newmap = C.mb.GetTypeList()
     map_kbien, kbienmoyen = C.Lancer_simulation(True, True, should_init=True)
+
     while(kbienmoyen <= SEUIL):
         try:
             rd = random.randint(0, 100)
