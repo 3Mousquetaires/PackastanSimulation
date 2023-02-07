@@ -261,18 +261,19 @@ def renforcement():
     
     
     
-import sys    
+import sys
+import os
 
 if __name__ == "__main__":
-    if len(sys.argv < 2):
+    if len(sys.argv) < 2:
         renforcement()
-    elif sys.argv[1] == 1:
+    elif int(sys.argv[1]) == 1:
         #StrasbourgComp()
         print("coucou les petits loups")
-    elif sys.argv[1] == 2:
+    elif int(sys.argv[1]) == 2:
         print("...There's not a soul out there...")
         
-        with open("./data/map1.json", "r") as f:
+        with open(os.getcwd() ,os.join("data\\map1.json", "w")) as f:
             f.write(dumps(C.mb.batlist))
         
         #renforcement()
