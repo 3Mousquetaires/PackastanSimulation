@@ -237,14 +237,15 @@ def exploration():
     return newkbien_moyen
 
 
-def renforcement(nb_tours = -1):
+def renforcement(nb_tours = 200):
     plt.ion()
     C.start_graphing()
     newmap = C.mb.GetTypeList()
     map_kbien, kbienmoyen = C.Lancer_simulation(True, True, should_init=True)
 
     i = 0
-    while(kbienmoyen <= SEUIL) or (i < 200):
+    while(kbienmoyen <= SEUIL) or (i < nb_tours):
+        i += 1
         try:
             rd = random.randint(0, 100)
             if(rd < 20):
@@ -276,8 +277,11 @@ if __name__ == "__main__":
         
         with open(os.path.join(os.getcwd(), "data", "map1.json"), "w") as f:
             f.write(dumps(C.mb._dumpsBatList(), sort_keys=True, indent=4 ))
+
+        renforcement(nb_tours=50)
         
-        renforcement()
+        with open(os.path.join(os.getcwd(), "data", "map2.json"), "w") as f:
+            f.write(dumps(C.mb._dumpsBatList(), sort_keys=True, indent=4 ))
         
         #renforcement()
         
