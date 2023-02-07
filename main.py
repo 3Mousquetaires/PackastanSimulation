@@ -2,6 +2,7 @@
 
 from mapbuilder import MapBuilder, Bug
 from ville import Ville
+from json import dumps
 
 from copy import copy
 
@@ -132,6 +133,7 @@ class Core():
                 print(f"--\t {k} : {self._mean_kbien(data, k)}")
             
         return data, kbien_moy
+    
         
         
     def ReplaceBat(self, i, type_):
@@ -257,6 +259,23 @@ def renforcement():
             break
     C.Lancer_simulation(True, True)
     
+    
+    
+import sys    
 
 if __name__ == "__main__":
-    renforcement()
+    if len(sys.argv < 2):
+        renforcement()
+    elif sys.argv[1] == 1:
+        #StrasbourgComp()
+        print("coucou les petits loups")
+    elif sys.argv[1] == 2:
+        print("...There's not a soul out there...")
+        
+        with open("./data/map1.json", "r") as f:
+            f.write(dumps(C.mb.batlist))
+        
+        #renforcement()
+        
+    else:
+        print("bah chef qu'est ce que tu fais ?")
