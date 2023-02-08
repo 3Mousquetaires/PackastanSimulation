@@ -237,13 +237,15 @@ def exploration():
     return newkbien_moyen
 
 
-def renforcement():
+def renforcement(nb_tours = 200):
     plt.ion()
     C.start_graphing()
     newmap = C.mb.GetTypeList()
     map_kbien, kbienmoyen = C.Lancer_simulation(True, True, should_init=True)
 
-    while(kbienmoyen <= SEUIL):
+    i = 0
+    while(kbienmoyen <= SEUIL) or (i < nb_tours):
+        i += 1
         try:
             rd = random.randint(0, 100)
             if(rd < 20):
@@ -273,8 +275,13 @@ if __name__ == "__main__":
     elif int(sys.argv[1]) == 2:
         print("...There's not a soul out there...")
         
-        with open(os.path.join(os.getchwd(), "data", "map1.json"), "w") as f:
-            f.write(dumps(C.mb.batlist))
+        with open(os.path.join(os.getcwd(), "data", "map1.json"), "w") as f:
+            f.write(dumps(C.mb._dumpsBatList(), sort_keys=True, indent=4 ))
+
+        renforcement(nb_tours=50)
+        
+        with open(os.path.join(os.getcwd(), "data", "map2.json"), "w") as f:
+            f.write(dumps(C.mb._dumpsBatList(), sort_keys=True, indent=4 ))
         
         #renforcement()
         
