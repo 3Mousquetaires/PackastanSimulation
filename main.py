@@ -273,7 +273,7 @@ if __name__ == "__main__":
     elif int(sys.argv[1]) == 2:
         print("...There's not a soul out there...")
         
-        with open(os.getcwd() ,os.join("data\\map1.json", "w")) as f:
+        with open(os.path.join(os.getchwd(), "data", "map1.json"), "w") as f:
             f.write(dumps(C.mb.batlist))
         
         #renforcement()
