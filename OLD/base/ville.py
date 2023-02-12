@@ -8,7 +8,7 @@ import batiment
 import citoyen
 import time
 import random
-import OLD.defaultMap as defaultMap
+import defaultMap as defaultMap
 
 class Ville:
     def __init__(self, height:int, width:int, population:int = 1, map:np.ndarray=np.array([[]]), kill_epsilon=1E-4): 
