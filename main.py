@@ -212,19 +212,19 @@ def getMaxDeltaKb(oldbat):
 
 def exploitation():
     map = C.mb.GetTypeList()
-    map_kbien, kbien_moyen = C.Lancer_simulation(True, True)
+    map_kbien, kbien_moyen = C.Lancer_simulation(False, False)
     pire_bat = np.argmin(map_kbien)
     oldType = map[pire_bat]
     newType = getMaxDeltaKb(oldType)
     C.ReplaceBat(pire_bat, newType)
     newmap = C.mb.GetTypeList()
-    newmap_kbien, newkbien_moyen = C.Lancer_simulation(True, True)
+    newmap_kbien, newkbien_moyen = C.Lancer_simulation(False, False)
     listeActions.append((oldType, newType, newkbien_moyen - kbien_moyen))
     return newkbien_moyen
 
 def exploration():
     map = C.mb.GetTypeList()
-    map_kbien, kbien_moyen = C.Lancer_simulation(True, True)
+    map_kbien, kbien_moyen = C.Lancer_simulation(False, False)
     pire_bat = np.argmin(map_kbien)
     oldType = map[pire_bat]
     nextType = random.randint(0, 8)
@@ -232,19 +232,20 @@ def exploration():
         nextType = 8-nextType
     C.ReplaceBat(pire_bat, nextType)
     newmap = C.mb.GetTypeList()
-    newmap_kbien, newkbien_moyen = C.Lancer_simulation(True, True)
+    newmap_kbien, newkbien_moyen = C.Lancer_simulation(False, False)
     listeActions.append((oldType, nextType, newkbien_moyen - kbien_moyen))
     return newkbien_moyen
 
 
 def renforcement(nb_tours = 200):
     plt.ion()
-    C.start_graphing()
+
     newmap = C.mb.GetTypeList()
-    map_kbien, kbienmoyen = C.Lancer_simulation(True, True, should_init=True)
+    map_kbien, kbienmoyen = C.Lancer_simulation(False, False, should_init=True)
 
     i = 0
     while(kbienmoyen <= SEUIL) or (i < nb_tours):
+        print(f"tour numéro {i}")
         i += 1
         try:
             rd = random.randint(0, 100)
@@ -259,6 +260,7 @@ def renforcement(nb_tours = 200):
             #C.show_realistic(C.lastV)
             #C.show_realistic(C.firstV)
             break
+    C.start_graphing()
     C.Lancer_simulation(True, True)
     
     
