@@ -193,7 +193,7 @@ maps = {
 
 ### Renforcement
 
-C = Core(((48.5825, 7.748)), 25_000)
+C = Core(((48.5825, 7.748)), 10_000)
 
 
 def getMaxDeltaKb(oldbat):
@@ -244,7 +244,7 @@ def renforcement(nb_tours = 200):
     map_kbien, kbienmoyen = C.Lancer_simulation(False, False, should_init=True)
 
     i = 0
-    while(kbienmoyen <= SEUIL) or (i < nb_tours):
+    while(kbienmoyen <= SEUIL) and (i < nb_tours):
         print(f"tour numéro {i}")
         i += 1
         try:
@@ -280,7 +280,7 @@ if __name__ == "__main__":
         with open(os.path.join(os.getcwd(), "data", "map1.json"), "w") as f:
             f.write(dumps(C.mb._dumpsBatList(), sort_keys=True, indent=4 ))
 
-        renforcement(nb_tours=50)
+        renforcement(nb_tours=25)
         
         with open(os.path.join(os.getcwd(), "data", "map2.json"), "w") as f:
             f.write(dumps(C.mb._dumpsBatList(), sort_keys=True, indent=4 ))
