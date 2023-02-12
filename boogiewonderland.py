@@ -32,6 +32,9 @@ def LetsDanceTonight():
         
     
     
+def VoulezVous():
+    pass
+    
     
 if __name__ == "__main__":
     LetsDanceTonight()
