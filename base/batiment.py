@@ -150,3 +150,4 @@ class Maison(Batiment):
 
                     if self.memoire_batiments[ self.map[i, j] ] == None:
                         self.memoire_batiments[ self.map[i, j] ] = accumulateur + [(x, y), (i, j)] #(i, j) #on a trouvé une adresse
+        return

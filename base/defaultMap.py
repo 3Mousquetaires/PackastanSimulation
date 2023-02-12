@@ -49,6 +49,8 @@ defaultMap = np.asarray(
 )
 
 
+
+
 defaultMap1 = np.asarray(
     [[9, 4, 0, 0, 9, 6, 0, 5, 9, 6, 7, 7, 9, 2, 3, 6, 9, 0, 1, 5, 9, 0,
         8, 2, 9, 8, 0, 1, 9, 6, 7, 8, 9, 5, 3, 4, 9, 8, 7, 6, 9, 6, 8, 1,
@@ -410,3 +412,9 @@ defaultMap1 = np.asarray(
         9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
         9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9]]
 )
+
+
+for i in range(len(defaultMap)):
+    for j in range(len(defaultMap[i])):
+        if defaultMap1[i, j] == 9:
+            defaultMap[i, j] = 9
