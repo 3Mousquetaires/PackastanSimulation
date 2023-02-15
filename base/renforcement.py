@@ -91,7 +91,7 @@ def exploitation(map, mapkb):
     return map, mapkb
 
 def renforcement():
-    city = Ville(45, 60, 2500, defaultMap.defaultMap)
+    city = Ville(45, 60, 5400, defaultMap.defaultMap)
     map, map_kbien = city.start(affichageLive=True)
     kbmoy = np.mean(map_kbien)
     while(kbmoy < 0.5):
@@ -106,7 +106,7 @@ def renforcement():
         kbmoy = np.mean(map_kbien)
         writer.writerow([kbmoy])
         print(kbmoy)
-    city = Ville(90, 60, 5400, defaultMap.defaultMap, kill_epsilon=0)
+    city = Ville(45, 60, 5400, defaultMap.defaultMap, kill_epsilon=0)
     map, map_kbien = city.start(affichageLive=True)
 
 renforcement()
