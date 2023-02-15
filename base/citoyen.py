@@ -182,6 +182,7 @@ class Citoyen :
 
         #on update tous les autres
         for i_b in range(len(self.besoins)):
+            self.besoins[1] = 1
             if i_b != besoin_i:
                 self.besoins[i_b] *= 1/(log2(BESOINS_COEFFS[i_b])+1)
             else:
