@@ -34,7 +34,7 @@ class Ville:
 
         self.map_saturation = np.zeros((height, width)) 
 
-        #self.kill_epsilon = 1e-3 #si la dérivée moyenne des 5 derniers tours descend sous 10^-6, le tour est fini
+        self.kill_epsilon = 1e-3 #si la dérivée moyenne des 5 derniers tours descend sous 10^-6, le tour est fini
 
         #Init map : Map des instances
         self.map = []
@@ -70,7 +70,7 @@ class Ville:
 
             self.highlightedMaps.append(tmp)
 
-    def start(self, affichageLive=False):
+    def start(self, affichageLive=True):
         """# Simulation de de la ville:
         Ne prend aucun paramètre, lance la simulation et renvoie la map des ```kbien```
         """
