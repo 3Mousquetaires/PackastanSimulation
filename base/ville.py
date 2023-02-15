@@ -11,7 +11,7 @@ import random
 import defaultMap
 
 class Ville:
-    def __init__(self, height:int, width:int, population:int = 1, map:np.ndarray=np.array([[]]), kill_epsilon=1E-3): 
+    def __init__(self, height:int, width:int, population:int = 1, map:np.ndarray=np.array([[]]), kill_epsilon=0): 
         """# Initialisation de la ville : 
         Permet de créer une ville de taille (height x width), 
         avec éventuellement une map par défaut (fondée uniquement sur les commerces).\n
@@ -34,7 +34,7 @@ class Ville:
 
         self.map_saturation = np.zeros((height, width)) 
 
-        self.kill_epsilon = 1e-3 #si la dérivée moyenne des 5 derniers tours descend sous 10^-6, le tour est fini
+        self.kill_epsilon = kill_epsilon #si la dérivée moyenne des 5 derniers tours descend sous 10^-6, le tour est fini
 
         #Init map : Map des instances
         self.map = []
@@ -45,10 +45,13 @@ class Ville:
                 if self.nummap[i][j] == 1 :
                     bat = batiment.Maison((i, j), self.nummap)
                     self.annuaire.append(bat)
+                    self.map_kbien[i][j] = -.5
                 else:
                     bat = batiment.Batiment(type = batiment.TypeBatiment(self.nummap[i][j]), adresse = (i, j))
                 temp.append(bat)
             self.map.append(temp)
+
+        print(" -- Nombre de maisons : ", len(self.annuaire), " --")
         
         #Init habitants : Liste des habitants
         self.habitants = []
@@ -129,7 +132,7 @@ class Ville:
                 delta = np.mean(self.map_kbien - map_kbien_avant)
                 self.derivee.append(delta)
 
-                if i > 10 and np.mean(self.derivee[-5:]) < self.kill_epsilon :
+                if i > 10 and abs(np.mean(self.derivee[-5:])) < self.kill_epsilon :
                     self.isRunning = False 
             if(affichageLive):
                 affichage()

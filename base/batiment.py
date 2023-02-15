@@ -103,6 +103,7 @@ class Maison(Batiment):
         self.memoire_batiments = { k:None for k in range(9) }
         self.memoire_batiments[1] = [self.adresse]
         self.map = map
+        self.kbien = -.5
         self.Update_Bats()
 
 
@@ -151,3 +152,7 @@ class Maison(Batiment):
                     if self.memoire_batiments[ self.map[i, j] ] == None:
                         self.memoire_batiments[ self.map[i, j] ] = accumulateur + [(x, y), (i, j)] #(i, j) #on a trouvé une adresse
         return
+
+
+    def ActualiseKbien(self, kbien):
+        return -.5
