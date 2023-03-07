@@ -21,7 +21,7 @@ writer = csv.writer(file)
 listeActions = []
 
 def remplacement(map, x, y, newType):
-    map[x][y] = newType;
+    map[x][y] = newType
     return map
 
 def remplacementAleatoire(map, x,y):
