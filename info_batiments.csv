@@ -1,11 +1,11 @@
 TYPE,BESOIN,COEFF,CAPACITE,RESSOURCE_GRAPH
-commerce,alimentation,1,-1,-1
-maison,habitation,7,-1,-1
-infirmerie,sante,0.08,-1,-1
-commissariat,securite,0.02,-1, -1
-usine,emploi,5,-1,-1
-eglise,moralite,1,-1,-1
-bar,fete,2.5,-1,-1
-espace_vert,physique,2,-1,-1
-mairie,gestion,0.04,-1,-1
-route,deplacement,1,-1,-1
+commerce,alimentation,1,.1,-1
+maison,habitation,7,.1,-1
+infirmerie,sante,0.08,.1,-1
+commissariat,securite,0.02,.1, -1
+usine,emploi,5,.1,-1
+eglise,moralite,1,.1,-1
+bar,fete,2.5,.1,-1
+espace_vert,physique,2,.1,-1
+mairie,gestion,0.04,.1,-1
+route,deplacement,1,.1,-1
