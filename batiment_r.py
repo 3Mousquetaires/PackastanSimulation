@@ -60,7 +60,6 @@ class Batiment :
         self.type = type_
         self.besoin =  StrToTypeBesoin[ str_data[1] ] 
         self.coeff = (str_data[2])
-        self.capacite = int(str_data[3])
         self.ressource = str_data[4] #ressource graphique
         
         self.population = 0
@@ -68,6 +67,7 @@ class Batiment :
         self.autre_props = props["props_"]
         self.id = props["id"]
         self.area = props["area"]
+        self.capacite = float(str_data[3])*self.area
 
 
     def AjouterCitoyen(self):

@@ -193,7 +193,7 @@ maps = {
 
 ### Renforcement
 
-C = Core(((48.5825, 7.748)), 25_000)
+C = Core((48.5825, 7.748), 25_000)
 
 
 def getMaxDeltaKb(oldbat):
