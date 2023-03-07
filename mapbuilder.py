@@ -541,7 +541,7 @@ class MapBuilder:
             json_list.append(response.json())
         
         #On va faire l'union de toutes ces données
-        for i in range(len(map_ids)):
+        for i in range(len(json_list)):
             json_list[0]["features"] += json_list[i]["features"]
 
         json_f  = json_list[0]["features"]
